@@ -93,7 +93,11 @@ INSERT YOUR QUERY HERE
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
 
-**You:** I think you can use the BETWEEN clause to get the total amount spent on a range of dates, just like we used earlier. Here's the query for that:
+**You:** I think you can use the BETWEEN clause to get the total amount spent on a range of dates, just like we used earlier.
+
+**Claire:** But I think I _only_ want those two dates, not a range, or all the days in between.
+
+**You:** Then you need an extra clause. Here's the query:
 
 ```sql
 CREATE YOUR QUERY HERE
