@@ -1,8 +1,14 @@
 # Project Brief: E-Commerce API
 
+You are a developer building an Express application to connect your e-commerce database to a shop front. Your client requires a fully tested API so you will write this application TDD-style: writing the test first and then the code to make the test pass. There is a starter test given to help you, that satisfies the first user story.
+
+How will you make this test pass?
+
 ## User Stories
 
 As a developer, I want to add new API endpoints to the NodeJS application for the cyf-ecommerce-api, so that I can improve the functionality of the application.
+
+As a developer, I want to build up my API using TDD - writing the test first and then iterating : adding one feature to pass one unit test.
 
 - As a user, I want to view a list of all products with their prices and supplier names.
 - As a user, I want to search for products by name.
@@ -18,6 +24,11 @@ As a developer, I want to add new API endpoints to the NodeJS application for th
 
 ## Acceptance Criteria
 
+- [ ] Each user story has an accompanying unit test
+- [ ] Secrets are not stored in the codebase
+
+<details>
+<summary>Try writing out your own acceptance criteria from the user stories before looking here</summary>
 - [ ] Endpoint `/products` should return a list of all product names with their prices and supplier names.
 - [ ] Endpoint `/products` should filter the list of products by name using a query parameter, even if the parameter is not used.
 - [ ] Endpoint `/customers/:customerId` should load a single customer by their ID.
@@ -29,3 +40,12 @@ As a developer, I want to add new API endpoints to the NodeJS application for th
 - [ ] Endpoint `/orders/:orderId` should delete an existing order and all associated order items.
 - [ ] Endpoint `/customers/:customerId` should delete an existing customer only if the customer doesn't have any orders.
 - [ ] Endpoint `/customers/:customerId/orders` should load all the orders along with the items in the orders of a specific customer. The information returned should include order references, order dates, product names, unit prices, suppliers, and quantities.
+</details>
+
+### Sanity check!
+
+In this project, you must write the test first.
+
+It's better to turn in a smaller set of user stories than to turn in untested features.
+
+If you're running out of time, scope down your application rather than commit untested code. Cut your _scope_, not your quality.

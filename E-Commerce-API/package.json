@@ -1,0 +1,25 @@
+{
+  "name": "cyf-ecommerce-api",
+  "version": "1.0.0",
+  "description": "API for the CYF ecommerce application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "API",
+    "CYF"
+  ],
+  "author": "CYF",
+  "license": "CC-BY-4-0",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "jest": "^27.2.5",
+    "supertest": "^6.1.6"
+  }
+}
