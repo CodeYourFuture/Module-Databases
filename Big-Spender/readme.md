@@ -28,10 +28,10 @@ psql big-spender
 
 ## User Stories:
 
-As a data analyst, I want to retrieve specific transaction records that meet a certain criteria, so that I can generate insights and reports based on the data.
-As a finance manager, I want to know the total amount spent on a specific month, so that I can compare it with our budget and plan accordingly.
-As a data analyst, I want to filter transactions by a specific keyword, so that I can retrieve records that are relevant to my analysis.
-As a finance manager, I want to add a missing transaction to the database, so that it correctly reflects our latest expenses for our report.
+- As a data analyst, I want to retrieve specific transaction records that meet a certain criteria, so that I can generate insights and reports based on the data.
+- As a finance manager, I want to know the total amount spent on a specific month, so that I can compare it with our budget and plan accordingly.
+- As a data analyst, I want to filter transactions by a specific keyword, so that I can retrieve records that are relevant to my analysis.
+- As a finance manager, I want to add a missing transaction to the database, so that it correctly reflects our latest expenses for our report.
 
 ## Briefing
 
