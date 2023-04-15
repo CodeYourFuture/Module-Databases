@@ -55,7 +55,7 @@ Write SQL queries to complete the following tasks:
 
 ## Acceptance Criteria
 
-- [ ] The SQL queries retrieve the correct data according to the tasks listed above
-- [ ] The database schema is drawn correctly to visualize relationships between tables
 - [ ] The `cyf_ecommerce` database is imported and set up correctly
+- [ ] The database schema is drawn correctly to visualize relationships between tables
+- [ ] The SQL queries retrieve the correct data according to the tasks listed above
 - [ ] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
