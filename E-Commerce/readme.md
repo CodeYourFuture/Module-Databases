@@ -24,11 +24,13 @@ Import the file [`cyf_ecommerce.sql`](./cyf_ecommerce.sql) in your newly created
 psql -d cyf_ecommerce -f cyf_ecommerce.sql
 ```
 
+### Understand the schema
+
 Open the file `cyf_ecommerce.sql` in VSCode and examine the SQL code. Take a piece of paper and draw the database with the different relationships between tables (as defined by the REFERENCES keyword in the CREATE TABLE commands). Identify the foreign keys and make sure you understand the full database schema.
 
-Don't skip this step. You may one day [be asked at interview](https://monzo.com/blog/2022/03/23/demystifying-the-backend-engineering-interview-process) to draw a database schema. Sketching systems is a valuable skill for back end developers and worth practising. If you're interested in systems design, take a course on Udemy.
+Don't skip this step. You may one day [be asked at interview](https://monzo.com/blog/2022/03/23/demystifying-the-backend-engineering-interview-process) to draw a database schema. Sketching systems is a valuable skill for back end developers and worth practising. If you're interested in systems design, you may also want to take a course on Udemy.
 
-You can even draw relationship diagrams on GitHub:
+You can even [draw relationship diagrams](https://mermaid.js.org/syntax/entityRelationshipDiagram.html) on [GitHub](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams):
 
 ```mermaid
 erDiagram
@@ -53,7 +55,7 @@ Write SQL queries to complete the following tasks:
 
 ## Acceptance Criteria
 
-- [ ] The SQL queries retrieve the correct data according to the tasks listed above
-- [ ] The database schema is drawn correctly to visualize relationships between tables
 - [ ] The `cyf_ecommerce` database is imported and set up correctly
+- [ ] The database schema is drawn correctly to visualize relationships between tables
+- [ ] The SQL queries retrieve the correct data according to the tasks listed above
 - [ ] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
