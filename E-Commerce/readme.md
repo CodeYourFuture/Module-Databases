@@ -24,6 +24,8 @@ Import the file [`cyf_ecommerce.sql`](./cyf_ecommerce.sql) in your newly created
 psql -d cyf_ecommerce -f cyf_ecommerce.sql
 ```
 
+### Understand the schema
+
 Open the file `cyf_ecommerce.sql` in VSCode and examine the SQL code. Take a piece of paper and draw the database with the different relationships between tables (as defined by the REFERENCES keyword in the CREATE TABLE commands). Identify the foreign keys and make sure you understand the full database schema.
 
 Don't skip this step. You may one day [be asked at interview](https://monzo.com/blog/2022/03/23/demystifying-the-backend-engineering-interview-process) to draw a database schema. Sketching systems is a valuable skill for back end developers and worth practising. If you're interested in systems design, take a course on Udemy.
