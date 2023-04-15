@@ -30,7 +30,7 @@ Open the file `cyf_ecommerce.sql` in VSCode and examine the SQL code. Take a pie
 
 Don't skip this step. You may one day [be asked at interview](https://monzo.com/blog/2022/03/23/demystifying-the-backend-engineering-interview-process) to draw a database schema. Sketching systems is a valuable skill for back end developers and worth practising. If you're interested in systems design, you may also want to take a course on Udemy.
 
-You can even draw relationship diagrams on GitHub:
+You can even [draw relationship diagrams](https://mermaid.js.org/syntax/entityRelationshipDiagram.html) on [GitHub](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams):
 
 ```mermaid
 erDiagram
