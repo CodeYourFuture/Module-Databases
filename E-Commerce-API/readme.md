@@ -52,10 +52,10 @@ As a developer, I want to build up my API using TDD - writing the test first and
 - [ ] Endpoint `/customers/:customerId/orders` should load all the orders along with the items in the orders of a specific customer. The information returned should include order references, order dates, product names, unit prices, suppliers, and quantities.
 </details>
 
-### Sanity check!
+### Quality check!
 
 In this project, you must write the test first.
 
-It's better to turn in a smaller set of user stories than to turn in untested features.
+It's better to turn in a smaller set of completed user stories than to turn in untested features.
 
 If you're running out of time, scope down your application rather than commit untested code. Cut your _scope_, not your quality.
