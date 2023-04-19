@@ -2,6 +2,8 @@
 
 You are a developer building an Express application to connect your e-commerce database to a shop front. Your client requires a fully tested API so you will write this application TDD-style: writing the test first and then the code to make the test pass. There is a starter test given to help you, that satisfies the first user story.
 
+You're just looking to implement the API, not a frontend which uses the API (though feel free as an extension, if you're interested!)
+
 How will you make this test pass?
 
 ## Learning Objectives
