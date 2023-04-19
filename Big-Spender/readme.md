@@ -97,6 +97,8 @@ CREATE YOUR QUERY HERE
 INSERT YOUR QUERY HERE
 ```
 
+(Make sure the results from your query include the _names_ of the suppliers, not just the IDs).
+
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
 
 **You:** I think you can use the BETWEEN clause to get the total amount spent on a range of dates, just like we used earlier.
