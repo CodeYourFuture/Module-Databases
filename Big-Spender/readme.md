@@ -111,7 +111,7 @@ INSERT YOUR QUERY HERE
 CREATE YOUR QUERY HERE
 ```
 
-**Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
+**Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000 on the date 2021-04-07?
 
 **You:** Sure thing. To confirm, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
 
