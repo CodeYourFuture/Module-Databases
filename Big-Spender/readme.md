@@ -61,6 +61,12 @@ INSERT YOUR QUERY HERE
 
 **Claire:** I think that's all the same to me.
 
+**You:** What about "fees"?
+
+**Claire:** Yes, we want to include "fees" as well as "fee"... But definitely not "coffee"!
+
+(Hint: For this particular data-set, you don't need to do anything very complicated here, just using a `LIKE` operator. In the future, if you need to be more sophisticated, you may want to read about [stemming](https://www.compose.com/articles/indexing-for-full-text-search-in-postgresql/) and the `to_tsvector` and `to_tsquery` functions in Postgres).
+
 **You:** Then here's the query for that:
 
 ```sql
