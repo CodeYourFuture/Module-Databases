@@ -61,9 +61,9 @@ INSERT YOUR QUERY HERE
 
 **Claire:** I think that's all the same to me.
 
-**You:** And is it always singular? I mean: do you ever use fees or FEES? 
+**You:** And is it always singular? I mean: do you ever use fees or FEES?
 
-**Claire:** ...Maybe? 
+**Claire:** ...Maybe?
 
 **You:** Then here's the query for that:
 
@@ -94,6 +94,7 @@ CREATE YOUR QUERY HERE
 ```sql
 INSERT YOUR QUERY HERE
 ```
+
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
 
 **You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
@@ -123,7 +124,8 @@ CREATE YOUR QUERY HERE
 **You:** Sure thing. To confirm, the date is August 19, 2021, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT YOUR QUERIES HERE
+
 ```
 
 **Claire:** Great, that's everything we need. Thanks for your help.
