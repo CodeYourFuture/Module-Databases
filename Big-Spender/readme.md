@@ -61,6 +61,10 @@ INSERT YOUR QUERY HERE
 
 **Claire:** I think that's all the same to me.
 
+**You:** And is it always singular? I mean: do you ever use fees or FEES?
+
+**Claire:** ...Maybe?
+
 **You:** Then here's the query for that:
 
 ```sql
@@ -91,6 +95,14 @@ CREATE YOUR QUERY HERE
 INSERT YOUR QUERY HERE
 ```
 
+**Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
+
+**You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
+
+```sql
+INSERT YOUR QUERY HERE
+```
+
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
 
 **You:** I think you can use the BETWEEN clause to get the total amount spent on a range of dates, just like we used earlier.
@@ -105,10 +117,15 @@ CREATE YOUR QUERY HERE
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
 
-**You:** Sure thing. To confirm, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
+**You:** When was this?
+
+**Farnoosh:** The receipt says August 19, 2021
+
+**You:** Sure thing. To confirm, the date is August 19, 2021, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT YOUR QUERIES HERE
+
 ```
 
 **Claire:** Great, that's everything we need. Thanks for your help.
