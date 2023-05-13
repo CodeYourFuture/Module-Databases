@@ -7,14 +7,14 @@ You're just looking to implement the API, not a frontend which uses the API (tho
 How will you make this test pass?
 
 ## Learning Objectives
-
+```objectives
 - Write unit tests for new API endpoints
 - Implement new API endpoints that meet user requirements
 - Practice TDD development workflow
 - Handle errors for invalid data inputs
 - Use Git feature branch workflow
 - Manage secrets in a shared codebase
-
+```
 ## User Stories
 
 As a developer, I want to add new API endpoints to the NodeJS application for the cyf-ecommerce-api, so that I can improve the functionality of the application.
