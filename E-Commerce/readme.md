@@ -96,7 +96,7 @@ where c.name = 'Hope Crosby';
 select p.product_name, pa.unit_price, oi.quantity
 from products p INNER JOIN
 product_availability pa on (p.id = pa.prod_id)
-INNER JOIN order_items oi on (oi.product_id = p.id)
+INNER JOIN order_items oi on (oi.product_id = p.id and oi.supplier_id = pa.supp_id)
 INNER JOIN orders o on (o.id = oi.order_id)
 where o.order_reference = 'ORD006';
 
