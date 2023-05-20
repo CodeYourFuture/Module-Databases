@@ -82,7 +82,7 @@ select  p.product_name, pa.unit_price, oi.quantity
 from products p
 left join product_availability pa on (pa.prod_id=p.id)
 left join order_items oi on (p.id=oi.product_id)
- left join orders o on (oi.order_id=o.id)
+ left join orders o on (oi.order_id=o.id and oi.supplier_id=pa.supp_id)
  where o.order_reference='ORD006';
 ```
 
@@ -95,7 +95,7 @@ left join order_items oi on (p.id=oi.product_id)
 left join suppliers s on (oi.supplier_id=s.id)
  left join orders o on (oi.order_id=o.id)
  left join customers c on (o.customer_id=c.id);
- 
+
 ```
 
 ## Acceptance Criteria
