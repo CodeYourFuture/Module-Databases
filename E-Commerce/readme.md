@@ -45,13 +45,45 @@ erDiagram
 
 Write SQL queries to complete the following tasks:
 
-- [ ] List all the products whose name contains the word "socks"
-- [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
-- [ ] List the 5 most expensive products
-- [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
-- [ ] List all orders, including order items, from customer named Hope Crosby
-- [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
-- [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+- [*] List all the products whose name contains the word "socks"
+SELECT * FROM products WHERE product_name LIKE ‘%socks%’;
+
+- [*] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+SELECT prod_id, product_name, unit_price, supp_id
+FROM product_availability pa INNER JOIN products p on (pa.prod_id=p.id)
+INNER JOIN suppliers s on (pa.supp_id=s.id)
+WHERE unit_price > 100;
+
+- [*] List the 5 most expensive products
+select product_name , unit_price FROM product_availability pa INNER JOIN products p on (pa.prod_id=p.id) by unit_price desc Limit 5;
+
+- [*] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+SELECT product_name , supplier_name 
+FROM product_availability pa INNER JOIN products p on (pa.prod_id=p.id)
+INNER JOIN suppliers s on (pa.supp_id=s.id) where s.country='United Kingdom';
+
+
+- [*] List all orders, including order items, from customer named Hope Crosby
+SELECT order_id,product_id,supplier_id,quantity
+FROM order_items oi INNER JOIN orders o ON (oi.order_id=o.id)
+INNER JOIN customers c ON (o.customer_id=c.id)
+where c.name = 'Hope Crosby';
+
+- [*] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+SELECT p.product_name, pa.unit_price,oi.quantity
+FROM order_items oi INNER JOIN orders o ON (oi.order_id=o.id)
+INNER JOIN products p ON (p.id=oi.product_id)
+INNER JOIN product_availability pa ON (p.id=pa.prod_id)
+WHERE o.order_reference = 'ORD006';
+
+- [*] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+SELECT c.name,o.order_reference,o.order_date,p.product_name,s.supplier_name,oi.quantity
+FROM customers c INNER JOIN orders o ON (o.customer_id=c.id)
+INNER JOIN order_items oi ON (oi.order_id=o.id)
+INNER JOIN products p ON (p.id=oi.product_id)
+INNER JOIN product_availability pa ON (p.id=pa.prod_id)
+INNER JOIN suppliers s ON (pa.supp_id=s.id);
+
 
 ## Acceptance Criteria
 
