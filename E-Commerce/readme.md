@@ -32,7 +32,7 @@ Don't skip this step. You may one day [be asked at interview](https://monzo.com/
 
 You can even [draw relationship diagrams](https://mermaid.js.org/syntax/entityRelationshipDiagram.html) on [GitHub](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams):
 
-```mermaid
+```'mermaid'
 erDiagram
     customers {
         id INT PK
@@ -46,12 +46,79 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+
+```sql
+SELECT * FROM products WHERE product_name ILIKE '%socks%';
+```
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+```sql
+SELECT p.id, p.product_name, pa.unit_price, PA.SUPP_ID
+    FROM products p INNER JOIN
+    product_availability pa on (p.id = pa.prod_id)
+    WHERE pa.unit_price > 100;
+```
+
 - [ ] List the 5 most expensive products
+
+```sql
+SELECT p.id, p.product_name, pa.unit_price, PA.SUPP_ID
+    FROM products p INNER JOIN
+    product_availability pa on (p.id = pa.prod_id)
+    ORDER BY pa.unit_price DESC
+    LIMIT 5;
+```
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
-- [ ] List all orders, including order items, from customer named Hope Crosby
+
+```sql
+SELECT p.product_name, s.supplier_name
+    FROM products p INNER JOIN
+    product_availability pa on (p.id = pa.prod_id)
+    INNER JOIN suppliers s on (pa.supp_id = s.id)
+    WHERE s.country = 'United Kingdom';
+```
+
+- [ ] List all orders, including order items, from customer named Hope Crosby.
+
+```sql
+SELECT *
+    FROM orders o INNER JOIN
+    order_items oi on (o.id = oi.order_id)
+    INNER JOIN customers c on (o.customer_id = c.id)
+    WHERE c.name ILIKE '%Hope Crosby%';
+```
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+```sql
+SELECT * FROM orders o
+    LEFT JOIN order_items oi ON (o.id = oi.order_id)
+    LEFT JOIN products p on (p.id = oi.product_id)
+    INNER JOIN product_availability pa on (p.id = pa.prod_id and oi.supplier_id = pa.supp_id)
+    WHERE order_reference = 'ORD006';
+
+
+SELECT p.product_name, pa.unit_price, oi.quantity
+    FROM products p LEFT JOIN
+    product_availability pa ON (p.id = pa.prod_id)
+    LEFT JOIN order_items oi ON (oi.product_id = pa.prod_id and oi.supplier_id = pa.supp_id)
+    LEFT JOIN orders o ON (o.id = oi.order_id)
+    WHERE o.order_reference = 'ORD006';
+```
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+
+```sql
+SELECT c.name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity
+    FROM customers c INNER JOIN
+    orders o on (c.id = o.customer_id)
+    INNER JOIN order_items oi on (o.id = oi.order_id)
+    INNER JOIN products p on (oi.product_id = p.id)
+    INNER JOIN product_availability pa on (p.id = pa.prod_id)
+    INNER JOIN suppliers s on (pa.supp_id = s.id);
+```
 
 ## Acceptance Criteria
 
@@ -59,3 +126,7 @@ Write SQL queries to complete the following tasks:
 - [ ] The database schema is drawn correctly to visualize relationships between tables
 - [ ] The SQL queries retrieve the correct data according to the tasks listed above
 - [ ] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
+
+```
+
+```
