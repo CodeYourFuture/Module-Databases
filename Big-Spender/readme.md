@@ -48,12 +48,14 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 **You:** Absolutely. Here's the SQL query you need:
 
 ```sql
-INSERT YOUR QUERY HERE
+select * from spends
+where amount > 30000 and amount < 31000;
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
 
 **You:** Does case matter?
+Yes, case does matter.
 
 **Claire:** I don't know. What do you meant?
 
@@ -68,7 +70,10 @@ INSERT YOUR QUERY HERE
 **You:** Then here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+
+select * from spends
+where lower(description) like lower('%Fee%');
+
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -76,7 +81,7 @@ INSERT YOUR QUERY HERE
 **You:** No worries. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
