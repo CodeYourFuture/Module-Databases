@@ -46,12 +46,58 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+
+```sql
+SELECT * FROM products WHERE product_name LIKE '%socks%';
+```
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+```sql
+SELECT prod_id, product_name, unit_price FROM products INNER JOIN product_availability ON id = prod_id WHERE unit_price > 100;
+```
+
 - [ ] List the 5 most expensive products
+
+```sql
+SELECT product_name, unit_price FROM products INNER JOIN product_availability ON id = prod_id ORDER BY unit_price DESC;
+```
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
-- [ ] List all orders, including order items, from customer named Hope Crosby
+
+```sql
+SELECT * FROM products p INNER JOIN product_availability pa ON pa.prod_id = p.id INNER JOIN suppliers s ON pa.supp_id = s.id WHERE s.country = 'United Kingdom';
+```
+
+- [ done ] List all orders, including order items, from customer named Hope Crosby
+
+```sql
+SELECT * FROM orders o
+INNER JOIN customers c ON (c.id = o.customer_id)
+INNER JOIN order_items oi ON (o.id = oi.order_id)
+WHERE c.name = 'Hope Crosby';
+```
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+```sql
+SELECT p.product_name, pa.unit_price, oi.quantity FROM products p
+INNER JOIN product_availability pa ON (p.id = pa.prod_id)
+INNER JOIN order_items oi ON (oi.product_id = pa.prod_id)
+INNER JOIN orders o ON (o.id = oi.order_id)
+WHERE o.order_reference = 'ORD006';
+```
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+
+```sql
+SELECT c.name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity FROM customers c
+INNER JOIN orders o ON (c.id = o.customer_id)
+INNER JOIN order_items oi ON (o.id = oi.order_id)
+INNER JOIN product_availability pa ON (oi.product_id = pa.prod_id)
+INNER JOIN suppliers s ON (pa.supp_id = s.id)
+INNER JOIN products p ON (p.id = pa.prod_id)
+```
 
 ## Acceptance Criteria
 
