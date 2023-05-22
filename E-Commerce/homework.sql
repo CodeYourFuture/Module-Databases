@@ -68,7 +68,7 @@ SELECT  products.product_name,
 
 -- List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity:
 
-SELECT  customers.name 
+SELECT  customers.name,
         order_reference,
         orders.order_date,
         products.product_name,
