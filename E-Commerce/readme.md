@@ -74,13 +74,20 @@ select product_name, supplier_name from products
   inner join product_availability on product_availability.prod_id = products.id inner join suppliers
   on product_availability.supp_id = suppliers.id
   where country like 'United Kingdom';
-   Tee Shirt Olympic Games | Argos
+
+        product_name       | supplier_name 
+-------------------------+---------------
+ Javascript Book         | Argos
+ Super warm socks        | Argos
+ Coffee Cup              | Argos
+ Tee Shirt Olympic Games | Argos
  Mobile Phone X          | Sainsburys
  Le Petit Prince         | Sainsburys
  Super warm socks        | Sainsburys
  Coffee Cup              | Sainsburys
  Ball                    | Sainsburys
 (9 rows)
+ 
 
 - [ ] List all orders, including order items, from customer named Hope Crosby
 
