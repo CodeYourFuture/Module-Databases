@@ -7,6 +7,7 @@ You're just looking to implement the API, not a frontend which uses the API (tho
 How will you make this test pass?
 
 ## Learning Objectives
+
 ```objectives
 - Write unit tests for new API endpoints
 - Implement new API endpoints that meet user requirements
@@ -15,6 +16,7 @@ How will you make this test pass?
 - Use Git feature branch workflow
 - Manage secrets in a shared codebase
 ```
+
 ## User Stories
 
 As a developer, I want to add new API endpoints to the NodeJS application for the cyf-ecommerce-api, so that I can improve the functionality of the application.
@@ -22,12 +24,55 @@ As a developer, I want to add new API endpoints to the NodeJS application for th
 As a developer, I want to build up my API using TDD - writing the test first and then iterating : adding one feature to pass one unit test.
 
 1. As a user, I want to view a list of all products with their prices and supplier names.
+
+```sql
+SELECT p.product_name as name, pa.unit_price as price, s.supplier_name as supplierName
+  FROM products p
+  INNER JOIN product_availability pa on (p.id = pa.prod_id)
+  INNER JOIN suppliers s on (pa.supp_id = s.id)
+
+```
+
 1. As a user, I want to search for products by name.
+
+```sql
+SELECT p.product_name as name, pa.unit_price as price, s.supplier_name as supplierName
+  FROM products p
+  INNER JOIN product_availability pa on (p.id = pa.prod_id)
+  INNER JOIN suppliers s on (pa.supp_id = s.id)
+  WHERE p.product_name ILIKE '%<search term>%'
+```
+
 1. As a user, I want to view a single customer by their ID.
+
+```sql
+SELECT * FROM customers WHERE id = <customer id>
+```
+
 1. As a user, I want to create a new customer with their name, address, city, and country.
+
+```sql
+INSERT INTO customers (name, address, city, country) VALUES (<name>, <address>, <city>, <country>)
+```
+
 1. As a user, I want to create a new product.
+
+```sql
+INSERT INTO products (product_name) VALUES (<product name>)
+```
+
 1. As a user, I want to create a new product availability with a price and supplier ID, and get an error if the price is not a positive integer or if either the product or supplier ID does not exist.
+
+```sql
+INSERT INTO product_availability (prod_id, supp_id, unit_price) VALUES (<product id>, <supplier id>, <price>)
+```
+
 1. As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
+
+```sql
+INSERT INTO orders (order_date, order_reference, customer_id) VALUES (<order date>, <order reference>, <customer id>)
+```
+
 1. As a user, I want to update an existing customer's information with their name, address, city, and country.
 1. As a user, I want to delete an existing order and all associated order items.
 1. As a user, I want to delete an existing customer only if they do not have any orders.
@@ -63,3 +108,11 @@ In this project, you must write the test first.
 It's better to turn in a smaller set of completed user stories than to turn in untested features.
 
 If you're running out of time, scope down your application rather than commit untested code. Cut your _scope_, not your quality.
+
+```
+
+```
+
+```
+
+```
