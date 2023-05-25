@@ -98,6 +98,44 @@ app.post("/customers", (req, res) => {
   );
 });
 
+// As a user, I want to create a new product.
+// curl -X POST -H "Content-Type: application/json" -d '{"name":"Basketball","description":"A ball used in basketball","supplierId":1}' "http://127.0.0.1:3000/products/"
+app.post("/products", (req, res) => {
+  const { name } = req.body;
+  db.query(
+    "INSERT INTO products (product_name) VALUES ($1) RETURNING *",
+    [name],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const product = result.rows[0];
+        res.status(201).json(product);
+      }
+    }
+  );
+});
+
+// As a user, I want to create a new product availability with a price and supplier ID, and get an error if the price is not a positive integer or if either the product or supplier ID does not exist.
+// curl -X POST -H "Content-Type: application/json" -d '{"price":100,"productId":1,"supplierId":1}' "http://127.0.0.1:3000/availability/"
+app.post("/availability", (req, res) => {
+  const { price, productId, supplierId } = req.body;
+  db.query(
+    "INSERT INTO product_availability (prod_id, supp_id, unit_price) VALUES ($1, $2, $3) RETURNING *",
+    [productId, supplierId, price],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const availability = result.rows[0];
+        res.status(201).json(availability);
+      }
+    }
+  );
+});
+
 //
 module.exports = app;
 

@@ -55,9 +55,18 @@ SELECT * FROM customers WHERE id = <customer id>
 INSERT INTO customers (name, address, city, country) VALUES (<name>, <address>, <city>, <country>)
 ```
 
-````
 1. As a user, I want to create a new product.
+
+```sql
+INSERT INTO products (product_name) VALUES (<product name>)
+```
+
 1. As a user, I want to create a new product availability with a price and supplier ID, and get an error if the price is not a positive integer or if either the product or supplier ID does not exist.
+
+```sql
+INSERT INTO product_availability (prod_id, supp_id, unit_price) VALUES (<product id>, <supplier id>, <price>)
+```
+
 1. As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
 1. As a user, I want to update an existing customer's information with their name, address, city, and country.
 1. As a user, I want to delete an existing order and all associated order items.
@@ -98,4 +107,7 @@ If you're running out of time, scope down your application rather than commit un
 ```
 
 ```
-````
+
+```
+
+```
