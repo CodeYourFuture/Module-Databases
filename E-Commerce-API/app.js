@@ -39,7 +39,7 @@ app.get("/products", (req, res) => {
 
 // As a user, I want to search for products by name.
 // curl "http://127.0.0.1:3000/products/search?name=ball"
-app.get("/products/search", function (req, res) {
+app.get("/products/search", (req, res) => {
   const { name } = req.query;
   db.query(
     "SELECT p.product_name as name, pa.unit_price as price, s.supplier_name as supplierName FROM products p INNER JOIN product_availability pa on (p.id = pa.prod_id) INNER JOIN suppliers s on (pa.supp_id = s.id) WHERE p.product_name ILIKE $1",
@@ -60,6 +60,26 @@ app.get("/products/search", function (req, res) {
   );
 });
 
+// As a user, I want to view a single customer by their ID.
+// curl "http://127.0.0.1:3000/customers/1"
+app.get("/customers/:id", (req, res) => {
+  const { id } = req.params;
+  db.query("SELECT * FROM customers WHERE id = $1", [id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    } else {
+      const customer = result.rows[0];
+      if (customer) {
+        res.status(200).json(customer);
+      } else {
+        res.status(404).json({ error: `Customer with id ${id} not found` });
+      }
+    }
+  });
+});
+
+//
 module.exports = app;
 
 // Start the server and export the server instance
