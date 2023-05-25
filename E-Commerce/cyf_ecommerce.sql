@@ -36,7 +36,7 @@ create table product_availability (prod_id integer references products(id), supp
 
 
 CREATE TABLE orders (id SERIAL PRIMARY KEY,
-                                       order_date DATE NOT NULL,
+                                         DATE NOT NULL,
                                                        order_reference VARCHAR(10) NOT NULL,
                                                                                    customer_id INT REFERENCES customers(id));
 
