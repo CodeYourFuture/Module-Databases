@@ -91,7 +91,39 @@ select product_name, supplier_name from products
 
 - [ ] List all orders, including order items, from customer named Hope Crosby
 
+SELECT order_id,product_id,supplier_id,quantity
+FROM order_items oi INNER JOIN orders o ON (oi.order_id = o.id)
+INNER JOIN customers c ON (o.customer_id = c.id)
+WHERE c.name = 'Hope Crosby';
+
+ order_id | product_id | supplier_id | quantity 
+----------+------------+-------------+----------
+        4 |          1 |           1 |        1
+(1 row)
+
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+SELECT p.product_name, pa.unit_price,oi.quantity
+FROM order_items oi INNER JOIN orders o ON (oi.order_id=o.id)
+INNER JOIN products p ON (p.id=oi.product_id)
+INNER JOIN product_availability pa ON (p.id=pa.prod_id)
+WHERE o.order_reference = 'ORD006';
+
+ product_name   | unit_price | quantity 
+------------------+------------+----------
+ Coffee Cup       |          3 |        3
+ Coffee Cup       |          4 |        3
+ Coffee Cup       |          4 |        3
+ Coffee Cup       |          5 |        3
+ Javascript Book  |         40 |        1
+ Javascript Book  |         41 |        1
+ Javascript Book  |         39 |        1
+ Le Petit Prince  |         10 |        1
+ Le Petit Prince  |         10 |        1
+ Super warm socks |         10 |        3
+ Super warm socks |          5 |        3
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
 ## Acceptance Criteria
