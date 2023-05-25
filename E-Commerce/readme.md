@@ -126,6 +126,23 @@ WHERE o.order_reference = 'ORD006';
 
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
+
+SELECT c.name,o.order_reference,o.order_date,p.product_name,s.supplier_name,oi.quantity
+FROM customers c INNER JOIN orders o ON (o.customer_id=c.id)
+INNER JOIN order_items oi ON (oi.order_id=o.id)
+INNER JOIN products p ON (p.id=oi.product_id)
+INNER JOIN product_availability pa ON (p.id=pa.prod_id)
+INNER JOIN suppliers s ON (pa.supp_id=s.id);
+
+       name        | order_reference | order_date |      product_name       | supplier_name | quantity 
+--------------------+-----------------+------------+-------------------------+---------------+----------
+ Edan Higgins       | ORD008          | 2019-07-23 | Mobile Phone X          | Sainsburys    |        1
+ Hope Crosby        | ORD004          | 2019-05-24 | Mobile Phone X          | Sainsburys    |        1
+ Edan Higgins       | ORD008          | 2019-07-23 | Mobile Phone X          | Amazon        |        1
+ Hope Crosby        | ORD004          | 2019-05-24 | Mobile Phone X          | Amazon        |        1
+ Amber Tran         | ORD006          | 2019-07-05 | Javascript Book         | Taobao:
+
+
 ## Acceptance Criteria
 
 - [ ] The `cyf_ecommerce` database is imported and set up correctly
