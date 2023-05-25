@@ -28,7 +28,7 @@ psql -d cyf_ecommerce -f cyf_ecommerce.sql
 
 Open the file `cyf_ecommerce.sql` in VSCode and examine the SQL code. Take a piece of paper and draw the database with the different relationships between tables (as defined by the REFERENCES keyword in the CREATE TABLE commands). Identify the foreign keys and make sure you understand the full database schema.
 
-Don't skip this step. You may one day [be asked at interview](https://monzo.com/blog/2022/03/23/demystifying-the-backend-engineering-interview-process) to draw a database schema. Sketching systems is a valuable skill for back end developers and worth practising. If you're interested in systems design, you may also want to take a course on Udemy.
+Don't skip this step. You may one day [be asked at interview](https://monzo.com/blog/2022/03/23/demystipsql -d cyf_ecommerce -f cyf_ecommerce.sqlfyinpsql -d cyf_ecommerce -f cyf_ecommerce.sqlg-the-backend-engineering-interview-process) to draw a database schema. Sketching systems is a valuable skill for back end developers and worth practising. If you're interested in systems design, you may also want to take a course on Udemy.
 
 You can even [draw relationship diagrams](https://mermaid.js.org/syntax/entityRelationshipDiagram.html) on [GitHub](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams):
 
@@ -46,8 +46,29 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+select product_name from products where product_name like '%socks%';
+ Super warm socks
+(1 row)
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+select id, product_name, unit_price, supp_id from products
+  inner join product_availability on product_availability.prod_id = products.id where unit_price > 100;
+   id |  product_name  | unit_price | supp_id 
+----+----------------+------------+---------
+  1 | Mobile Phone X |        249 |       4
+  1 | Mobile Phone X |        299 |       1
+(2 rows)
 - [ ] List the 5 most expensive products
+select product_name, unit_price from products
+  inner join product_availability on product_availability.prod_id = products.id order by unit_price desc limit 5;
+    product_name   | unit_price 
+-----------------+------------
+ Mobile Phone X  |        299
+ Mobile Phone X  |        249
+ Javascript Book |         41
+ Javascript Book |         40
+ Javascript Book |         39
+(5 rows)
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 - [ ] List all orders, including order items, from customer named Hope Crosby
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
