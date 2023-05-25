@@ -121,16 +121,52 @@ app.post("/products", (req, res) => {
 // curl -X POST -H "Content-Type: application/json" -d '{"price":100,"productId":1,"supplierId":1}' "http://127.0.0.1:3000/availability/"
 app.post("/availability", (req, res) => {
   const { price, productId, supplierId } = req.body;
+
+  // Check if the price is a positive integer
+  if (!Number.isInteger(price) || price <= 0) {
+    res.status(400).json({ error: "Price must be a positive integer" });
+    return;
+  }
+
+  // Check if the product exists
   db.query(
-    "INSERT INTO product_availability (prod_id, supp_id, unit_price) VALUES ($1, $2, $3) RETURNING *",
-    [productId, supplierId, price],
+    "SELECT * FROM products WHERE id = $1",
+    [productId],
     (error, result) => {
       if (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
+      } else if (result.rows.length === 0) {
+        res.status(404).json({ error: "Product not found" });
       } else {
-        const availability = result.rows[0];
-        res.status(201).json(availability);
+        // Check if the supplier exists
+        db.query(
+          "SELECT * FROM suppliers WHERE id = $1",
+          [supplierId],
+          (error, result) => {
+            if (error) {
+              console.error(error);
+              res.status(500).json({ error: "Internal Server Error" });
+            } else if (result.rows.length === 0) {
+              res.status(404).json({ error: "Supplier not found" });
+            } else {
+              // Insert the new availability
+              db.query(
+                "INSERT INTO product_availability (prod_id, supp_id, unit_price) VALUES ($1, $2, $3) RETURNING *",
+                [productId, supplierId, price],
+                (error, result) => {
+                  if (error) {
+                    console.error(error);
+                    res.status(500).json({ error: "Internal Server Error" });
+                  } else {
+                    const availability = result.rows[0];
+                    res.status(201).json(availability);
+                  }
+                }
+              );
+            }
+          }
+        );
       }
     }
   );
