@@ -172,6 +172,42 @@ app.post("/availability", (req, res) => {
   );
 });
 
+// As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
+app.post("/orders", (req, res) => {
+  const { orderDate, referenceNumber, customerId } = req.body;
+
+  // Check if the customer ID is valid
+  db.query(
+    "SELECT * FROM customers WHERE id = $1",
+    [customerId],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const customer = result.rows[0];
+        if (customer) {
+          db.query(
+            "INSERT INTO orders (customer_id, order_date, reference_number) VALUES ($1, $2, $3) RETURNING *",
+            [customerId, orderDate, referenceNumber],
+            (error, result) => {
+              if (error) {
+                console.error(error);
+                res.status(500).json({ error: "Internal Server Error" });
+              } else {
+                const order = result.rows[0];
+                res.status(201).json(order);
+              }
+            }
+          );
+        } else {
+          res.status(404).json({ error: "Invalid customer ID" });
+        }
+      }
+    }
+  );
+});
+
 //
 module.exports = app;
 

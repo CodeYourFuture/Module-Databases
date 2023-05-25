@@ -68,6 +68,11 @@ INSERT INTO product_availability (prod_id, supp_id, unit_price) VALUES (<product
 ```
 
 1. As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
+
+```sql
+INSERT INTO orders (order_date, order_reference, customer_id) VALUES (<order date>, <order reference>, <customer id>)
+```
+
 1. As a user, I want to update an existing customer's information with their name, address, city, and country.
 1. As a user, I want to delete an existing order and all associated order items.
 1. As a user, I want to delete an existing customer only if they do not have any orders.
