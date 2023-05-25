@@ -70,7 +70,20 @@ select product_name, unit_price from products
 (5 rows)
 
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+select product_name, supplier_name from products
+  inner join product_availability on product_availability.prod_id = products.id inner join suppliers
+  on product_availability.supp_id = suppliers.id
+  where country like 'United Kingdom';
+   Tee Shirt Olympic Games | Argos
+ Mobile Phone X          | Sainsburys
+ Le Petit Prince         | Sainsburys
+ Super warm socks        | Sainsburys
+ Coffee Cup              | Sainsburys
+ Ball                    | Sainsburys
+(9 rows)
+
 - [ ] List all orders, including order items, from customer named Hope Crosby
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
