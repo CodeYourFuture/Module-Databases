@@ -55,7 +55,7 @@ SELECT * FROM customers WHERE id = <customer id>
 INSERT INTO customers (name, address, city, country) VALUES (<name>, <address>, <city>, <country>)
 ```
 
-```
+````
 1. As a user, I want to create a new product.
 1. As a user, I want to create a new product availability with a price and supplier ID, and get an error if the price is not a positive integer or if either the product or supplier ID does not exist.
 1. As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
@@ -94,4 +94,8 @@ In this project, you must write the test first.
 It's better to turn in a smaller set of completed user stories than to turn in untested features.
 
 If you're running out of time, scope down your application rather than commit untested code. Cut your _scope_, not your quality.
+
 ```
+
+```
+````

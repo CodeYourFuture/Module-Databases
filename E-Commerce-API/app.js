@@ -79,6 +79,25 @@ app.get("/customers/:id", (req, res) => {
   });
 });
 
+// As a user, I want to create a new customer with their name, address, city, and country.
+// curl -X POST -H "Content-Type: application/json" -d '{"name":"John Doe","address":"123 Main St","city":"New York","country":"USA"}' "http://127.0.0.1:3000/customers/"
+app.post("/customers", (req, res) => {
+  const { name, address, city, country } = req.body;
+  db.query(
+    "INSERT INTO customers (name, address, city, country) VALUES ($1, $2, $3, $4) RETURNING *",
+    [name, address, city, country],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const customer = result.rows[0];
+        res.status(201).json(customer);
+      }
+    }
+  );
+});
+
 //
 module.exports = app;
 
