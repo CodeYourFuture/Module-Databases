@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "test": "jest"
+   
   },
   "keywords": [
     "node",
@@ -16,7 +17,8 @@
   "author": "CYF",
   "license": "CC-BY-4-0",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "pg": "^8.11.0"
   },
   "devDependencies": {
     "jest": "^27.2.5",
