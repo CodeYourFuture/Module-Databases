@@ -46,11 +46,58 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+ANS:  SELECT * 
+FROM products 
+WHERE product_name LIKE '%socks%';
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+ SELECT p.id, p.product_name, pa.unit_price, PA.supp_id 
+ FROM products p 
+ INNER JOIN product_availability pa 
+ ON (p.id = pa.prod_id) 
+ WHERE pa.unit_price > 100;
+
+
 - [ ] List the 5 most expensive products
+
+SELECT p.id, p.product_name, pa.unit_price 
+FROM products p 
+INNER JOIN product_availability pa 
+ON (p.id=pa.prod_id) 
+ORDER BY pa.unit_price 
+LIMIT 5;
+
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
-- [ ] List all orders, including order items, from customer named Hope Crosby
+
+SELECT p.product_name, s.supplier_name
+    FROM products p 
+    INNER JOIN product_availability pa on (p.id = pa.prod_id)
+    INNER JOIN suppliers s 
+    ON (pa.supp_id = s.id)
+    WHERE s.country = 'United Kingdom';
+
+
+- [ ] List all orders, including order items, from customer named Hope Crosby?
+
+SELECT * FROM orders 
+INNER JOIN customers  
+ON (customer_id = customers.id) 
+WHERE name LIKE '%Hope Crosby%';
+
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+SELECT p.product_name, pa.unit_price, oi.quantity, o.order_reference
+    FROM products p JOIN
+    product_availability pa ON (p.id = pa.prod_id)
+    JOIN order_items oi ON (oi.product_id = pa.prod_id and oi.supplier_id = pa.supp_id)
+    JOIN orders o ON (o.id = oi.order_id)
+    WHERE o.order_reference = 'ORD006';
+
+
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
 ## Acceptance Criteria
