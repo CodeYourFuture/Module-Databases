@@ -10,7 +10,7 @@
 
 Run the following commands:
 
-```
+```\dt
 createdb big-spender
 psql -d big-spender -f big-spender.sql
 ```
@@ -48,7 +48,7 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 **You:** Absolutely. Here's the SQL query you need:
 
 ```sql
-INSERT YOUR QUERY HERE
+ SELECT transaction_no, description,  amount FROM spends WHERE amount BETWEEN 30000 AND 31000 ORDER BY amount;
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -68,7 +68,7 @@ INSERT YOUR QUERY HERE
 **You:** Then here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+ SELECT transaction_no, description FROM spends WHERE LOWER(description) LIKE '%fees%';   
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
