@@ -16,3 +16,18 @@ describe("GET /products", () => {
     );
   });
 });
+
+describe("GET/ products", () =>{
+  it("should return a filtered list of products by name",  
+  async () => {
+    const responseWithParameter = await request(app).get("/products?name=");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+     expect.arrayContaining([
+      expect.objectContaining([
+
+      ])
+     ])
+    )
+  })
+})
