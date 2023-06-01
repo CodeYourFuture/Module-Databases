@@ -100,6 +100,15 @@ SELECT p.product_name, pa.unit_price, oi.quantity, o.order_reference
 
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
+
+SELECT c.name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity 
+FROM customers c JOIN orders o ON (c.id = o.customer_id)
+JOIN order_items oi ON (o.id = oi.order_id)
+JOIN product_availability pa ON (oi.product_id = pa.prod_id)
+JOIN products p ON (pa.prod_id = p.id)
+JOIN suppliers s ON (s.id = pa.supp_id);
+
+
 ## Acceptance Criteria
 
 - [ ] The `cyf_ecommerce` database is imported and set up correctly
