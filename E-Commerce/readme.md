@@ -46,9 +46,50 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+select product_name from products where product_name like '%socks%';
+
+ Super warm socks
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+select id, product_name, unit_price, supp_id from products
+  inner join product_availability on product_availability.prod_id = products.id where unit_price > 100;
+
+   id |  product_name  | unit_price | supp_id 
+----+----------------+------------+---------
+  1 | Mobile Phone X |        249 |       4
+  1 | Mobile Phone X |        299 |       1
+
+
+
 - [ ] List the 5 most expensive products
+
+ select product_name, unit_price from products
+  inner join product_availability on product_availability.prod_id = products.id order by unit_price desc limit 5;
+
+  -----------------+------------
+ Mobile Phone X  |        299
+ Mobile Phone X  |        249
+ Javascript Book |         41
+ Javascript Book |         40
+ Javascript Book |         39
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+select product_name, supplier_name from products
+  inner join product_availability on product_availability.prod_id = products.id inner join suppliers
+  on product_availability.supp_id = suppliers.id
+  where country like 'United Kingdom';
+
+
+     product_name       | supplier_name 
+-------------------------+---------------
+ Javascript Book         | Argos
+ Super warm socks        | Argos
+ Coffee Cup              | Argos
+ Tee Shirt Olympic Games | Argos
+ Mobile Phone X          | Sainsburys
+ Le Petit Prince         | Sainsburys
+ Super warm socks        | Sainsburys
+ 
 - [ ] List all orders, including order items, from customer named Hope Crosby
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
