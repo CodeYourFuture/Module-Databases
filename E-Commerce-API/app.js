@@ -5,17 +5,20 @@ var bodyParser = require("body-parser");
 // Don't hardcode your DB password in the code or upload it to GitHub! Never ever do this ever.
 // Use environment variables instead:
 // https://www.codementor.io/@parthibakumarmurugesan/what-is-env-how-to-set-up-and-run-a-env-file-in-node-1pnyxw9yxj
-app.listener = app.listen(3000, function () {
-  console.log(`Server is listening on port ${3000}`);
-});
+
 const { Pool } = require("pg");
 
+DB_HOST=localhost
+DB_PORT=5432
+DB_DATABASE=cyf_ecommerce
+DB_USERNAME=postgres
+DB_PASSWORD=""
 const db = new Pool({
-  user: "mickeyhaile", // replace with you username
-  host: "localhost",
-  database: "cyf_ecommerce",
-  password: "",
-  port: 5432,
+  user: process.env.DB_USERNAME,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 app.use(express.json());
 app.get("/products", (req, res) => {
@@ -205,5 +208,8 @@ app.post("/orders", (req, res) => {
       }
     }
   );
+});
+app.listener = app.listen(3000, function () {
+  console.log(`Server is listening on port ${3000}`);
 });
 module.exports = app;
