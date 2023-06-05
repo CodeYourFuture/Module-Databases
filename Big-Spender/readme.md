@@ -157,7 +157,7 @@ INSERT INTO expense_areas ea (expense_area),
 
 ## Acceptance Criteria
 
-- [ ] All user stories are satisfied
-- [ ] All queries are written in SQL
-- [ ] All queries are correct and I have tested them in the database
-- [ ] I have opened a pull request with my answers written directly into this README.md file
+- [Y] All user stories are satisfied
+- [Y] All queries are written in SQL
+- [] All queries are correct and I have tested them in the database
+- [Y] I have opened a pull request with my answers written directly into this README.md file
