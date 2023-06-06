@@ -70,7 +70,8 @@ BETWEEN 30000 AND 31000;
 **You:** Then here's the query for that:
 
 ```sql
-select * from spends where description ilike '%fee%';
+select * from spends
+where description ilike '%fee%';
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -78,7 +79,9 @@ select * from spends where description ilike '%fee%';
 **You:** No worries. Here's the query for that:
 
 ```sql
- select * from spends s inner join expense_areas ea on s.expense_area_id=ea.id where ea.expense_area='Better Hospital Food';
+ select * from spends s
+ inner join expense_areas ea on s.expense_area_id=ea.id
+ where ea.expense_area='Better Hospital Food';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -138,7 +141,8 @@ order by supplier;
 **You:** Sure thing. To confirm, the date is August 19, 2021, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
 
 ```sql
-INSERT INTO spends (expense_type_id, expense_area_id, supplier_id,date,transaction_no,supplier_inv_no,description, amount)  VALUES(7,18,16, '2021-08-19',38104091,3780119655, 'Computer Hardware Dell', 32000);
+INSERT INTO spends (expense_type_id, expense_area_id, supplier_id,date,transaction_no,supplier_inv_no,description, amount)
+VALUES(7,18,16, '2021-08-19',38104091,3780119655, 'Computer Hardware Dell', 32000);
 
 ```
 
