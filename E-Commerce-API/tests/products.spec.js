@@ -10,7 +10,25 @@ describe("GET /products", () => {
         expect.objectContaining({
           name: expect.any(String),
           price: expect.any(Number),
-          supplierName: expect.any(String),
+          supplier_name: expect.any(String),
+        }),
+      ])
+    );
+  });
+});
+
+describe("GET /customers/:customerId", () => {
+  it("should load a single customer by their ID", async () => {
+    const response = await request(app).get("/customers/:customerId");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          address: expect.any(String),
+          city: expect.any(String),
+          country: expect.any(String),
         }),
       ])
     );
