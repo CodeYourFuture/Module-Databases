@@ -16,10 +16,13 @@
   "author": "CYF",
   "license": "CC-BY-4-0",
   "dependencies": {
-    "express": "^4.17.1"
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.4",
+    "express": "^4.17.1",
+    "pg": "^8.11.0"
   },
   "devDependencies": {
-    "jest": "^27.2.5",
-    "supertest": "^6.1.6"
+    "jest": "^27.5.1",
+    "supertest": "^6.3.3"
   }
 }
