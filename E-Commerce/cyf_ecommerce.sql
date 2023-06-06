@@ -32,7 +32,9 @@ CREATE TABLE products (id SERIAL PRIMARY KEY,
                                          product_name VARCHAR(100) NOT NULL);
 
 
-create table product_availability (prod_id integer references products(id), supp_id integer references suppliers(id), unit_price integer not null, primary key (prod_id, supp_id));
+create table product_availability (prod_id integer references products(id), 
+                                        supp_id integer references suppliers(id), 
+                                                unit_price integer not null, primary key (prod_id, supp_id));
 
 
 CREATE TABLE orders (id SERIAL PRIMARY KEY,
