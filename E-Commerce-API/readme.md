@@ -22,7 +22,22 @@ As a developer, I want to add new API endpoints to the NodeJS application for th
 As a developer, I want to build up my API using TDD - writing the test first and then iterating : adding one feature to pass one unit test.
 
 1. As a user, I want to view a list of all products with their prices and supplier names.
+
+SELECT p.product_name as name, pa.unit_price as price, s.supplier_name as supplierName
+  FROM products p
+  INNER JOIN product_availability pa on (p.id = pa.prod_id)
+  INNER JOIN suppliers s on (pa.supp_id = s.id)
+
+  
 1. As a user, I want to search for products by name.
+
+SELECT p.product_name as name, pa.unit_price as price, s.supplier_name as supplierName
+  FROM products p
+  INNER JOIN product_availability pa on (p.id = pa.prod_id)
+  INNER JOIN suppliers s on (pa.supp_id = s.id)
+  WHERE p.product_name ILIKE '%<search term>%'
+
+  
 1. As a user, I want to view a single customer by their ID.
 1. As a user, I want to create a new customer with their name, address, city, and country.
 1. As a user, I want to create a new product.
