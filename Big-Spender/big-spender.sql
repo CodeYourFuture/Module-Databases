@@ -1,3 +1,13 @@
+-- Create Database
+--CREATE DATABASE IF NOT EXISTS cyf_big_spender;
+
+SELECT 'CREATE DATABASE cyf_bigspender'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'cyf_bigspender')\gexec
+
+-- Connect to the 'cyf_big_spender' database
+\c cyf_bigspender
+
+-- CreateTable
 CREATE TABLE expense_types (id SERIAL PRIMARY KEY,
                                               expense_type VARCHAR(30) NOT NULL);
 
