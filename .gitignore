@@ -15,6 +15,7 @@ E-Commerce-API/model
 E-Commerce-API/controllers/availabilityController.js
 E-Commerce-API/controllers/customerController.js
 E-Commerce-API/controllers/orderController.js
+E-Commerce-API/package-lock.json
 
 Big-Spender/readmeOne.md
 
