@@ -46,12 +46,78 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+
+```sql
+      SELECT *
+      FROM products
+      WHERE product_name
+      LIKE '%socks%';
+```
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+```sql
+SELECT products.id AS product_id, products.product_name, product_availability.unit_price, product_availability.supp_id AS supplier_id
+FROM products
+JOIN product_availability ON products.id = product_availability.prod_id
+WHERE product_availability.unit_price > 100;
+```
+
 - [ ] List the 5 most expensive products
+
+```sql
+SELECT products.product_name, product_availability.unit_price
+FROM products
+JOIN product_availability ON products.id = product_availability.prod_id
+ORDER BY product_availability.unit_price DESC
+LIMIT 5;
+```
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+
+```sql
+SELECT products.product_name, suppliers.supplier_name
+FROM products
+JOIN product_availability ON products.id = product_availability.prod_id
+JOIN suppliers ON product_availability.supp_id = suppliers.id
+WHERE suppliers.country = 'United Kingdom';
+
+```
+
 - [ ] List all orders, including order items, from customer named Hope Crosby
+
+```sql
+SELECT orders.order_date,customers.name AS customer_name,order_items.quantity,products.product_name
+FROM orders
+JOIN customers ON orders.customer_id = customers.id
+JOIN order_items ON orders.id = order_items.order_id
+JOIN products ON order_items.product_id = products.id
+WHERE customers.name = 'Hope Crosby';
+
+```
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+```sql
+SELECT products.product_name, product_availability.unit_price, order_items.quantity
+FROM orders
+JOIN order_items ON orders.id = order_items.order_id
+JOIN products ON order_items.product_id = products.id
+JOIN product_availability ON products.id = product_availability.prod_id
+WHERE orders.order_reference = 'ORD006';
+
+```
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+
+```sql
+SELECT customers.name AS customer_name, orders.order_reference, orders.order_date, products.product_name,suppliers.supplier_name, order_items.quantity
+FROM orders
+JOIN customers ON orders.customer_id = customers.id
+JOIN order_items ON orders.id = order_items.order_id
+JOIN products ON order_items.product_id = products.id
+JOIN suppliers ON order_items.supplier_id = suppliers.id;
+```
 
 ## Acceptance Criteria
 
@@ -59,3 +125,7 @@ Write SQL queries to complete the following tasks:
 - [ ] The database schema is drawn correctly to visualize relationships between tables
 - [ ] The SQL queries retrieve the correct data according to the tasks listed above
 - [ ] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
+
+```
+
+```
