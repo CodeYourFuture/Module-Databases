@@ -477,3 +477,10 @@ VALUES (19,
         1,
         5);
 
+        INSERT INTO order_items
+VALUES (19,
+        10,
+        4,
+        1,
+        5);
+
