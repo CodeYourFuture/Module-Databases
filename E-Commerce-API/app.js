@@ -24,7 +24,7 @@ const db = new Pool({
 //1. all products prices, supplier names
 app.get("/products", (req, res) => {
   db.query(
-    "SELECT p.product_name as name, pa.unit_price as price, s.supplier_name as supplierName FROM products p INNER JOIN product_availability pa on (p.id = pa.prod_id) INNER JOIN suppliers s on (pa.supp_id = s.id)",
+    "SELECT p.product_name as name, pa.unit_price as price, s.supplier_name as supplier_name FROM products p INNER JOIN product_availability pa on (p.id = pa.prod_id) INNER JOIN suppliers s on (pa.supp_id = s.id)",
     (error, result) => {
       if (error) {
         console.error(error);
