@@ -15,4 +15,32 @@ describe("GET /products", () => {
       ])
     );
   });
+  it("should return a filtered list of products by name", async () => {
+    const responseWithParameter = await request(app).get(
+      "/products?name=coffee"
+    );
+    expect(responseWithParameter.status).toBe(200);
+    expect(responseWithParameter.body).toEqual([
+      {
+        name: "Coffee Cup",
+        price: 5,
+        supplierName: "Sainsburys",
+      },
+      {
+        name: "Coffee Cup",
+        price: 4,
+        supplierName: "Argos",
+      },
+      {
+        name: "Coffee Cup",
+        price: 4,
+        supplierName: "Taobao",
+      },
+      {
+        name: "Coffee Cup",
+        price: 3,
+        supplierName: "Amazon",
+      },
+    ]);
+  });
 });
