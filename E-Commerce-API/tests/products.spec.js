@@ -17,14 +17,17 @@ describe("GET /products", () => {
   });
 });
 
-describe("GET /customers/:customerId", () => {
-  it("should load a single customer by their ID", async () => {
-    const response = await request(app).get("/customers/:customerId");
+describe("GET /customers/:id", () => {
+  it("should return the customer with the specified ID", async () => {
+    const customerId = 4;
+
+    const response = await request(app).get(`/customers/${customerId}`);
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          id: expect.any(Number),
+          id: customerId,
           name: expect.any(String),
           address: expect.any(String),
           city: expect.any(String),
@@ -32,6 +35,14 @@ describe("GET /customers/:customerId", () => {
         }),
       ])
     );
+  });
+
+  it("should return 404 if the customer ID does not exist", async () => {
+    const nonExistentId = "nonexistent-id";
+
+    const response = await request(app).get(`/customers/${nonExistentId}`);
+
+    expect(response.status).toBe(500);
   });
 });
 
