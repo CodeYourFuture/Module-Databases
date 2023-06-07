@@ -108,15 +108,49 @@ app.post("/products", (req, res) => {
 });
 
 app.post("/availability", (req, res) => {
+  if (
+    !Number.isInteger(req.body.unit_price) ||
+    Number(req.body.unit_price) <= 0
+  ) {
+    res.status(400).json({ error: "Price is not a positive integer" });
+    return;
+  }
+
   db.query(
-    "insert into product_availability (prod_id, supp_id, unit_price) VALUES ($1, $2, $3) RETURNING *",
-    [req.body.prod_id, req.body.supp_id, req.body.unit_price],
+    "SELECT * FROM products WHERE id = $1",
+    [req.body.prod_id],
     (error, result) => {
       if (error) {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
+      } else if (result.rows.length === 0) {
+        res.status(404).json({ error: "Product doesn't exist in db" });
       } else {
-        res.status(201).json(result.rows);
+        db.query(
+          "SELECT * FROM suppliers WHERE id = $1",
+          [req.body.supp_id],
+          (error, result) => {
+            if (error) {
+              console.error(error);
+              res.status(500).json({ error: "Internal Server Error" });
+            } else if (result.rows.length === 0) {
+              res.status(404).json({ error: "Supplier doesn't exist in db" });
+            } else {
+              db.query(
+                "INSERT INTO product_availability (prod_id, supp_id, unit_price) VALUES ($1, $2, $3) RETURNING *",
+                [req.body.prod_id, req.body.supp_id, req.body.unit_price],
+                (error, result) => {
+                  if (error) {
+                    console.error(error);
+                    res.status(500).json({ error: "Internal Server Error" });
+                  } else {
+                    res.status(201).json(result.rows);
+                  }
+                }
+              );
+            }
+          }
+        );
       }
     }
   );
