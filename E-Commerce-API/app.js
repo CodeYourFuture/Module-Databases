@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const PORT = 5006;
 const { Pool } = require("pg");
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
 
 const myDataBase = new Pool({
   user: "gaylengozi",
@@ -25,7 +28,6 @@ app.get("/products", (request, response) => {
     query += ` WHERE LOWER(product_name) LIKE '%${request.query.name.toLowerCase()}%'`;
     console.log(query);
   }
-
   myDataBase
     .query(query)
     .then((result) => {
@@ -42,6 +44,36 @@ app.get("/products", (request, response) => {
       console.log(error);
     });
 });
+
+
+app.get("/customers", (request, response) => {
+  console.log(request.query);
+  let query =
+    "SELECT * FROM customers";
+
+    if (request.query.name) {
+      query += ` WHERE LOWER(customers.name) LIKE '%${request.query.name.toLowerCase()}%'`;
+      console.log(query);
+    }
+
+     myDataBase
+    .query(query)
+    .then((result) => {
+      const arrayData = result.rows.map((row) => ({
+        name: row.name,
+        address: row.address,
+        city: row.city,
+        country: row.country
+      }));
+  
+      return response.status(200).json(arrayData);
+  })
+  .catch((error) => {
+      console.log(error);
+    });
+});
+
+
 
 app.listen(PORT, function () {
   console.log(`Server is listening on port ${PORT}. Ready to accept requests!`);

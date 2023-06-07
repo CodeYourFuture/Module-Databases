@@ -15,7 +15,7 @@ describe("GET /products", () => {
       ])
     );
   });
-  
+
 
   it("should return a filtered list of products by name", async () => {
     const responseWithParameter = await request(app).get(
@@ -46,4 +46,28 @@ describe("GET /products", () => {
       },
     ]);
   });
+
+  })
+
+
+describe("GET/customers", () => {
+  it("should load all customers", async () => {
+    const response = await request(app).get("/customers");
+    expect(response.status).toBe(200);
+  });
+
+it("should load a single customer by their ID", async () => {
+  const responseWithParameter = await request(app).get(
+    "/customers/?name=Guy"
+  );
+  expect(responseWithParameter.status).toBe(200);
+  expect(responseWithParameter.body).toEqual([
+    {
+      name: "Guy Crawford",
+      address: "770-2839 Ligula Road",
+      city: "Paris",
+      country: "France",
+    },
+  ]);
 });
+})
