@@ -78,3 +78,48 @@ app.get("/customers/:id", (req, res) => {
     }
   );
 });
+
+app.post("/customers", (req, res) => {
+  db.query(
+    "INSERT into customers (name, address, city, country) values ($1, $2, $3, $4) returning *",
+    [req.body.name, req.body.address, req.body.city, req.body.country],
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        res.status(200).json(result.rows);
+      }
+    }
+  );
+});
+
+app.post("/products", (req, res) => {
+  db.query(
+    "INSERT into products (product_name) values ($1) returning *",
+    [req.body.product_name],
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        res.status(201).json(result.rows);
+      }
+    }
+  );
+});
+
+app.post("/availability", (req, res) => {
+  db.query(
+    "insert into product_availability (prod_id, supp_id, unit_price) VALUES ($1, $2, $3) RETURNING *",
+    [req.body.prod_id, req.body.supp_id, req.body.unit_price],
+    (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        res.status(201).json(result.rows);
+      }
+    }
+  );
+});
+
+module.exports = app;
