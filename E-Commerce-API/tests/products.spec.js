@@ -81,7 +81,7 @@ describe("POST /customers", () => {
       city: "London",
       country: "UK",
     };
-   const response = await request(app).post("/customers").send(newCustomer);
+    const response = await request(app).post("/customers").send(newCustomer);
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -90,6 +90,60 @@ describe("POST /customers", () => {
         address: newCustomer.address,
         city: newCustomer.city,
         country: newCustomer.country,
+      })
+    );
+  });
+});
+
+describe("POST /products", () => {
+  it("should create a new product including product_name", async () => {
+    const newProduct = {
+      product_name: "Airpods",
+    };
+    const response = await request(app).post("/products").send(newProduct);
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: expect.any(Number),
+        product_name: newProduct.product_name,
+      })
+    );
+  });
+});
+
+describe("POST /availability", () => {
+  it("should return 400 if unit_price is not a number", async () => {
+    const newProductAvailability = {
+      prod_id: 1,
+      supp_id: 2,
+      unit_price: "test unit price",
+    };
+    const response = await request(app)
+      .post("/availability")
+      .send(newProductAvailability);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Price is not a positive integer",
+      })
+    );
+  });
+
+  it("should create a new product including prod_id, supp_id, unit_price", async () => {
+    const newProductAvailability = {
+      prod_id: 1,
+      supp_id: 2,
+      unit_price: 1995,
+    };
+    const response = await request(app)
+      .post("/availability")
+      .send(newProductAvailability);
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        prod_id: newProductAvailability.prod_id,
+        supp_id: newProductAvailability.supp_id,
+        unit_price: newProductAvailability.unit_price,
       })
     );
   });

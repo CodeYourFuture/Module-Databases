@@ -103,7 +103,7 @@ app.post("/products", (req, res) => {
       if (error) {
         res.status(500).json({ error: "Internal Server Error" });
       } else {
-        res.status(201).json(result.rows);
+        res.status(201).json(result.rows[0]);
       }
     }
   );
@@ -146,7 +146,7 @@ app.post("/availability", (req, res) => {
                     console.error(error);
                     res.status(500).json({ error: "Internal Server Error" });
                   } else {
-                    res.status(201).json(result.rows);
+                    res.status(201).json(result.rows[0]);
                   }
                 }
               );
