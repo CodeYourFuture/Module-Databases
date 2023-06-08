@@ -72,6 +72,8 @@ app.get("/customers/:id", (req, res) => {
     (error, result) => {
       if (error) {
         res.status(500).json({ error: "Internal Server Error" });
+      } else if (result.rows.length === 0) {
+        res.status(404).json({ error: "Customer does not exist" });
       } else {
         res.status(200).json(result.rows);
       }
@@ -87,7 +89,7 @@ app.post("/customers", (req, res) => {
       if (error) {
         res.status(500).json({ error: "Internal Server Error" });
       } else {
-        res.status(200).json(result.rows);
+        res.status(201).json(result.rows[0]);
       }
     }
   );
