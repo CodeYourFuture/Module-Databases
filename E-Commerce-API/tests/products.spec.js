@@ -129,10 +129,27 @@ describe("POST /availability", () => {
     );
   });
 
+  // it("should return 404 if prod_id does not exist", async () => {
+  //   const newProductAvailability = {
+  //     prod_id: 7,
+  //     supp_id: 2,
+  //     unit_price: 1993,
+  //   };
+  //   const response = await request(app)
+  //     .post("/availability")
+  //     .send(newProductAvailability);
+  //   expect(response.status).toBe(500);
+  //   expect(response.body).toEqual(
+  //     expect.objectContaining({
+  //       error: "Product doesn't exist in db",
+  //     })
+  //   );
+  // });
+
   it("should create a new product including prod_id, supp_id, unit_price", async () => {
     const newProductAvailability = {
       prod_id: 1,
-      supp_id: 2,
+      supp_id: 3,
       unit_price: 1995,
     };
     const response = await request(app)
