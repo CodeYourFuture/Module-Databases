@@ -7,6 +7,7 @@ You're just looking to implement the API, not a frontend which uses the API (tho
 How will you make this test pass?
 
 ## Learning Objectives
+
 ```objectives
 - Write unit tests for new API endpoints
 - Implement new API endpoints that meet user requirements
@@ -15,6 +16,7 @@ How will you make this test pass?
 - Use Git feature branch workflow
 - Manage secrets in a shared codebase
 ```
+
 ## User Stories
 
 As a developer, I want to add new API endpoints to the NodeJS application for the cyf-ecommerce-api, so that I can improve the functionality of the application.
@@ -43,9 +45,9 @@ As a developer, I want to build up my API using TDD - writing the test first and
 <details>
 <summary>Try writing out your own acceptance criteria from the user stories before looking here</summary>
 
-- [ ] Endpoint `/products` should return a list of all product names with their prices and supplier names.
-- [ ] Endpoint `/products` should filter the list of products by name using a query parameter, even if the parameter is not used.
-- [ ] Endpoint `/customers/:customerId` should load a single customer by their ID.
+- [] Endpoint `/products` should return a list of all product names with their prices and supplier names.
+- [] Endpoint `/products` should filter the list of products by name using a query parameter, even if the parameter is not used.
+- [x] Endpoint `/customers/:customerId` should load a single customer by their ID.
 - [ ] Endpoint `/customers` should create a new customer with name, address, city, and country.
 - [ ] Endpoint `/products` should create a new product.
 - [ ] Endpoint `/availability` should create a new product availability with a price and supplier ID. An error should be returned if the price is not a positive integer or if either the product or supplier IDs don't exist in the database.
