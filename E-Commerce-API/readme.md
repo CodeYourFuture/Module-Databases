@@ -37,23 +37,23 @@ As a developer, I want to build up my API using TDD - writing the test first and
 
 ## Acceptance Criteria
 
-- [ ] Each user story has an accompanying unit test
-- [ ] Secrets are not stored in the codebase
+- [x] Each user story has an accompanying unit test
+- [x] Secrets are not stored in the codebase
 
 <details>
 <summary>Try writing out your own acceptance criteria from the user stories before looking here</summary>
 
-- [ ] Endpoint `/products` should return a list of all product names with their prices and supplier names.
-- [ ] Endpoint `/products` should filter the list of products by name using a query parameter, even if the parameter is not used.
-- [ ] Endpoint `/customers/:customerId` should load a single customer by their ID.
-- [ ] Endpoint `/customers` should create a new customer with name, address, city, and country.
-- [ ] Endpoint `/products` should create a new product.
-- [ ] Endpoint `/availability` should create a new product availability with a price and supplier ID. An error should be returned if the price is not a positive integer or if either the product or supplier IDs don't exist in the database.
-- [ ] Endpoint `/customers/:customerId/orders` should create a new order for a customer, including an order date and order reference. An error should be returned if the customer ID doesn't correspond to an existing customer.
-- [ ] Endpoint `/customers/:customerId` should update an existing customer's information.
-- [ ] Endpoint `/orders/:orderId` should delete an existing order and all associated order items.
-- [ ] Endpoint `/customers/:customerId` should delete an existing customer only if the customer doesn't have any orders.
-- [ ] Endpoint `/customers/:customerId/orders` should load all the orders along with the items in the orders of a specific customer. The information returned should include order references, order dates, product names, unit prices, suppliers, and quantities.
+- [x] Endpoint `/products` should return a list of all product names with their prices and supplier names.
+- [x] Endpoint `/products` should filter the list of products by name using a query parameter, even if the parameter is not used.
+- [x] Endpoint `/customers/:customerId` should load a single customer by their ID.
+- [x] Endpoint `/customers` should create a new customer with name, address, city, and country.
+- [x] Endpoint `/products` should create a new product.
+- [x] Endpoint `/availability` should create a new product availability with a price and supplier ID. An error should be returned if the price is not a positive integer or if either the product or supplier IDs don't exist in the database.
+- [x] Endpoint `/customers/:customerId/orders` should create a new order for a customer, including an order date and order reference. An error should be returned if the customer ID doesn't correspond to an existing customer.
+- [x] Endpoint `/customers/:customerId` should update an existing customer's information.
+- [x] Endpoint `/orders/:orderId` should delete an existing order and all associated order items.
+- [x] Endpoint `/customers/:customerId` should delete an existing customer only if the customer doesn't have any orders.
+- [x] Endpoint `/customers/:customerId/orders` should load all the orders along with the items in the orders of a specific customer. The information returned should include order references, order dates, product names, unit prices, suppliers, and quantities.
 </details>
 
 ### Quality check!
