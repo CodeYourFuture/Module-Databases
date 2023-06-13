@@ -1,5 +1,6 @@
 {
   "[sql]": {
     "editor.defaultFormatter": "dorzey.vscode-sqlfluff"
-  }
+  },
+  "cSpell.words": ["Cust"]
 }
