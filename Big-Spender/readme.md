@@ -127,6 +127,8 @@ su.supplier order by total_amount_spent desc;
 
 ```sql
 INSERT YOUR QUERY HERE
+Answer:
+select supplier from suppliers;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -139,6 +141,10 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+Answer:
+select date,sum(amount) as total_amount_spent from spends
+where date in ('2021-03-01', '2021-04-01')
+group by date;
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
@@ -151,6 +157,14 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERIES HERE
+Answer:
+INSERT INTO spends (expense_type_id, expense_area_id, supplier_id, date, transaction_no, supplier_inv_no, description, amount)
+VALUES
+    ((SELECT id FROM expense_types WHERE expense_type = 'Hardware'),
+     (SELECT id FROM expense_areas WHERE expense_area = 'IT'),
+     (SELECT id FROM suppliers WHERE supplier = 'Dell'),
+     '2021-08-19', 38104091, '3780119655', 'Computer Hardware Dell', 32000.00);
+
 
 ```
 
