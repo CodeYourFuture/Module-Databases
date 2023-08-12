@@ -49,7 +49,13 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 ```sql
 INSERT YOUR QUERY HERE
+Answer:
+select * from spends
+where amount >= 30000 and amount <= 31000
+and date >= '2021-01-01' and date <= '2021-12-31';
 ```
+
+
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
 
@@ -69,6 +75,10 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+Answer: 
+select * from spends
+where description ILike '%fee%'
+and date >= '2021-01-01' and date <= '2021-12-31';
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -77,6 +87,12 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+Answer:
+select s.* from spends s
+join expense_areas ea on
+s.expense_area_id = ea.id
+where ea.expense_area = 'Better Hospital food' and s.date >= '2021-01-01' and 
+s.date <= '2021-12-31';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -85,6 +101,11 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+Answer:
+select date_trunc('month', date) as month,
+sum(amount) as total_amount from spends
+where date >= '2021-01-01' and date <= '2021-12-31' group by month order by month;
+
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -93,6 +114,11 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+Answer:
+select s.supplier_id, su.supplier, sum(s.amount) as total_amount_spent from spends s
+join suppliers su on s.supplier_id = su.id
+where s.date >= '2021-01-01 and s.date <= '2021-12-31' group by s.supplier_id,
+su.supplier order by total_amount_spent desc;
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
