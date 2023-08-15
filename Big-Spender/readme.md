@@ -47,9 +47,12 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 **You:** Absolutely. Here's the SQL query you need:
 
-```sql
 INSERT YOUR QUERY HERE
 ```
+
+select* from spends
+where date between '2021-01-01' and '2021-12-31' and  transaction_no between 30000 and 31000;
+
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
 
@@ -70,8 +73,11 @@ INSERT YOUR QUERY HERE
 ```sql
 INSERT YOUR QUERY HERE
 ```
+select transaction_no from spends where description like '%fee%' or  description like '%fees%';
 
-**Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
+
+**Farnoosh:** Hi, it's me again. It turns out q
+. Can you help us with that one?
 
 **You:** No worries. Here's the query for that:
 
@@ -86,6 +92,7 @@ INSERT YOUR QUERY HERE
 ```sql
 CREATE YOUR QUERY HERE
 ```
+select sum (amount),date from spends group by date;
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
 
@@ -94,6 +101,9 @@ CREATE YOUR QUERY HERE
 ```sql
 INSERT YOUR QUERY HERE
 ```
+select sum(amount),supplier_id from spends group by supplier_id;
+
+
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
 
@@ -102,6 +112,12 @@ INSERT YOUR QUERY HERE
 ```sql
 INSERT YOUR QUERY HERE
 ```
+SELECT SUM(amount), spends.supplier_id, suppliers.supplier
+FROM spends
+INNER JOIN suppliers ON suppliers.id = spends.supplier_id
+GROUP BY  suppliers.supplier, spends.supplier_id
+order by supplier_id;q
+
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
 
