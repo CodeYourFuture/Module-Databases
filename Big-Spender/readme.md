@@ -150,7 +150,36 @@ GROUP BY date;
 **You:** Sure thing. To confirm, the date is August 19, 2021, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERIES HERE
+INSERT INTO expense_types (expense_type)
+  VALUES ('Hardware');
+
+INSERT INTO expense_areas (expense_area)
+  VALUES ('IT');
+
+INSERT INTO suppliers (supplier)
+  VALUES ('Dell');
+
+INSERT INTO spends (
+	 expense_type_id,
+	 expense_area_id,
+	 supplier_id,
+	 date,
+	 transaction_no,
+	 supplier_inv_no,
+	 description,
+	 amount   
+)  
+VALUES (
+42,
+46,
+66,
+'19-08-2021',
+38104091,
+3780119655,
+'Computer Hardware Dell',
+32000
+);
+
 
 ```
 
