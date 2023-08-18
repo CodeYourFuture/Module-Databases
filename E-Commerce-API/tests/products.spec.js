@@ -16,3 +16,18 @@ describe("GET /products", () => {
     );
   });
 });
+
+describe("GET /products/:name", () => {
+  it("should return a list of product names for products that have names including the search words", async () => {
+    const searchQuery = "Book"; // Change this to a search term that is likely to match some product names
+    const response = await request(app).get(`/products/${searchQuery}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: expect.any(String),
+        }),
+      ])
+    );
+  });
+});
