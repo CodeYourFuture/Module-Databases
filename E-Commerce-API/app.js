@@ -16,13 +16,32 @@ const db = new Pool({
 
 app.get("/products", (req, res) => {
   db.query(
-    "select p.product_name, pa.unit_price, s.supplier_name FROM products AS p INNER JOIN product_availability AS pa ON p.id = pa.prod_id INNER JOIN suppliers AS s ON pa.supp_id = s.id"
+    "SELECT p.product_name, pa.unit_price, s.supplier_name FROM products AS p INNER JOIN product_availability AS pa ON p.id = pa.prod_id INNER JOIN suppliers AS s ON pa.supp_id = s.id"
   )
     .then((result) => {
       const productList = result.rows.map((row) => ({
         name: row.product_name,
         price: row.unit_price,
         supplierName: row.supplier_name,
+      }));
+      res.status(200).json(productList);
+    })
+    .catch((error) =>
+      res.status(500).json({
+        message: error.message,
+      })
+    );
+});
+
+app.get("/products/:name", (req, res) => {
+  const productName = req.params.name;
+  console.log(productName);
+  db.query("SELECT * FROM products WHERE product_name LIKE '%' || $1 || '%'", [
+    productName,
+  ])
+    .then((result) => {
+      const productList = result.rows.map((row) => ({
+        name: row.product_name,
       }));
       res.status(200).json(productList);
     })
