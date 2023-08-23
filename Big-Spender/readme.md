@@ -48,7 +48,10 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 **You:** Absolutely. Here's the SQL query you need:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT
+SELECT *
+FROM spends
+WHERE Amount >= 30000 AND Amount <= 31000;
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -68,15 +71,24 @@ INSERT YOUR QUERY HERE
 **You:** Then here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT
+SELECT *
+FROM spends
+WHERE LOWER(Description) LIKE '%fee%';
 ```
+
+I tried to use regex but it does not accept regex.
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
 
 **You:** No worries. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT
+SELECT *
+FROM spends
+WHERE expense_area_id IN (SELECT id FROM expense_areas WHERE expense_area = 'Better Hospital Food');
+
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
