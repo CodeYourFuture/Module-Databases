@@ -76,7 +76,10 @@ SELECT * FROM spends WHERE description ILIKE '%fee%';
 **You:** No worries. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+SELECT * FROM expense_areas
+FULL OUTER JOIN spends ON expense_areas.id = spends.expense_area_id
+WHERE expense_area ILIKE 'Better Hospital Food';
+
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
