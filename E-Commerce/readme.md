@@ -54,11 +54,41 @@ WHERE product_name ILIKE '%socks%';
 ```
 
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+```sql
+SELECT pa.prod_id, p.product_name, pa.supp_id, pa.unit_price FROM products as p
+FULL OUTER JOIN product_availability as pa ON p.id = pa.prod_id WHERE unit_price > 100;
+```
+
 - [ ] List the 5 most expensive products
+
+```sql
+
+```
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+
+```sql
+
+```
+
 - [ ] List all orders, including order items, from customer named Hope Crosby
+
+```sql
+
+```
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+```sql
+
+```
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+
+```sql
+
+```
 
 ## Acceptance Criteria
 
