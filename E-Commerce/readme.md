@@ -46,6 +46,13 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+
+```sql
+SELECT * FROM products
+WHERE product_name ILIKE '%socks%';
+
+```
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
 - [ ] List the 5 most expensive products
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
