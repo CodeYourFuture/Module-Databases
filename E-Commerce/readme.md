@@ -71,7 +71,9 @@ LIMIT 5;
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 
 ```sql
-
+SELECT  p.product_name, s.supplier_name
+FROM (SELECT * FROM suppliers FULL OUTER JOIN product_availability as pa ON suppliers.id = pa.supp_id ) as s FULL OUTER JOIN products as p ON s.prod_id = p.id
+WHERE country ILIKE 'United Kingdom';
 ```
 
 - [ ] List all orders, including order items, from customer named Hope Crosby
