@@ -87,7 +87,9 @@ WHERE expense_area ILIKE 'Better Hospital Food';
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+SELECT date, SUM(amount)
+FROM spends
+GROUP BY date;
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
