@@ -79,7 +79,10 @@ WHERE country ILIKE 'United Kingdom';
 - [ ] List all orders, including order items, from customer named Hope Crosby
 
 ```sql
-
+SELECT o.id as order_id, o.product_name, c.name
+FROM (SELECT i.product_name, o.customer_id, o.id FROM (SELECT p.product_name, i.order_id FROM products as p FULL OUTER JOIN order_items as i ON p.id = i.product_id ) as i FULL OUTER JOIN orders as o ON o.id = i.order_id) as o
+FULL OUTER JOIN customers as c ON o.customer_id = c.id
+WHERE name ILIKE 'Hope Crosby';
 ```
 
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
