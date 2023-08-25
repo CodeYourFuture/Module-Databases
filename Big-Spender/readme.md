@@ -87,7 +87,7 @@ WHERE expense_area ILIKE 'Better Hospital Food';
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
 ```sql
-SELECT date, SUM(amount)
+SELECT date, SUM(amount) as total_spent_per_month
 FROM spends
 GROUP BY date;
 ```
@@ -97,7 +97,7 @@ GROUP BY date;
 **You:** Sure thing. Here's the query for that:
 
 ```sql
-SELECT supplier_id, SUM(amount)
+SELECT supplier_id, SUM(amount) as total_spent_per_month
 FROM spends
 GROUP BY supplier_id;
 ```
@@ -107,7 +107,10 @@ GROUP BY supplier_id;
 **You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
 
 ```sql
-INSERT YOUR QUERY HERE
+SELECT suppliers.id, suppliers.supplier, SUM(amount) as total_spent_per_month
+FROM suppliers
+FULL OUTER JOIN spends ON suppliers.id = spends.supplier_id
+GROUP BY suppliers.id;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -119,7 +122,10 @@ INSERT YOUR QUERY HERE
 **You:** Then you need an extra clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+SELECT date, SUM(amount) as total_spent_per_month
+FROM spends
+WHERE date BETWEEN '2021-03-01' AND '2021-04-01'
+GROUP BY date;
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
