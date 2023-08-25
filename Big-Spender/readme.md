@@ -97,7 +97,9 @@ GROUP BY date;
 **You:** Sure thing. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+SELECT supplier_id, SUM(amount)
+FROM spends
+GROUP BY supplier_id;
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
