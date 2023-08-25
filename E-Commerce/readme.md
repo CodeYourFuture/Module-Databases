@@ -63,7 +63,9 @@ FULL OUTER JOIN product_availability as pa ON p.id = pa.prod_id WHERE unit_price
 - [ ] List the 5 most expensive products
 
 ```sql
-
+SELECT pa.prod_id, p.product_name, pa.supp_id, pa.unit_price FROM products as p
+FULL OUTER JOIN product_availability as pa ON p.id = pa.prod_id ORDER BY unit_price DESC
+LIMIT 5;
 ```
 
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
