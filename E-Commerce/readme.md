@@ -88,7 +88,9 @@ WHERE name ILIKE 'Hope Crosby';
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 
 ```sql
-
+SELECT product_name, unit_price, quantity FROM (SELECT * FROM (SELECT * FROM product_availability as p FULL OUTER JOIN order_items as i ON p.prod_id = i.product_id) as i FULL OUTER JOIN products as p ON i.prod_id = p.id) as p
+FULL OUTER JOIN orders as o ON p.order_id = o.id
+WHERE order_reference = 'ORD006';
 ```
 
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
