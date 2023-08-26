@@ -39,6 +39,12 @@ erDiagram
         name VARCHAR(50) NOT NULL
     }
     customers ||--o{ orders : places
+    orders {
+        id SERIAL PK
+    order_date DATE NOT NULL
+    order_reference VARCHAR(10) NOT NULL
+    customer_id INT FK
+    }
 ```
 
 ### Query Practice
