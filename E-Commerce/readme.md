@@ -96,7 +96,9 @@ WHERE order_reference = 'ORD006';
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
 ```sql
-
+SELECT c.name, o.order_reference, o.order_date, o.product_name, o.supplier_name, o.quantity
+FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM suppliers as s FULL OUTER JOIN product_availability as pa ON s.id = pa.supp_id) as pa FULL OUTER JOIN products as p ON pa.prod_id = p.id) as p FULL OUTER JOIN order_items as i ON p.prod_id = i.product_id) as i FULL OUTER JOIN orders as o ON i.order_id = o.id) as o
+FULL OUTER JOIN customers as c ON o.customer_id = c.id;
 ```
 
 ## Acceptance Criteria
