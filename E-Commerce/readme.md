@@ -77,7 +77,7 @@ id SERIAL PK
 supplier_name VARCHAR(100) NOT NULL
 country VARCHAR(20) NOT NULL
 }
-product_availability }o--o{ order_items : contains
+product_availability }o--o{ order_items : in
 ```
 
 ### Query Practice
