@@ -48,6 +48,15 @@ country VARCHAR(20)
     order_reference VARCHAR(10) NOT NULL
     customer_id INT FK
     }
+    orders ||--|{ order_items : contains
+
+order_items {
+id SERIAL PK
+order_id INT NOT NULL FK
+product_id INT NOT NULL FK
+supplier_id INT NOT NULL FK
+quantity INT NOT NULL
+}
 ```
 
 ### Query Practice
