@@ -35,8 +35,11 @@ You can even [draw relationship diagrams](https://mermaid.js.org/syntax/entityRe
 ```mermaid
 erDiagram
     customers {
-        id INT PK
-        name VARCHAR(50) NOT NULL
+id SERIAL PK
+name VARCHAR(50) NOT NULL
+address VARCHAR(120)
+city VARCHAR(30)
+country VARCHAR(20)
     }
     customers ||--o{ orders : places
     orders {
