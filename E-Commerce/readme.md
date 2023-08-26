@@ -57,6 +57,26 @@ product_id INT NOT NULL FK
 supplier_id INT NOT NULL FK
 quantity INT NOT NULL
 }
+
+products {
+id SERIAL PK
+product_name VARCHAR(100) NOT NULL}
+
+products }o--o{ product_availability : available
+
+product_availability {
+prod_id integer PK, FK
+supp_id integer PK, FK
+unit_price integer not null
+}
+
+suppliers }|..|{ product_availability : supplies
+
+suppliers {
+id SERIAL PK
+supplier_name VARCHAR(100) NOT NULL
+country VARCHAR(20) NOT NULL
+}
 ```
 
 ### Query Practice
