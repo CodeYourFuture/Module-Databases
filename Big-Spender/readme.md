@@ -40,6 +40,7 @@ You are a data analyst working with the finance team at Worcestershire Acute Hos
 You are working with Claire and Farnoosh, who are trying to complete a missing report for their boss. They don't just want the answers, they want the queries that will give them the answers. They want to be able to run the queries themselves, so they can do this year's report without your help.
 
 **Claire:** Hey, can you help us out with something? We need to analyze our spending data for 2021 because apparently the report is missing.
+SELECT date FROM spends WHERE date BETWEEN '2021-01-01' AND '2021-12-31';
 
 **You:** I can try. What kind of data are you looking for exactly?
 
@@ -47,9 +48,9 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 **You:** Absolutely. Here's the SQL query you need:
 
-```sql
 INSERT YOUR QUERY HERE
-```
+
+SELECT amount FROM spends WHERE amount BETWEEN 30000 AND 31000;
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
 
@@ -69,14 +70,18 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
-```
+SELECT id, description FROM spends WHERE lower(description) LIKE '%fee%';
+
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
 
 **You:** No worries. Here's the query for that:
 
-```sql
+sql
 INSERT YOUR QUERY HERE
+select * from spends join expense_areas
+on(spends.expense_area_id= expense_areas.id)
+where expense_areas.expense_area='Better Hospital Food';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -85,7 +90,10 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
-```
+SELECT DATE_TRUNC('month', date) AS month, SUM(amount) AS total_amount
+FROM spends
+GROUP BY month
+ORDER BY month;
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
 
@@ -94,6 +102,10 @@ CREATE YOUR QUERY HERE
 ```sql
 INSERT YOUR QUERY HERE
 ```
+SELECT supplier_id, SUM(amount) AS total_amount
+FROM spends
+GROUP BY supplier_id;
+
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
 
