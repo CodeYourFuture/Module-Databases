@@ -68,7 +68,7 @@ select * from spends where amount between 30000 and 31000;
 **You:** Then here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+select * from spends where description ilike '%FEE%';
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
