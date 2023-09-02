@@ -92,7 +92,7 @@ select date_trunc('month', date), sum(amount) from spends group by date_trunc('m
 **You:** Sure thing. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+select suppliers.supplier, sum(amount) from spends join suppliers on spends.supplier_id = suppliers.id group by suppliers.id order by suppliers.supplier;
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
