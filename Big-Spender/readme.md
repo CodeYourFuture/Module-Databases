@@ -48,7 +48,7 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 **You:** Absolutely. Here's the SQL query you need:
 
 ```sql
-INSERT YOUR QUERY HERE
+select * from spends where amount >= 30000 and amount <= 31000;
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -68,7 +68,7 @@ INSERT YOUR QUERY HERE
 **You:** Then here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+select * from spends where description like '%Fee%' or description like '%FEE%';
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -76,7 +76,8 @@ INSERT YOUR QUERY HERE
 **You:** No worries. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+select s.id, s.expense_area_id, s.transaction_no, s.supplier_inv_no, s.description, s.date, e.expense_area
+from spends s join expense_areas e on (s.expense_area_id = e.id) where expense_area = 'Better Hospital Food';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -84,7 +85,7 @@ INSERT YOUR QUERY HERE
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+select date, sum(amount) from spends group by date;
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
