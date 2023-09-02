@@ -76,7 +76,7 @@ select * from spends where description ilike '%FEE%';
 **You:** No worries. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+select spends.* from spends join expense_areas on spends.expense_area_id = expense_areas.id where expense_areas.expense_area like 'Better Hospital Food';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
