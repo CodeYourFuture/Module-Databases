@@ -84,7 +84,7 @@ select spends.* from spends join expense_areas on spends.expense_area_id = expen
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+select date_trunc('month', date), sum(amount) from spends group by date_trunc('month', date);
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
