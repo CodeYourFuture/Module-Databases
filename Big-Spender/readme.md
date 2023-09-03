@@ -64,7 +64,7 @@ ORDER BY amount DESC;
 
 **You:** Does case matter?
 
-**Claire:** I don't know. What do you meant?
+**Claire:** I don't know. What do you mean?
 
 **You:** Does it matter if fee is written like "Fee" or "fee" or "FEE"? Are those all the same to you?
 
