@@ -35,7 +35,7 @@ psql big-spender
 
 ## Briefing
 
-You are a data analyst working with the finance team at Worcestershire Acute Hospital Trust. The finance team has asked you to help them analyse their spending data. They have provided you with a file containing all of their big-ticket spending data for 2021.
+You are a data analyst working with the finance team at Worcestershire Acute Hospital Trust. The finance team has asked you to help them analyze their spending data. They have provided you with a file containing all of their big-ticket spending data for 2021.
 
 You are working with Claire and Farnoosh, who are trying to complete a missing report for their boss. They don't just want the answers, they want the queries that will give them the answers. They want to be able to run the queries themselves, so they can do this year's report without your help.
 
@@ -49,6 +49,9 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 ```sql
 INSERT YOUR QUERY HERE
+select * 
+from spends 
+where amount between 30000 and 31000;
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -69,6 +72,10 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+select spends
+from spends
+where lower(description) like '%fee%';
+
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -77,7 +84,9 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
-```
+select * from spends join expense_areas on expense_areas.id =spends.expense_area_id where expense_areas.expense_area = 'Better Hospital Food';
+
+
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
 
@@ -85,6 +94,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+select sum(amount) as total, date from spends group by date; 
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -93,6 +103,10 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+SELECT supplier_id, SUM(amount) AS total
+FROM spends
+GROUP BY spends.supplier_id;
+
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -101,6 +115,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+SELECT supplier_id, suppliers, sum(amount) as total FROM spends JOIN suppliers ON spends.supplier_id = suppliers.id group by spends.supplier_id, suppliers;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -112,7 +127,18 @@ INSERT YOUR QUERY HERE
 **You:** Then you need an extra clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+CREATE YOUR TABLE HERE
+
+SELECT '2021-03-01' AS date,
+       SUM(amount) AS total_amount
+FROM spends
+WHERE date = '2021-03-01';
+
+SELECT '2021-04-01' AS date,
+       SUM(amount) AS total_amount
+FROM spends
+WHERE date = '2021-04-01';
+
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
@@ -124,7 +150,19 @@ CREATE YOUR QUERY HERE
 **You:** Sure thing. To confirm, the date is August 19, 2021, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERIES HERE
+INSERT INTO spends (expense_type_id, expense_area_id, supplier_id, date, transaction_no, supplier_inv_no, description, amount)
+VALUES (
+    (SELECT id FROM expense_types WHERE expense_type = 'Hardware'),
+    (SELECT id FROM expense_areas WHERE expense_area = 'IT'),
+    (SELECT id FROM suppliers WHERE supplier = 'Dell'),
+    '2021-08-19',
+    '38104091',
+    '3780119655',
+    'Computer Hardware Dell',
+    32000
+);
+
+
 
 ```
 
@@ -138,3 +176,21 @@ INSERT YOUR QUERIES HERE
 - [ ] All queries are written in SQL
 - [ ] All queries are correct and I have tested them in the database
 - [ ] I have opened a pull request with my answers written directly into this README.md file
+
+
+
+
+
+
+** 1-Find all the names of the tables in big-spender
+2-Find all the expense types where they start with the letter B
+3-How many transactions happened in April 2021?
+4-How many covid-19 transactions occurred in March 2021? How many in total?
+5-Group the covid-19 transactions by month (ie- how many covid-19 transactions occurred per month)?
+
+select COUNT(*) from spends join expense_areas on expense_areas.id= spends.expense_area_id where expense_area = 'COVID-19' group by date;
+
+6-Which supplier spent the most in March 2021? How much did they spend?
+7-Which supplier supplied the covid-19 expense areas in March and how much did they spend?
+8-Give the top 10 expense areas by amount spent
+9-Give the top 5 suppliers with the highest average spend rounded 2 decimal places and provide the number of transactions they have completed 
