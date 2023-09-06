@@ -127,7 +127,7 @@ SELECT to_char(date, 'YYYY-MM-DD') AS day, sum(amount) AS total FROM spends WHER
 INSERT INTO expense_types (expense_type) VALUES ('Hardware');
 INSERT INTO expense_areas (expense_area) VALUES ('IT');
 INSERT INTO suppliers (supplier) VALUES ('Dell');
-INSERT INTO spends (expense_type_id, expense_area_id, supplier_id, date, transaction_no, supplier_inv_no, description, amount) VALUES (83, 91, 131,'19-08-2021', 38104091, 3780119655, 'Computer Hardware Dell', 32000);
+INSERT INTO spends (expense_type_id, expense_area_id, supplier_id, date, transaction_no, supplier_inv_no, description, amount) VALUES (83, 91, 131,'2021-08-19', 38104091, 3780119655, 'Computer Hardware Dell', 32000);
 
 
 ```
