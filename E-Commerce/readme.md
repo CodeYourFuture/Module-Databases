@@ -55,9 +55,10 @@ Write SQL queries to complete the following tasks:
 
 # SELECT pa.prod_id, pa.unit_price, pa.supp_id, p.product_name FROM product_availability pa JOIN products p ON (pa.prod_id = p.id) WHERE pa.unit_price > 100;
 
-Join product_availability with product
-
 - [ ] List the 5 most expensive products
+
+# SELECT pa.prod_id, pa.unit_price, p.product_name FROM product_availability pa JOIN products p ON (pa.prod_id = p.id) ORDER BY unit_price desc LIMIT 5;
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 - [ ] List all orders, including order items, from customer named Hope Crosby
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
