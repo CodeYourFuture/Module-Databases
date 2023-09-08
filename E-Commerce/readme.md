@@ -68,6 +68,9 @@ Write SQL queries to complete the following tasks:
 # SELECT c.name, oi._, o._ FROM orders o JOIN order_items oi ON o.id = oi.order_id JOIN customers c ON c.id = o.customer_id WHERE c.name = 'Hope Crosby';
 
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+# SELECT p.product_name, pa.unit_price, oi.quantity FROM order_items oi JOIN orders o ON (o.id = oi.order_id) JOIN product_availability pa ON (oi.product_id = pa.prod_id) JOIN products p ON ( p.id = pa.prod_id) WHERE o.order_reference = 'ORD006';
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
 ## Acceptance Criteria
