@@ -47,9 +47,8 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 **You:** Absolutely. Here's the SQL query you need:
 
-```sql
-SELECT * FROM spends WHERE amount > 30000 AND amount < 31000;
-```
+````sql
+FROM spends WHERE amount BETWEEN 30000 AND  31000;``
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
 
@@ -68,8 +67,8 @@ SELECT * FROM spends WHERE amount > 30000 AND amount < 31000;
 **You:** Then here's the query for that:
 
 ```sql
-SELECT * FROM spends WHERE description ILIKE '%fee%' OR description ILIKE '%fees%';
-```
+SELECT * FROM spends WHERE description ILIKE '%fee%' ;
+````
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
 
@@ -84,7 +83,7 @@ SELECT * FROM spends s JOIN expense_areas e ON (s.expense_area_id = e.id) WHERE 
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
 ```sql
-SELECT to_char(date, 'YYYY-MM') AS month, sum(amount) FROM spends GROUP BY month;
+SELECT EXTRACT('MONTH' FROM date) AS month, sum(amount) FROM spends GROUP BY month;
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -112,7 +111,7 @@ SELECT supplier_id, supplier, sum(amount) AS total FROM spends s JOIN suppliers 
 **You:** Then you need an extra clause. Here's the query:
 
 ```sql
-SELECT to_char(date, 'YYYY-MM-DD') AS day, sum(amount) AS total FROM spends WHERE date IN ('2021-03-01', '2021-04-01') GROUP BY day;
+SELECT date , sum(amount) AS total FROM spends WHERE date IN ('2021-03-01', '2021-04-01') GROUP BY date;
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
