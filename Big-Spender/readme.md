@@ -29,7 +29,7 @@ psql big-spender
 ## User Stories:
 
 - As a data analyst, I want to retrieve specific transaction records that meet a certain criteria, so that I can generate insights and reports based on the data.
-- As a finance manager, I want to know the total amount spent on a specific month, so that I can compare it with our budget and plan accordingly.
+- As a fi\qnance manager, I want to know the total amount spent on a specific month, so that I can compare it with our budget and plan accordingly.
 - As a data analyst, I want to filter transactions by a specific keyword, so that I can retrieve records that are relevant to my analysis.
 - As a finance manager, I want to add a missing transaction to the database, so that it correctly reflects our latest expenses for our report.
 
@@ -47,9 +47,9 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 **You:** Absolutely. Here's the SQL query you need:
 
-```sql
+````sql
 INSERT YOUR QUERY HERE
-```
+```SELECT amount FROM spends WHERE amount BETWEEN 30000 AND 31000;
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
 
@@ -69,7 +69,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
-```
+```select * from spends where description like '%Fee%';
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
 
@@ -77,7 +77,11 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
-```
+```select * from spends s
+join expense_areas e
+on (s.expense_area_id = e.id)
+where e.expense_area = 'Better Hospital Food';
+````
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
 
