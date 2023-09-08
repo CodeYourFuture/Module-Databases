@@ -60,6 +60,9 @@ Write SQL queries to complete the following tasks:
 # SELECT pa.prod_id, pa.unit_price, p.product_name FROM product_availability pa JOIN products p ON (pa.prod_id = p.id) ORDER BY unit_price desc LIMIT 5;
 
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+
+# SELECT p.product_name, s.supplier_name FROM products p JOIN product_availability ON (p.id = prod_id) JOIN suppliers s ON (s.id = supp_id) WHERE s.country = 'United Kingdom';
+
 - [ ] List all orders, including order items, from customer named Hope Crosby
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
