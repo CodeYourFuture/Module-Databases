@@ -389,7 +389,7 @@ VALUES ('ALTIATECH LTD');
 
 
 INSERT INTO suppliers (supplier)
-VALUES ('ARJO UK LTD');
+VALUES ('ARCO UK LTD');
 
 
 INSERT INTO suppliers (supplier)
