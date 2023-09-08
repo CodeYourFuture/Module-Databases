@@ -101,7 +101,7 @@ ORDER BY month;
 
 ```sql
 
-INSERT YOUR QUERY HERE
+INSERT YOUR QUERY HERE```
 SELECT supplier_id, SUM(amount) AS total_amount
 FROM spends
 GROUP BY supplier_id;
@@ -115,8 +115,10 @@ GROUP BY supplier_id;
 ```sql
 INSERT YOUR QUERY HERE
 ```
+select sum(spends.amount), suppliers.supplier from spends inner join suppliers on spends.supplier_id = suppliers.id group by suppliers.supplier;
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
+
 
 **You:** I think you can use the BETWEEN clause to get the total amount spent on a range of dates, just like we used earlier.
 
@@ -127,6 +129,7 @@ INSERT YOUR QUERY HERE
 ```sql
 CREATE YOUR QUERY HERE
 ```
+SELECT date , sum(amount) AS total FROM spends WHERE date IN ('2021-03-01', '2021-04-01') GROUP BY date;
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
 
@@ -140,6 +143,14 @@ CREATE YOUR QUERY HERE
 INSERT YOUR QUERIES HERE
 
 ```
+INSERT INTO expense_types (expense_type) VALUES ('Hardware');
+INSERT INTO expense_areas (expense_area) VALUES ('IT');
+INSERT INTO suppliers (supplier) VALUES ('Dell');
+INSERT INTO spends (expense_type_id, expense_area_id, supplier_id, date, transaction_no, supplier_inv_no, description, amount) VALUES (42, 46, 66,'19-08-2021', 38104091, 3780119655, 'Computer Hardware Dell', 32000);
+
+
+
+
 
 **Claire:** Great, that's everything we need. Thanks for your help.
 
