@@ -46,7 +46,17 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+
+  # SELECT \* FROM products WHERE product_name LIKE '%socks%';
+
+  (Every time I save the document the \ appears in front of the asterisk symbol)
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+# SELECT pa.prod_id, pa.unit_price, pa.supp_id, p.product_name FROM product_availability pa JOIN products p ON (pa.prod_id = p.id) WHERE pa.unit_price > 100;
+
+Join product_availability with product
+
 - [ ] List the 5 most expensive products
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 - [ ] List all orders, including order items, from customer named Hope Crosby
