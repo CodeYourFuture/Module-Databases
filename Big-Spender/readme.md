@@ -49,6 +49,12 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 ```sql
 INSERT YOUR QUERY HERE
+
+SELECT *
+FROM big-spender
+WHERE amount >= 30000 AND amount <= 31000
+AND date >= '2021-01-01' AND date <= '2021-12-31';
+
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -69,6 +75,11 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+
+
+SELECT *
+FROM spends
+WHERE description ILIKE '%fee%';psq
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -77,6 +88,10 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+
+SELECT *
+FROM spends
+WHERE expense_area_id = 2;
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -85,6 +100,20 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+
+
+SELECT
+    EXTRACT(YEAR FROM date) AS year,
+    EXTRACT(MONTH FROM date) AS month,
+    SUM(amount) AS total_amount_spent
+FROM
+    spends
+GROUP BY
+    EXTRACT(YEAR FROM date),
+    EXTRACT(MONTH FROM date)
+ORDER BY
+    year, month;
+
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -93,6 +122,33 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+
+
+SELECT
+    supplier_id,
+    SUM(amount) AS total_amount_spent
+FROM
+    spends
+GROUP BY
+    supplier_id
+ORDER BY
+    total_amount_spent DESC;
+
+
+    SELECT
+    s.id AS supplier_id,
+    s.supplier AS supplier_name,
+    SUM(sp.amount) AS total_amount_spent
+FROM
+    suppliers s
+JOIN
+    spends sp ON s.id = sp.supplier_id
+GROUP BY
+    s.id, s.supplier
+ORDER BY
+    total_amount_spent DESC;
+
+
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -101,6 +157,20 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+
+SELECT
+    s.id AS supplier_id,
+    s.supplier AS supplier_name,
+    SUM(sp.amount) AS total_amount_spent
+FROM
+    suppliers s
+JOIN
+    spends sp ON s.id = sp.supplier_id
+GROUP BY
+    s.id, s.supplier
+ORDER BY
+    total_amount_spent DESC;
+
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -113,6 +183,8 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+
+
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
