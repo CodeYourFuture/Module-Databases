@@ -29,18 +29,26 @@ app.use(express.urlencoded({ extended: true }));
 // Use environment variables instead:
 // https://www.codementor.io/@parthibakumarmurugesan/what-is-env-how-to-set-up-and-run-a-env-file-in-node-1pnyxw9yxj
 
-const dummyProducts = [
-  {
-    name: "table",
-    price: 9999,
-    supplierName: "CO.Post",
-  },
-];
 app.get("/products", (req, res) => {
-  res.send(dummyProducts);
+  db.query(
+    `select
+  p.product_name,
+  p_a.unit_price,
+  s.supplier_name
+from
+  products p 
+  join product_availability p_a on p.id = p_a.prod_id
+  join suppliers s on p.id = s.id`
+  )
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
-app.listen(process.env.DB_PORT, () => {
-  console.log(`App is listening on ${process.env.DB_PORT}`);
+app.listen(process.env.SERVER_PORT, () => {
+  console.log(`App is listening on ${process.env.SERVER_PORT}`);
 });
 module.exports = app;
