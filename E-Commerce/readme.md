@@ -45,13 +45,61 @@ erDiagram
 
 Write SQL queries to complete the following tasks:
 
-- [ ] List all the products whose name contains the word "socks"
-- [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
-- [ ] List the 5 most expensive products
-- [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
-- [ ] List all orders, including order items, from customer named Hope Crosby
-- [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+- [+] List all the products whose name contains the word "socks"
+``` sql
+SELECT * 
+FROM products
+WHERE lower(product_name) LIKE '%socks%';
+```
+- [+] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+```sql
+SELECT *
+FROM products p
+JOIN product_availability pa ON
+p.id=pa.prod_id
+WHERE unit_price > 100;
+```
+- [+] List the 5 most expensive products
+```sql
+SELECT p.product_name, MAX(unit_price) AS price
+FROM products p
+JOIN product_availability pa
+ON p.id=pa.prod_id 
+GROUP BY p.product_name
+ORDER BY price
+DESC LIMIT 5;
+```
+- [+] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+```sql
+SELECT product_name, supplier_name
+FROM products p
+JOIN product_availability pa
+ON p.id=pa.prod_id
+JOIN suppliers s
+ON pa.supp_id=s.id
+WHERE s.country='United Kingdom';
+```
+- [+] List all orders, including order items, from customer named Hope Crosby
+```sql
+
+```
+- [+] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+```sql
+SELECT product_name, unit_price, quantity
+FROM orders o
+JOIN order_items oi
+ON o.id=oi.order_id
+JOIN product_availability pa
+ON oi.product_id=pa.prod_id 
+AND oi.supplier_id=pa.supp_id
+JOIN products p
+ON oi.product_id=p.id
+WHERE o.order_reference='ORD006';
+```
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+```sql
+SELECT 
+```
 
 ## Acceptance Criteria
 
