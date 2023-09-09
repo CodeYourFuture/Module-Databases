@@ -69,6 +69,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+select * from spends where description ilike '%fee%';
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -77,6 +78,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+select * from spends where expense_area_id = 2;
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -85,6 +87,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+SELECT sum(amount) AS total_monthly_amount, date AS month from spends group by month    ;
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -93,6 +96,7 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+SELECT supplier_id, sum(amount) FROM spends GROUP BY 1;
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -101,6 +105,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
