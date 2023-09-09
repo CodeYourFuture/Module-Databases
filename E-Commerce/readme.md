@@ -45,13 +45,54 @@ erDiagram
 
 Write SQL queries to complete the following tasks:
 
-- [ ] List all the products whose name contains the word "socks"
-- [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
-- [ ] List the 5 most expensive products
-- [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+- [ ] List all the products whose name contains the word "socks":
+      select product_name from products where product_name like '%socks%';
+- [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id :
+      SELECT pa.prod_id, p.product_name, pa.unit_price, pa.supp_id
+      FROM product_availability pa
+      JOIN products p ON pa.prod_id = p.id
+      WHERE pa.unit_price > 100;
+- [ ] List the 5 most expensive products:
+      SELECT p.id, p.product_name, pa.unit_price
+      FROM products p
+      JOIN product_availability pa ON p.id = pa.prod_id
+      ORDER BY pa.unit_price DESC
+      LIMIT 5;
+
+- [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name:
+      SELECT p.product_name, s.supplier_name
+      FROM products p
+      JOIN product_availability pa ON p.id = pa.prod_id
+      JOIN suppliers s ON pa.supp_id = s.id
+      WHERE s.country = 'United Kingdom';
+
 - [ ] List all orders, including order items, from customer named Hope Crosby
-- [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
-- [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+
+We need to join 3 tables ,costumers where we get the id and check the name , match it with orders with the same id in the costumers_id, and then join with order_items with the order_id same as id on orders.
+
+SELECT o.id AS order_id, o.order_date, o.order_reference, oi.product_id, oi.supplier_id, ot.quantity
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+JOIN order_items oi ON o.id = oi.order_id
+WHERE c.name = 'Hope Crosby';
+
+- [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity:
+
+SELECT p.product_name, pa.unit_price, oi.quantity
+FROM orders o
+JOIN order_items oi ON o.id = oi.order_id
+JOIN products p ON oi.product_id = p.id
+JOIN product_availability pa ON pa.prod_id = oi.product_id and pa.supp_id=oi.supplier_id
+WHERE o.order_reference = 'ORD006';
+
+- [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity:
+
+select c.name ,o.order_reference , o.order_date,p.product_name,s.supplier_name,oi.quantity
+from orders o join customers c On o.customer_id=c.id
+join order_items oi on oi.order_id=o.id
+join product_availability pa on oi.product_id=pa.prod_id and oi.supplier_id=pa.supp_id
+join products p on oi.product_id = p.id
+join suppliers s on pa.supp_id=s.id;
 
 ## Acceptance Criteria
 
