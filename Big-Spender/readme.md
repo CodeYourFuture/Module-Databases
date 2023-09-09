@@ -85,7 +85,7 @@ WHERE expense_area = 'Better Hospital Food';
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+  SELECT to_char(date, 'YYYY-MM') AS month, sum(amount) AS total_amount FROM spends GROUP BY month;
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -93,7 +93,7 @@ CREATE YOUR QUERY HERE
 **You:** Sure thing. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+SELECT supplier_id, sum(amount) AS total_amount FROM spends GROUP BY supplier_id;
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -101,7 +101,10 @@ INSERT YOUR QUERY HERE
 **You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
 
 ```sql
-INSERT YOUR QUERY HERE
+SELECT suppliers.supplier, SUM(spends.amount) AS total_amount 
+FROM spends 
+JOIN suppliers ON (spends.supplier_id = suppliers.id) 
+GROUP BY suppliers.supplier;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -113,7 +116,10 @@ INSERT YOUR QUERY HERE
 **You:** Then you need an extra clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+SELECT date, sum(amount) AS total_amount
+FROM spends 
+WHERE date IN ('2021-03-01', '2021-04-01')
+GROUP BY date;
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
@@ -125,7 +131,13 @@ CREATE YOUR QUERY HERE
 **You:** Sure thing. To confirm, the date is August 19, 2021, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERIES HERE
+INSERT INTO spends (description, amount, date, transaction_no, supplier_inv_no) values ('Computer Hardware Dell', 32000, '2021-08-19', 38104091,3780119655);
+INSERT INTO suppliers (supplier) values ('Dell');
+INSERT INTO expense_areas (expense_area) values ('IT');
+UPDATE spends
+SET expense_area_id = 46, 
+supplier_id = 66 
+WHERE id = 343;
 
 ```
 
@@ -135,7 +147,7 @@ INSERT YOUR QUERIES HERE
 
 ## Acceptance Criteria
 
-- [ ] All user stories are satisfied
-- [ ] All queries are written in SQL
-- [ ] All queries are correct and I have tested them in the database
-- [ ] I have opened a pull request with my answers written directly into this README.md file
+- [+] All user stories are satisfied
+- [+] All queries are written in SQL
+- [+] All queries are correct and I have tested them in the database
+- [+] I have opened a pull request with my answers written directly into this README.md file
