@@ -112,7 +112,8 @@ select suppliers.supplier, sum(amount) from spends join suppliers on spends.supp
 **You:** Then you need an extra clause. Here's the query:
 
 ```sql
-select supplier_id, sum(amount) from spends where date in ('2021-03-01', '2021-04-01') group by supplier_id order by supplier_id;```
+select supplier_id, sum(amount) from spends where date in ('2021-03-01', '2021-04-01') group by supplier_id order by supplier_id;
+```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
 
