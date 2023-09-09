@@ -16,3 +16,31 @@ describe("GET /products", () => {
     );
   });
 });
+
+describe("GET /products/?name=Mobile", () => {
+  it("I want to search for product by name", async () => {
+    const response = await request(app).get("/products/?name=Mobile");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: expect.any(String),
+        })
+      ])
+    );
+  });
+});
+
+describe("GET /customers/:customerId", () => {
+  it(`should load a single customer by their ID`, async () => {
+    const customerId = 1;
+    const response = await request(app).get(`/customers/${customerId}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String)
+        })
+    );
+  });
+});

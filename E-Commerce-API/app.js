@@ -16,7 +16,7 @@ const db = new Pool({
 });
 
 app.get("/", (req, res) => {
-  res.send("this server is working on port 3099....");
+  res.send("this server is working on port 3306....");
 });
 
 app.get("/products", (req, res) => {
@@ -34,6 +34,42 @@ app.get("/products", (req, res) => {
     })
     .catch((err) => {
       console.error(err);
+    });
+});
+
+app.get("/products", (req, res) => {
+  const { name } = req.query;
+  const query = `
+        select product_name As name
+        from products
+        WHERE product_name ILIKE $1
+    `;
+
+  db.query(query, [`%${name}%`])
+    .then((result) => {
+      res.status(200).json(result.rows);
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+    });
+});
+
+app.get("/customers/:customerId", (req, res) => {
+  const customerId = parseInt(req.params.customerId);
+  const query = `SELECT id, name FROM customers WHERE id = $1`;
+
+  db.query(query, [customerId])
+    .then((result) => {
+        if (result.rows.length === 0) {
+            res.status(400).json({ error: 'customer id not found' });
+        } else {
+            res.status(200).json(result.rows[0]);
+        }
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
     });
 });
 
