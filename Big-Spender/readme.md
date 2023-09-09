@@ -124,8 +124,7 @@ select supplier_id, sum(amount) from spends where date in ('2021-03-01', '2021-0
 **You:** Sure thing. To confirm, the date is August 19, 2021, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERIES HERE
-
+insert into spends(date, amount, description, transaction_no, supplier_inv_no, supplier_id, expense_type_id, expense_area_id) values ('2021-08-19', 32000, 'Computer Hardware Dell', 38104091, 3780119655, 66, 42, 46);
 ```
 
 **Claire:** Great, that's everything we need. Thanks for your help.
