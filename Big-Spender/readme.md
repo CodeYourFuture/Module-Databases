@@ -92,7 +92,7 @@ select date_trunc('month', date), sum(amount) from spends group by date_trunc('m
 **You:** Sure thing. Here's the query for that:
 
 ```sql
-select suppliers.supplier, sum(amount) from spends join suppliers on spends.supplier_id = suppliers.id group by suppliers.id order by suppliers.supplier;
+select supplier_id, sum(amount) from spends group by supplier_id order by supplier_id;
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -100,7 +100,7 @@ select suppliers.supplier, sum(amount) from spends join suppliers on spends.supp
 **You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
 
 ```sql
-INSERT YOUR QUERY HERE
+select suppliers.supplier, sum(amount) from spends join suppliers on spends.supplier_id = suppliers.id group by suppliers.id order by suppliers.supplier;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
