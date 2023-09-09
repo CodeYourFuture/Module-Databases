@@ -45,17 +45,44 @@ erDiagram
 
 Write SQL queries to complete the following tasks:
 
-- [ ] List all the products whose name contains the word "socks"
-- [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
-- [ ] List the 5 most expensive products
-- [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
-- [ ] List all orders, including order items, from customer named Hope Crosby
-- [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
-- [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+- [X] List all the products whose name contains the word "socks"
+ select * from products where product_name  ilike '%socks%';
+ 1 row
+
+- [X] List all the products which cost more than 100 showing product id, unit price, and supplier id
+
+select products.id, products.product_name, product_availability.unit_price, suppliers.id from products join product_availability on (products.id = product_availability.prod_id) join suppliers on (suppliers.id = product_availability.supp_id) where product_availability.unit_price > 100;
+2rows
+
+- [X] List the 5 most expensive products
+select products.id, products.product_name, product_availability.unit_price, suppliers.id from products join product_availability on (products.id = product_availability.prod_id) join suppliers on (suppliers.id = product_availability.supp_id) 
+cyf_ecommerce-# order by product_availability.unit_price desc 
+cyf_ecommerce-# limit 5;
+5rows
+
+- [X] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+
+select products.product_name, suppliers.supplier_name from products join order_items on (order_items.product_id = products.id) join suppliers on(suppliers.id = order_items.supplier_id) where suppliers.country = 'United Kingdom';
+9 rows
+
+- [X] List all orders, including order items, from customer named Hope Crosby 
+select * from customers join orders on (customers.id = orders.customer_id) join order_items on (order_items.order_id = orders.id) where customers.name = 'Hope Crosby';
+1 row
+
+
+- [X] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+ select products.product_name, product_availability.unit_price, order_items.quantity from orders join order_items on (orders.id = order_items.order_id) join products on (products.id = order_items.product_id) join product_availability on (products.id = product_availability.prod_id) where orders.order_reference = 'ORD006';
+ 13 rows
+
+- [X] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+
+select customers.name, orders.order_reference, suppliers.supplier_name, order_items.quantity, products.product_name from order_items join orders on(orders.id = order_items.order_id) join suppliers on (suppliers.id = order_items.supplier_id) join customers on (customers.id = orders.customer_id) join products on(products.id = order_items.product_id);
+19 rows
 
 ## Acceptance Criteria
 
-- [ ] The `cyf_ecommerce` database is imported and set up correctly
-- [ ] The database schema is drawn correctly to visualize relationships between tables
-- [ ] The SQL queries retrieve the correct data according to the tasks listed above
-- [ ] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
+- [X] The `cyf_ecommerce` database is imported and set up correctly
+- [X] The database schema is drawn correctly to visualize relationships between tables
+- [X] The SQL queries retrieve the correct data according to the tasks listed above
+- [X] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
