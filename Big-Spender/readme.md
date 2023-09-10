@@ -48,7 +48,7 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 **You:** Absolutely. Here's the SQL query you need:
 
 ```sql
-select * from spends where amount between 30000 and 31000
+select * from spends where amount between 30000 and 31000;
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -100,7 +100,7 @@ select supplier_id, sum(amount) from spends group by supplier_id;
 **You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
 
 ```sql
-select s.supplier, sum(sp.amount) as total from spends sp inner join suppliers s on (s.id = sp.supplier_id) group by s.supplier, sp.amount;
+select s.supplier, sum(sp.amount) as total from spends sp inner join suppliers s on (s.id = sp.supplier_id) group by s.supplier;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -112,7 +112,7 @@ select s.supplier, sum(sp.amount) as total from spends sp inner join suppliers s
 **You:** Then you need an extra clause. Here's the query:
 
 ```sql
-select s.supplier, sp.date, sum(sp.amount) as total from spends sp inner join suppliers s on (s.id = sp.supplier_id) where sp.date in ('2021-03-01', '2021-04-01') group by s.supplier, sp.amount, sp.date;
+select s.supplier, sp.date, sum(sp.amount) as total from spends sp inner join suppliers s on (s.id = sp.supplier_id) where sp.date in ('2021-03-01', '2021-04-01') group by s.supplier, sp.date;
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
