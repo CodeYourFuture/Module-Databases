@@ -1,10 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const db = require("./db");
 
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 db.connect;
 
 // Your code to run the server should go here
@@ -87,7 +87,13 @@ app.post("/customers/newCustomer", (req, res) => {
 
     db.query(query, [newName, newAddress, newCity, newCountry])
       .then(() => {
-        res.status(201).send("Created a new customer");
+        // const createdCustomer = {
+        //   name: newName,
+        //   address: newAddress,
+        //   city: newCity,
+        //   country: newCountry,
+        // };
+        res.status(201).json(createdCustomer);
       })
       .catch((err) => {
         console.error(err);

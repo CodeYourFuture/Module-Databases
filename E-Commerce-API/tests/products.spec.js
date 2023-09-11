@@ -45,33 +45,30 @@ describe("GET /customers/:customerId", () => {
   });
 });
 
-// describe("POST /customers/newCustomer", () => {
-//   it("should create a new customer with name, address, city, and country", async () => {
-//     const newCustomer = {
-//       name: "Test TDD",
-//       address: "123 Cyf St",
-//       city: "Sample City",
-//       country: "Sample Country",
-//     };
-//     const response = await request(app)
-//       .post(`/customers/newCustomer`)
-//       .send(newCustomer);
-//     expect(response.status).toBe(201);
-//     expect(response.body.name).toBeString();
-//     expect(response.body.name).not.toBeEmpty();
-//     expect(response.body.address).toBeString();
-//     expect(response.body.address).not.toBeEmpty();
-//     expect(response.body.city).toBeString();
-//     expect(response.body.city).not.toBeEmpty();
-//     expect(response.body.country).toBeString();
-//     expect(response.body.country).not.toBeEmpty();
-//     expect(response.body).toEqual(
-//         expect.objectContaining({
-//           name: expect.any(String),
-//           address: expect.any(String),
-//           city: expect.any(String),
-//           country: expect.any(String),
-//         }),
-//     );
-//   });
-// });
+describe("POST /customers/newCustomer", () => {
+  it("should create a new customer with name, address, city, and country", async () => {
+    const newCustomer = {
+      name: "Test TDD",
+      address: "123 Cyf St",
+      city: "Sample City",
+      country: "Sample Country",
+    };
+    const response = await request(app)
+      .post(`/customers/newCustomer`)
+      .send(newCustomer);
+    expect(response.body).toHaveProperty("name", newCustomer.name);
+    expect(response.body).toHaveProperty("address", newCustomer.address);
+    expect(response.body).toHaveProperty("city", newCustomer.city);
+    expect(response.body).toHaveProperty("country", newCustomer.country);
+
+    expect(typeof response.body.name).toBe("string");
+    expect(typeof response.body.address).toBe("string");
+    expect(typeof response.body.city).toBe("string");
+    expect(typeof response.body.country).toBe("string");
+    expect(response.body.name.length).toBeGreaterThan(0);
+    expect(response.body.address.length).toBeGreaterThan(0);
+    expect(response.body.city.length).toBeGreaterThan(0);
+    expect(response.body.country.length).toBeGreaterThan(0);
+  });
+});
+
