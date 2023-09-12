@@ -42,23 +42,19 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 **Claire:** Hey, can you help us out with something? We need to analyze our spending data for 2021 because apparently the report is missing.
 
 **You:** I can try. What kind of data are you looking for exactly?
-
-big-spender=# select * from spends where date between '2021-01-01' and '2021-12-31';    
-
+ 
 **Farnoosh:** We need to find out the transactions between £30,000 and £31,000. Could you help us write a query for that?
 
 **You:** Absolutely. Here's the SQL query you need:
-big-spender=# select * from spends where date between '2021-01-01' and '2021-12-31' and amount  between 30000 and 31000;    
 
 ```sql
 INSERT YOUR QUERY HERE
-big-spender=# select * from spends where date between '2021-01-01' and '2021-12-31' and amount  between 30000 and 31000;    
+select transaction_no from spends where date between '2021-01-01' and '2021-12-31' and amount  between 30000 and 31000;    
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
 
 **You:** Does case matter?
-select * from spends where description like '%fee%';   
 
 **Claire:** I don't know. What do you meant?
 
@@ -83,8 +79,7 @@ select * from spends where description ilike '%fee%';
 
 ```sql
 INSERT YOUR QUERY HERE
-  select * from spends join expense_areas on expense_areas.id = spends.expense_area_id 
-big_spender-# where expense_areas.id = 2;   
+  select * from spends join expense_areas on expense_areas.id = spends.expense_area_id where expense_area ilike '%Better Hospital Food%';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount       ?
@@ -94,8 +89,10 @@ big_spender-# where expense_areas.id = 2;
 ```sql
 CREATE YOUR QUERY HERE
 
-select sum(spends.amount) from spends join expense_areas on expense_areas.id = spends.expense_area_id                                                
-where expense_areas.id = 2;
+select select to_char(spends.date,'Mon') as mon, sum(spends.amount) 
+from spends join expense_areas on (expense_areas.id = spends.expense_area_id)                                                                where expense_area ilike '%Better Hospital Food%' 
+group by mon;
+
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -131,7 +128,19 @@ group by suppliers.supplier;
 ```sql
 CREATE YOUR QUERY HERE
 
-select sum(amount), date from                                                                                                                            from spends                                                                                                                                        where date = '2021-03-01' or date = '2021-04-01'                                                                                                                   group by date;
+select sum(amount), date from spends
+where date = '2021-03-01' 
+or date = '2021-04-01'
+group by date;
+
+
+or 
+
+
+SELECT SUM(amount), date
+FROM spends
+WHERE date IN ('2021-03-01', '2021-04-01')
+GROUP BY date;
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
@@ -148,6 +157,14 @@ insert into spends (amount, description, supplier_inv_no, transaction_no, date) 
 insert into suppliers (supplier) values('Dell');
 insert into expense_areas (expense_area ) values ('IT');
 update spends set expense_area_id = 46, supplier_id = 66 where id = 346;
+
+
+
+or 
+
+insert into suppliers (supplier) values('Dell');
+insert into expense_areas (expense_area ) values ('IT');
+insert into spends (amount, description, supplier_inv_no, transaction_no, date) values (32000, 'Computer Hardware Dell', 3780119655, 38104091, '2021-08-19');
 ```
 
 **Claire:** Great, that's everything we need. Thanks for your help.
