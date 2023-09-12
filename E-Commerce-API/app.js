@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+require("dotenv").config({ path: "database.env" });
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
@@ -7,11 +8,11 @@ app.use(bodyParser.json());
 const { Pool } = require("pg");
 
 const db = new Pool({
-  user: "anna",
-  host: "localhost",
-  database: "cyf_ecommerce",
-  password: "hello",
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
 app.get("/products", (req, res) => {
@@ -47,7 +48,10 @@ app.get("/customers/:customerId/orders", (req, res) => {
     db.query(
       "select o.order_reference, o.order_date, p.product_name, pa.unit_price, s.supplier_name, oi.quantity from orders o join customers c on (o.customer_id = c.id) join order_items oi on (o.id = oi.order_id) join products p on (oi.product_id = p.id) join suppliers s on (oi.supplier_id = s.id) join product_availability pa on (oi.product_id = pa.prod_id AND oi.supplier_id = pa.supp_id) where c.id = $1", [custId])
       .then(result => res.status(200).json(result.rows))
-      .catch(err => res.json(err));
+      .catch(err => res.json(err));    
+      console.log(process.env.DB_HOST);
+      console.log(process.env.DB_DATABASE);
+      console.log(process.env.DB_PORT);  
 });
 
 app.get("/customers/:customerId", (req, res) => {

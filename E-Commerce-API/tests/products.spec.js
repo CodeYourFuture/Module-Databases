@@ -1,14 +1,15 @@
 const request = require("supertest");
 const app = require("../app");
+require("dotenv").config({ path: "database.env" });
 
 const { Pool } = require("pg");
 
 const db = new Pool({
-  user: "anna",
-  host: "localhost",
-  database: "cyf_ecommerce",
-  password: "hello",
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
 
 describe("GET, POST /products", () => {
