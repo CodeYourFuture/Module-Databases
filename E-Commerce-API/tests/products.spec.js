@@ -1,6 +1,16 @@
 const request = require("supertest");
 const app = require("../app");
 
+const { Pool } = require("pg");
+
+const db = new Pool({
+  user: "anna",
+  host: "localhost",
+  database: "cyf_ecommerce",
+  password: "hello",
+  port: 5432,
+});
+
 describe("GET, POST /products", () => {
   it("should return a list of all product names with their prices and supplier names", async () => {
     const response = await request(app).get("/products");
@@ -208,5 +218,16 @@ describe("POST /availability", () => {
     const response = await request(app).post("/availability").send(newProduct);
     expect(response.status).toBe(400);
     expect(response.body).toEqual({Error: "Supplier with such ID does not exist"});
+  });
+});
+
+describe("DELETE /orders/:orderId", () => {
+  it("should delete an existing order and all associated order items", async () => {
+    const response = await request(app).delete("/orders/11");
+    expect(response.status).toBe(204);
+    const deletedOrder = await db.query("select * from orders where id = 11");
+    expect(deletedOrder.rows.length).toBe(0);
+    const deletedOrderItems = await db.query("select * from order_items where order_id = 11");
+    expect(deletedOrderItems.rows.length).toBe(0);
   });
 });

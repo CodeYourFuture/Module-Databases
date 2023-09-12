@@ -125,6 +125,15 @@ app.post("/availability", async (req, res) => {
     .catch(err => res.json(err));
 })
 
+app.delete("/orders/:orderId", (req, res) => {
+    const order_id = req.params.orderId;
+    db.query("delete from order_items where order_id = $1", [order_id])
+    .then(() => {
+        return db.query("delete from orders where id = $1", [order_id]);
+    })    
+    .then(() => res.sendStatus(204))
+    .catch(err => res.json(err));
+});
 
 app.listen(5000, function () {
   console.log("Server is listening on port 5000. Ready to accept requests!");
