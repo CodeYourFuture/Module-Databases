@@ -50,12 +50,13 @@ Write SQL queries to complete the following tasks:
 - [x] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
       SELECT pr.id, product_name AS name, unit_price AS price, supp_id FROM products pr JOIN suppliers s ON (pr.id=s.id) JOIN product_availability p ON (p.prod_id=pr.id) WHERE unit_price>100;
 - [x] List the 5 most expensive products
-      SELECT p.id, product_name,unit_price FROM products p JOIN product_availability pa ON (p.id=pa.prod_id) ORDER BY unit_price DESC LIMIT 5;
+      SELECT product_name,max(unit_price) price FROM products p JOIN product_availability pa ON (p.id=pa.prod_id) group by product_name ORDER BY price DESC LIMIT 5;
 - [x] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
       SELECT p.product_name, s.supplier_name FROM products p JOIN suppliers s ON p.id = s.id WHERE country = 'United Kingdom';
 - [x] List all orders, including order items, from customer named Hope Crosby
-      SELECT \* FROM orders o JOIN customers c ON o.id = c.id WHERE c.name = 'Hope Crosby'; [X] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
-      SELECT product_name, unit_price, quantity FROM order_items o JOIN products p ON o.product_id = p.id JOIN product_availability pa ON pa.prod_id = o.product_id JOIN orders ON orders.id = order_id WHERE order_reference = 'ORD006';
+      SELECT \* FROM orders o JOIN customers c ON o.customer_id = c.id WHERE c.name = 'Hope Crosby';
+- [x] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+      SELECT product_name, unit_price, quantity FROM order_items o JOIN products p ON o.product_id = p.id JOIN product_availability pa ON pa.prod_id = o.product_id AND o.supplier_id = pa.supp_id JOIN orders ON orders.id = order_id WHERE order_reference = 'ORD006';
 - [x] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
       SELECT c.name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity FROM order_items oi JOIN orders o ON (oi.order_id=o.id) JOIN customers c ON (o.customer_id = c.id) JOIN products p ON (oi.product_id = p.id) JOIN suppliers s ON (s.id=oi.supplier_id);
 
