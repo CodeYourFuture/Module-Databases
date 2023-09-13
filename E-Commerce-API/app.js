@@ -14,4 +14,6 @@ app.use(express.json());
 app.use(CORS());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const pool = new Pool();
+
 module.exports = app;
