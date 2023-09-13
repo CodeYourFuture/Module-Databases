@@ -46,12 +46,72 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+
+```
+select * from products where product_name like '%socks%';
+```
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+```
+select p.id as product_id, p.product_name, pa.unit_price, pa.supp_id as supplier_id
+from products p
+inner join product_availability pa on p.id = pa.prod_id
+where pa.unit_price > 100;
+```
+
 - [ ] List the 5 most expensive products
+
+```
+select p.id as product_id, p.product_name, pa.unit_price, pa.supp_id as supplier_id
+from products p
+inner join product_availability pa on p.id = pa.prod_id
+order by pa.unit_price desc
+limit 5;
+```
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+
+```
+select p.product_name, s.supplier_name
+from products p
+inner join product_availability pa on p.id = pa.prod_id
+inner join suppliers s on pa.supp_id = s.id
+where s.country = 'United Kingdom';
+```
+
 - [ ] List all orders, including order items, from customer named Hope Crosby
+
+```
+select o.id as order_id, o.order_date, o.order_reference, oi.product_id, oi.supplier_id, oi.quantity
+from orders o
+inner join order_items oi on o.id = oi.order_id
+inner join customers c on o.customer_id = c.id
+where c.name = 'Hope Crosby';
+```
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+```
+select p.product_name, pa.unit_price, oi.quantity
+from order_items oi
+inner join products p on oi.product_id = p.id
+inner join product_availability pa on oi.product_id = pa.prod_id and oi.supplier_id = pa.supp_id
+inner join orders o on oi.order_id = o.id
+where o.order_reference = 'ORD006';
+```
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+
+```
+select c.name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity
+from orders o
+inner join customers c on o.customer_id = c.id
+inner join order_items oi on o.id = oi.order_id
+inner join products p on oi.product_id = p.id
+inner join product_availability pa on oi.product_id = pa.prod_id and oi.supplier_id = pa.supp_id
+inner join suppliers s on pa.supp_id = s.id;
+```
 
 ## Acceptance Criteria
 
