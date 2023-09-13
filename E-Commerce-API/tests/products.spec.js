@@ -10,7 +10,7 @@ describe("GET /products", () => {
         expect.objectContaining({
           name: expect.any(String),
           price: expect.any(Number),
-          supplierName: expect.any(String),
+          suppliername: expect.any(String),
         }),
       ])
     );
