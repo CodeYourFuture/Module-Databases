@@ -36,5 +36,20 @@ app.get("/products", (req, res) => {
   };
   allProducts();
 });
+//
+app.get("/products/:name", (req, res) => {
+  const singleProduct = async () => {
+    try {
+      const result = await pool.query(
+        "SELECT  p.product_name as name, s.unit_price as price, s.supplier_name as supplierName FROM (SELECT * FROM suppliers FULL OUTER JOIN product_availability as pa ON suppliers.id = pa.supp_id ) as s FULL OUTER JOIN products as p ON s.prod_id = p.id WHERE p.product_name ILIKE $1",
+        [req.params.name]
+      );
+      res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  singleProduct();
+});
 
 module.exports = app;
