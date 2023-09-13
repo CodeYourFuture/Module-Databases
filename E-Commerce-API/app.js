@@ -51,5 +51,19 @@ app.get("/products/:name", (req, res) => {
   };
   singleProduct();
 });
+//
+app.get("/customers/:customerId", (req, res) => {
+  const singleProduct = async () => {
+    try {
+      const result = await pool.query("SELECT * FROM customers WHERE id = $1", [
+        req.params.customerId,
+      ]);
+      res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  singleProduct();
+});
 
 module.exports = app;
