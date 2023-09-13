@@ -1,4 +1,9 @@
-# Big Spender
+# ## User Stories:
+
+- As a data analyst, I want to retrieve specific transaction records that meet a certain criteria, so that I can generate insights and reports based on the data.
+- As a finance manager, I want to know the total amount spent on a specific month, so that I can compare it with our budget and plan accordingly.
+- As a data analyst, I want to filter transactions by a specific keyword, so that I can retrieve records that are relevant to my analysis.
+- As aBig Spender
 
 ## Objectives
 
@@ -26,12 +31,7 @@ You can work with it by running
 psql big-spender
 ```
 
-## User Stories:
-
-- As a data analyst, I want to retrieve specific transaction records that meet a certain criteria, so that I can generate insights and reports based on the data.
-- As a finance manager, I want to know the total amount spent on a specific month, so that I can compare it with our budget and plan accordingly.
-- As a data analyst, I want to filter transactions by a specific keyword, so that I can retrieve records that are relevant to my analysis.
-- As a finance manager, I want to add a missing transaction to the database, so that it correctly reflects our latest expenses for our report.
+ finance manager, I want to add a missing transaction to the database, so that it correctly reflects our latest expenses for our report.
 
 ## Briefing
 
@@ -40,6 +40,7 @@ You are a data analyst working with the finance team at Worcestershire Acute Hos
 You are working with Claire and Farnoosh, who are trying to complete a missing report for their boss. They don't just want the answers, they want the queries that will give them the answers. They want to be able to run the queries themselves, so they can do this year's report without your help.
 
 **Claire:** Hey, can you help us out with something? We need to analyze our spending data for 2021 because apparently the report is missing.
+        SELECT * FROM spends WHERE date BETWEEN '2021-01-01' AND '2021-12-31';
 
 **You:** I can try. What kind of data are you looking for exactly?
 
@@ -49,7 +50,7 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 ```sql
 INSERT YOUR QUERY HERE
-```
+SELECT * FROM spends WHERE amount BETWEEN 30000 AND 31000;
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
 
@@ -68,7 +69,13 @@ INSERT YOUR QUERY HERE
 **You:** Then here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT YOUR QUERY here
+select * from spends where lower(description) like '%fees%'; 
+
+OR
+
+select * from spends where description iLIKE '%fees%'; 
+
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -77,7 +84,11 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
-```
+```SELECT * FROM expense_areas WHERE expense_area = 'Better Hospital Food';
+
+OR
+
+SELECT * FROM expense_areas WHERE expense_area_id IN (2, 47);
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
 
@@ -86,6 +97,13 @@ INSERT YOUR QUERY HERE
 ```sql
 CREATE YOUR QUERY HERE
 ```
+select sum (amount), date FROM spends GROUP BY date; 
+
+OR
+
+select sum (amount), date_trunc('month', date) FROM spends GROUP BY date;
+OR
+elect sum (amount), date_trunc('month', date) FROM spends GROUP BY date_trunc('month', date);
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
 
@@ -94,6 +112,7 @@ CREATE YOUR QUERY HERE
 ```sql
 INSERT YOUR QUERY HERE
 ```
+=> select sum (amount), supplier_id from suppliers join spends on suppliers.id = spends.supplier_id GROUP BY supplier_id;
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
 
@@ -102,6 +121,7 @@ INSERT YOUR QUERY HERE
 ```sql
 INSERT YOUR QUERY HERE
 ```
+=> select sum (amount), supplier from suppliers join spends on suppliers.id = spends.supplier_id GROUP BY supplier;
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
 
@@ -111,9 +131,7 @@ INSERT YOUR QUERY HERE
 
 **You:** Then you need an extra clause. Here's the query:
 
-```sql
-CREATE YOUR QUERY HERE
-```
+select sum (amount), date from spends where date ='2021/03/01' OR date = '2021/04/01' group by date;
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
 
@@ -126,7 +144,8 @@ CREATE YOUR QUERY HERE
 ```sql
 INSERT YOUR QUERIES HERE
 
-```
+INSERT INTO spends (description, amount, transaction_no, supplier_inv_no, expense_type_id, expense_area_id, supplier_id, date)
+VALUES ('Computer Hardware Dell', 32000, 38104091, 3780119655, (select id from expense_types where expense_type = 'Hardware'), (select id from expense_areas where expense_area = 'IT'), (select id from suppliers where supplier = 'Dell'), '2021-08-19');
 
 **Claire:** Great, that's everything we need. Thanks for your help.
 
@@ -138,3 +157,33 @@ INSERT YOUR QUERIES HERE
 - [ ] All queries are written in SQL
 - [ ] All queries are correct and I have tested them in the database
 - [ ] I have opened a pull request with my answers written directly into this README.md file
+
+
+Questions on big-spender Data to explore:
+Find all the names of the tables in big-spender
+    => \dt
+Find all the expense types where they start with the letter B
+    => select expense_type from expense_types where expense_type ilike 'B%';
+How many transactions happened in April 2021?
+
+    => select count(*) from spends where date BETWEEN '2021-04-01' and '2021-04-30';
+    or
+     => select count(*) from spends where date >= '2021-04-01' and date <= '2021-04-30';
+How many covid-19 transactions occurred in March 2021? How many in total?
+    =>select s.expense_area_id, e.expense_area, s.date from spends as s left join expense_areas as e on s.expense_area_id = e.id where s.date >= '2021-03-01' and date < '2021-04-01' and s.expense_area_id = 8;
+
+
+Group the covid-19 transactions by month (ie- how many covid-19 transactions occurred per month)?
+    =>select count(e.expense_area),s.expense_area_id, e.expense_area, s.date from spends as s left join expense_areas as e on s.expense_area_id = e.id where s.expense_area_id = 8 group by s.date, s.expense_area_id, e.expense_area;
+
+Which supplier spent the most in March 2021? How much did they spend?
+    =>select s.supplier_id, su.supplier, s.date, sum(s.amount) from spends s join suppliers su on su.id = s.supplier_id where date >= '2021-03-01' and date < '2021-04-01' group by s.supplier_id, su.supplier, s.date order by sum(s.amount) desc;
+Which supplier supplied the covid-19 expense areas in March and how much did they spend?
+    =>select s.supplier_id, su.supplier, e.expense_area, s.date, sum(s.amount) from spends s join suppliers su on su.id = s.supplier_id join expense_areas e on e.id = s.expense_area_id where date >= '2021-03-01' and date < '2021-04-01' and e.expense_area ilike 'covid%' group by s.supplier_id, su.supplier,e.expense_area, s.date order by expense_area, sum(s.amount) desc;
+
+Give the top 10 expense areas by amount spent
+
+    => select e.expense_area, sum(s.amount) from spends s join expense_areas e on e.id = s.expense_area_id where expense_area not ilike 'balance sheet' group by e.expense_area order by sum(s.amount) desc limit 10;
+
+Give the top 5 suppliers with the highest average spend rounded 2 decimal places and provide the number of transactions they have completed
+    => select ROUND( avg(s.amount), 2), count(s.amount), su.supplier from spends s join suppliers su on su.id = s.supplier_id group by su.supplier order by avg(s.amount) desc limit 5;
