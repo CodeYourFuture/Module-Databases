@@ -84,5 +84,23 @@ app.post("/customers", (req, res) => {
   };
   newCustomer();
 });
+//
+app.post("/products", (req, res) => {
+  const newProduct = async () => {
+    try {
+      await pool.query("INSERT INTO products (product_name) VALUES($1)", [
+        req.body.name,
+      ]);
+      const result = await pool.query(
+        "SELECT * FROM products WHERE product_name = $1",
+        [req.body.name]
+      );
+      res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  newProduct();
+});
 
 module.exports = app;

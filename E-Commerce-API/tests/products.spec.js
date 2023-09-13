@@ -71,3 +71,20 @@ describe("POST /customers", () => {
     );
   });
 });
+describe("POST /products", () => {
+  it("should create new product ", async () => {
+    const product = {
+      name: "Python book",
+    };
+    const response = await request(app).post("/products").send(product);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          product_name: expect.any(String),
+        }),
+      ])
+    );
+  });
+});
