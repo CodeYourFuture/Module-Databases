@@ -48,3 +48,26 @@ describe("GET /customers/:customerId", () => {
     );
   });
 });
+describe("POST /customers", () => {
+  it("should create new customer ", async () => {
+    const customer = {
+      name: "Appolin",
+      address: "200 cyf G74 00",
+      city: "Glasgow",
+      country: "Scotland",
+    };
+    const response = await request(app).post("/customers").send(customer);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          address: expect.any(String),
+          city: expect.any(String),
+          country: expect.any(String),
+        }),
+      ])
+    );
+  });
+});

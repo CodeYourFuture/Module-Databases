@@ -53,7 +53,7 @@ app.get("/products/:name", (req, res) => {
 });
 //
 app.get("/customers/:customerId", (req, res) => {
-  const singleProduct = async () => {
+  const customerId = async () => {
     try {
       const result = await pool.query("SELECT * FROM customers WHERE id = $1", [
         req.params.customerId,
@@ -63,7 +63,26 @@ app.get("/customers/:customerId", (req, res) => {
       console.log(err);
     }
   };
-  singleProduct();
+  customerId();
+});
+//
+app.post("/customers", (req, res) => {
+  const newCustomer = async () => {
+    try {
+      await pool.query(
+        "INSERT INTO customers (name, address, city, country) VALUES($1, $2, $3, $4)",
+        [req.body.name, req.body.address, req.body.city, req.body.country]
+      );
+      const result = await pool.query(
+        "SELECT * FROM customers WHERE name = $1",
+        [req.body.name]
+      );
+      res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  newCustomer();
 });
 
 module.exports = app;
