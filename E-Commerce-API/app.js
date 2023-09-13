@@ -5,4 +5,13 @@ const app = express();
 // Use environment variables instead:
 // https://www.codementor.io/@parthibakumarmurugesan/what-is-env-how-to-set-up-and-run-a-env-file-in-node-1pnyxw9yxj
 
+const { Pool } = require("pg");
+const bodyParser = require("body-parser");
+const port = process.env.PORT || 5000;
+
+app.listen(port, () => console.log(`Listening on port ${port}`));
+app.use(express.json());
+app.use(CORS());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 module.exports = app;
