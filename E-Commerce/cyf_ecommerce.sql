@@ -45,6 +45,7 @@ CREATE TABLE order_items (id SERIAL PRIMARY KEY,
                                             order_id INT NOT NULL REFERENCES orders(id),
                                                                              product_id INT NOT NULL,
                                                                                             supplier_id INT NOT NULL,
+                                                                                           supplier_id INT NOT NULL,
                                                                                                             quantity INT NOT NULL,
                           FOREIGN KEY (product_id,
                                        supplier_id) REFERENCES product_availability (prod_id, supp_id));
