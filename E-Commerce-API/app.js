@@ -31,4 +31,17 @@ app.get("/products", async function (req, res) {
     });
 });
 
+// 2. As a user, I want to search for products by name.
+app.get("/products/:name", function (request, response) {
+  const partialName = "%" + request.params.name + "%"; // % to match any part of the name
+  db.query("SELECT * FROM products WHERE product_name LIKE $1", [partialName])
+    .then((result) => {
+      response.status(200).json(result.rows);
+    })
+    .catch((error) => {
+      console.log(error);
+      response.status(500).json(error);
+    });
+});
+
 module.exports = app;
