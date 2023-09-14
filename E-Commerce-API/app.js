@@ -15,4 +15,20 @@ const db = new Pool({
   port: process.env.DB_PORT,
 });
 
+///////////// What database should I use here?
+
+// 1. As a user, I want to view a list of all products with their prices and supplier names.
+app.get("/products", async function (req, res) {
+  await db
+    .query(
+      "SELECT p.id AS product_id, p.product_name, pa.unit_price, pa.supp_id AS supplier_id FROM products p JOIN product_availability pa ON (p.id = pa.prod_id)"
+    )
+    .then((result) => {
+      res.status(200).json(result.rows);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 module.exports = app;
