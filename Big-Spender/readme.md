@@ -79,7 +79,7 @@ SELECT
 FROM
     spends
 WHERE
-    description ILIKE '%fee%';
+    description ILIKE '% fee%';
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -107,7 +107,7 @@ WHERE
 ```
 SELECT
     SUM(amount) AS "total amount spent",
-    to_char(date, 'month') AS month
+    to_char(date, 'YYYY-MM') AS month
 FROM
     spends
 GROUP BY
