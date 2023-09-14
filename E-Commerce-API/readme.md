@@ -7,6 +7,7 @@ You're just looking to implement the API, not a frontend which uses the API (tho
 How will you make this test pass?
 
 ## Learning Objectives
+
 ```objectives
 - Write unit tests for new API endpoints
 - Implement new API endpoints that meet user requirements
@@ -15,23 +16,24 @@ How will you make this test pass?
 - Use Git feature branch workflow
 - Manage secrets in a shared codebase
 ```
+
 ## User Stories
 
 As a developer, I want to add new API endpoints to the NodeJS application for the cyf-ecommerce-api, so that I can improve the functionality of the application.
 
 As a developer, I want to build up my API using TDD - writing the test first and then iterating : adding one feature to pass one unit test.
 
-1. As a user, I want to view a list of all products with their prices and supplier names.
-1. As a user, I want to search for products by name.
-1. As a user, I want to view a single customer by their ID.
-1. As a user, I want to create a new customer with their name, address, city, and country.
-1. As a user, I want to create a new product.
-1. As a user, I want to create a new product availability with a price and supplier ID, and get an error if the price is not a positive integer or if either the product or supplier ID does not exist.
-1. As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
-1. As a user, I want to update an existing customer's information with their name, address, city, and country.
-1. As a user, I want to delete an existing order and all associated order items.
-1. As a user, I want to delete an existing customer only if they do not have any orders.
-1. As a user, I want to view all orders with their items for a specific customer, including order references, dates, product names, unit prices, suppliers, and quantities.
+[ X ]1. As a user, I want to view a list of all products with their prices and supplier names.
+[ ]1. As a user, I want to search for products by name.
+[ ]1. As a user, I want to view a single customer by their ID.
+[ ]1. As a user, I want to create a new customer with their name, address, city, and country.
+[ ]1. As a user, I want to create a new product.
+[ ]1. As a user, I want to create a new product availability with a price and supplier ID, and get an error if the price is not a positive integer or if either the product or supplier ID does not exist.
+[ ]1. As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
+[ ]1. As a user, I want to update an existing customer's information with their name, address, city, and [ ]country.
+[ ]1. As a user, I want to delete an existing order and all associated order items.
+[ ]1. As a user, I want to delete an existing customer only if they do not have any orders.
+[ ]1. As a user, I want to view all orders with their items for a specific customer, including order references, dates, product names, unit prices, suppliers, and quantities.
 
 **These user stories describe the API. Do not build a front end or database.**
 
