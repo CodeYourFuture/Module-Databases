@@ -88,28 +88,28 @@ describe("POST /products", () => {
     );
   });
 });
-// describe("POST /availability", () => {
-//   it("should create new product availability", async () => {
-//     const productAvailability = {
-//       prodId: 12,
-//       suppId: 1,
-//       unitPrice: 70,
-//     };
-//     const response = await request(app)
-//       .post("/availability")
-//       .send(productAvailability);
-//     expect(response.status).toBe(200);
-//     expect(response.body).toEqual(
-//       expect.arrayContaining([
-//         expect.objectContaining({
-//           prod_id: expect.any(Number),
-//           supp_id: expect.any(Number),
-//           unit_price: expect.any(Number),
-//         }),
-//       ])
-//     );
-//   });
-// });
+describe("POST /availability", () => {
+  it("should create new product availability", async () => {
+    const productAvailability = {
+      prodId: 12,
+      suppId: 1,
+      unitPrice: 70,
+    };
+    const response = await request(app)
+      .post("/availability")
+      .send(productAvailability);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          prod_id: expect.any(Number),
+          supp_id: expect.any(Number),
+          unit_price: expect.any(Number),
+        }),
+      ])
+    );
+  });
+});
 describe("POST /customers/customerId/orders", () => {
   it("should create new order", async () => {
     const newOrder = {
@@ -140,7 +140,7 @@ describe("POST /customers/:customerId", () => {
       city: "Glasgow",
       country: "Scotland",
     };
-    const response = await request(app).post("/customers/").send(customer);
+    const response = await request(app).post("/customers/12").send(customer);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
@@ -152,6 +152,17 @@ describe("POST /customers/:customerId", () => {
           country: expect.any(String),
         }),
       ])
+    );
+  });
+});
+describe("DELETE /orders/:orderId", () => {
+  it("should create new order", async () => {
+    const response = await request(app).delete("/orders/15");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        rowCount: expect.any(Number),
+      })
     );
   });
 });

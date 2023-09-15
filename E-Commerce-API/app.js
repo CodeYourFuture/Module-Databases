@@ -136,8 +136,8 @@ app.post("/customers/:customerId/orders", (req, res) => {
         [req.params.customerId]
       );
       let customerId =
-        checkCustomerId.rows[0].id === req.body.customerId
-          ? req.body.customerId
+        checkCustomerId.rows[0].id === Number(req.body.customerId)
+          ? checkCustomerId.rows[0].id
           : "Customer ID does not exist";
       await pool.query(
         "INSERT INTO orders (order_date, order_reference, customer_id) VALUES($1, $2, $3)",
@@ -163,8 +163,8 @@ app.post("/customers/:customerId", (req, res) => {
         [req.params.customerId]
       );
       let customerId =
-        checkCustomerId.rows[0].id === req.params.customerId
-          ? req.params.customerId
+        checkCustomerId.rows[0].id === Number(req.params.customerId)
+          ? checkCustomerId.rows[0].id
           : "Customer ID does not exist";
       await pool.query(
         "UPDATE customers SET name = $1, address = $2, city = $3, country = $4 WHERE id = $5",
@@ -185,6 +185,30 @@ app.post("/customers/:customerId", (req, res) => {
     }
   };
   customerUpdate();
+});
+//
+app.delete("/orders/:orderId", (req, res) => {
+  const deleteCustomer = async () => {
+    try {
+      const checkOrderId = await pool.query(
+        "SELECT id FROM orders WHERE id = $1",
+        [req.params.orderId]
+      );
+      console.log(checkOrderId.rows[0].id);
+      let orderId =
+        checkOrderId.rows[0].id === Number(req.params.orderId)
+          ? checkOrderId.rows[0].id
+          : "Order ID does not exist";
+      const result = await pool.query("DELETE FROM orders WHERE id = $1", [
+        orderId,
+      ]);
+
+      res.json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  deleteCustomer();
 });
 //
 module.exports = app;
