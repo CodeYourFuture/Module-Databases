@@ -127,5 +127,31 @@ app.post("/availability", (req, res) => {
   };
   productAvailability();
 });
-
+//
+app.post("/customers/:customerId/orders", (req, res) => {
+  const newOrder = async () => {
+    try {
+      const checkCustomerId = await pool.query(
+        "SELECT id FROM customers WHERE id = $1",
+        [req.params.customerId]
+      );
+      let customerId =
+        checkCustomerId.rows[0].id === req.body.customerId
+          ? req.body.customerId
+          : "Customer ID does not exist";
+      await pool.query(
+        "INSERT INTO orders (order_date, order_reference, customer_id) VALUES($1, $2, $3)",
+        [req.body.orderDate, req.body.orderReference, req.body.customerId]
+      );
+      const result = await pool.query(
+        "SELECT * FROM orders WHERE order_reference = $1",
+        [req.body.orderReference]
+      );
+      res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  newOrder();
+});
 module.exports = app;

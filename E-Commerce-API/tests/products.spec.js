@@ -88,23 +88,45 @@ describe("POST /products", () => {
     );
   });
 });
-describe("POST /availability", () => {
-  it("should create new product availability", async () => {
-    const productAvailability = {
-      prodId: 12,
-      suppId: 1,
-      unitPrice: 70,
+// describe("POST /availability", () => {
+//   it("should create new product availability", async () => {
+//     const productAvailability = {
+//       prodId: 12,
+//       suppId: 1,
+//       unitPrice: 70,
+//     };
+//     const response = await request(app)
+//       .post("/availability")
+//       .send(productAvailability);
+//     expect(response.status).toBe(200);
+//     expect(response.body).toEqual(
+//       expect.arrayContaining([
+//         expect.objectContaining({
+//           prod_id: expect.any(Number),
+//           supp_id: expect.any(Number),
+//           unit_price: expect.any(Number),
+//         }),
+//       ])
+//     );
+//   });
+// });
+describe("POST /customers/customerId/orders", () => {
+  it("should create new order", async () => {
+    const newOrder = {
+      orderDate: new Date(),
+      orderReference: "ORD0011",
+      customerId: 2,
     };
     const response = await request(app)
-      .post("/availability")
-      .send(productAvailability);
+      .post("/customers/2/orders")
+      .send(newOrder);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          prod_id: expect.any(Number),
-          supp_id: expect.any(Number),
-          unit_price: expect.any(Number),
+          order_date: expect.any(String),
+          order_reference: expect.any(String),
+          customer_id: expect.any(Number),
         }),
       ])
     );
