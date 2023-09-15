@@ -65,8 +65,34 @@ JOIN suppliers s ON pa.supp_id=s.id
 WHERE s.country = 'United Kingdom';
 '''
 - [ ] List all orders, including order items, from customer named Hope Crosby
+'''
+SELECT * FROM orders o JOIN customers c ON o.customer_id=c.id JOIN order_items oi ON o.id=oi.order_id 
+WHERE c.name='Hope Crosby';
+'''
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+'''
+SELECT product_name, unit_price, quantity FROM orders o JOIN order_items oi ON o.id=oi.order_id
+JOIN product_availability pa ON oi.product_id=pa.prod_id AND oi.supplier_id=pa.supp_id
+JOIN products p ON oi.product_id=p.id where o.order_reference='ORD006';
+'''
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+'''
+SELECT c.name AS customer_name,
+       o.order_reference,
+       o.order_date,
+       p.product_name,
+       s.supplier_name,
+       oi.quantity
+FROM customers c
+JOIN orders o ON c.id = o.customer_id
+JOIN order_items oi ON o.id = oi.order_id
+JOIN product_availability pa ON oi.product_id = pa.prod_id AND oi.supplier_id = pa.supp_id
+JOIN products p ON pa.prod_id = p.id
+JOIN suppliers s ON pa.supp_id = s.id
+ORDER BY c.name, o.order_reference, p.product_name;
+'''
 
 ## Acceptance Criteria
 
