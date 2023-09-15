@@ -17,51 +17,128 @@ describe("GET /products", () => {
   });
 });
 
-it("should return products matching the provided name", async () => {
-  const nameToSearch = "book"; // Replace with a valid product name
+// it("should return products matching the provided name", async () => {
+//   const nameToSearch = "book"; // Replace with a valid product name
 
-  const response = await request(app)
-    .get("/products")
-    .query({ name: nameToSearch });
+//   const response = await request(app)
+//     .get("/products")
+//     .query({ name: nameToSearch });
 
-  expect(response.status).toBe(200);
-  expect(Array.isArray(response.body)).toBe(true);
-  expect(response.body.length).toBeGreaterThan(0);
+//   expect(response.status).toBe(200);
+//   expect(Array.isArray(response.body)).toBe(true);
+//   expect(response.body.length).toBeGreaterThan(0);
 
-  // Check if each item in the response contains the provided name
-  for (const product of response.body) {
-    expect(product).toHaveProperty("name", nameToSearch);
-  }
+//   // Check if each item in the response contains the provided name
+//   for (const product of response.body) {
+//     expect(product).toHaveProperty("name", nameToSearch);
+//   }
+// });
+
+describe("GET /products/search", () => {
+  it("should return a list of products that match the search query", async () => {
+    // Define a test search query (replace with a valid query)
+    const searchQuery = "Product Name";
+
+    // Send a GET request to the /products/search endpoint with the search query
+    const response = await request(app)
+      .get("/products/search")
+      .query({ name: searchQuery });
+
+    // Check the response status code
+    expect(response.status).toBe(200);
+
+    // Check the response body structure
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: expect.any(String),
+          price: expect.any(Number),
+          supplierName: expect.any(String),
+        }),
+      ])
+    );
+  });
+
+  it("should return a 400 status code for an invalid search query", async () => {
+    // Send a GET request to the /products/search endpoint with an empty search query
+    const response = await request(app)
+      .get("/products/search")
+      .query({ name: "" });
+
+    // Check the response status code for a bad request
+    expect(response.status).toBe(400);
+
+    // Check the response body for the error message
+    expect(response.body).toEqual({
+      error: "Invalid search query, please provide a product name",
+    });
+  });
+
+  it("should return a 500 status code for database query errors", async () => {
+    // Mock a database query error by providing an invalid database connection string
+    // This will simulate a database error in the code
+    const appWithInvalidDB = require("../appWithInvalidDB");
+
+    // Send a GET request to the /products/search endpoint with a valid search query
+    const response = await request(appWithInvalidDB)
+      .get("/products/search")
+      .query({ name: "Product Name" });
+
+    // Check the response status code for a server error
+    expect(response.status).toBe(500);
+
+    // Check the response body for the error message
+    expect(response.body).toEqual({ error: "Internal Server Error" });
+  });
 });
 
 // As a user, I want to view a single customer by their ID.
 describe("GET /customers/:id", () => {
+  // Create a customer object to use in the test
+  const customer = {
+    id: 1,
+    name: "Test Customer",
+    address: "123 Test Street",
+    city: "Test City",
+    country: "Test Country",
+  };
+
+  beforeAll(async () => {
+    // Insert the test customer into the database before running the tests
+    const client = await pool.connect();
+    await client.query(
+      "INSERT INTO customers (id, name, address, city, country) VALUES ($1, $2, $3, $4, $5)",
+      [
+        customer.id,
+        customer.name,
+        customer.address,
+        customer.city,
+        customer.country,
+      ]
+    );
+    client.release();
+  });
+
+  afterAll(async () => {
+    // Remove the test customer from the database after running the tests
+    const client = await pool.connect();
+    await client.query("DELETE FROM customers WHERE id = $1", [customer.id]);
+    client.release();
+  });
+
   it("should return a single customer by their ID", async () => {
-    const customerId = 1; // Replace with a valid customer ID
-
-    const response = await request(app).get(`/customers/${customerId}`);
-
+    const response = await request(app).get(`/customers/${customer.id}`);
     expect(response.status).toBe(200);
-    expect(response.body).toHaveProperty("id", customerId);
-    expect(response.body).toHaveProperty("name");
+    expect(response.body).toEqual(customer);
   });
 
-  it("should return 404 for a non-existent customer", async () => {
-    const customerId = 999; // Use an ID that does not exist
-
-    const response = await request(app).get(`/customers/${customerId}`);
-
+  it("should return a 404 error for a non-existing customer", async () => {
+    const nonExistentCustomerId = 999; // Assuming this ID does not exist in the database
+    const response = await request(app).get(
+      `/customers/${nonExistentCustomerId}`
+    );
     expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty("error", "Customer not found");
-  });
-
-  it("should return 400 for an invalid customer ID", async () => {
-    const customerId = "invalid"; // Use an invalid ID
-
-    const response = await request(app).get(`/customers/${customerId}`);
-
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("error", "Invalid customer ID");
+    expect(response.body).toEqual({ error: "Customer not found" });
   });
 });
 
@@ -69,7 +146,7 @@ describe("POST /customers", () => {
   it("should create a new customer with name, address, city, and country", async () => {
     const newCustomer = {
       name: "John Doe",
-      address: "123 Main St",
+      address: "123 Main Street",
       city: "New York",
       country: "USA",
     };
@@ -77,25 +154,21 @@ describe("POST /customers", () => {
     const response = await request(app).post("/customers").send(newCustomer);
 
     expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("name", newCustomer.name);
-    expect(response.body).toHaveProperty("address", newCustomer.address);
-    expect(response.body).toHaveProperty("city", newCustomer.city);
-    expect(response.body).toHaveProperty("country", newCustomer.country);
+    expect(response.body).toMatchObject(newCustomer);
   });
 
-  it("should return 400 for incomplete customer data", async () => {
-    const incompleteCustomer = {
+  it("should return a 400 error if required fields are missing", async () => {
+    const invalidCustomer = {
       name: "Jane Smith",
-      // Missing 'address', 'city', and 'country' fields
+      // Missing address, city, and country
     };
 
     const response = await request(app)
       .post("/customers")
-      .send(incompleteCustomer);
+      .send(invalidCustomer);
 
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("error", "Incomplete customer data");
+    expect(response.body).toHaveProperty("error");
   });
 });
 
@@ -135,396 +208,300 @@ describe("POST /products", () => {
   });
 });
 
-// Endpoint `/availability` should create a new product availability with a price and supplier ID. An error should be returned if the price is not a positive integer or if either the product or supplier IDs don't exist in the database.
-describe("POST /availability", () => {
+// As a user, I want to create a new product availability with a price and supplier ID, and get an error if the price is not a positive integer or if either the product or supplier ID does not exist.
+describe("POST /product-availability", () => {
+  afterAll(async () => {
+    // Close the database connection pool after all tests
+    await pool.end();
+  });
+
   it("should create a new product availability", async () => {
-    const newAvailability = {
-      productId: 1, // Replace with a valid product ID
-      supplierId: 1, // Replace with a valid supplier ID
-      price: 19.99,
+    const product = {
+      prod_id: 1, // Replace with an existing product ID from your database
+      supp_id: 1, // Replace with an existing supplier ID from your database
+      unit_price: 50, // A positive integer
     };
 
     const response = await request(app)
-      .post("/availability")
-      .send(newAvailability);
+      .post("/product-availability")
+      .send(product);
 
-    expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty(
-      "productId",
-      newAvailability.productId
-    );
-    expect(response.body).toHaveProperty(
-      "supplierId",
-      newAvailability.supplierId
-    );
-    expect(response.body).toHaveProperty("price", newAvailability.price);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty("prod_id", product.prod_id);
+    expect(response.body).toHaveProperty("supp_id", product.supp_id);
+    expect(response.body).toHaveProperty("unit_price", product.unit_price);
   });
 
-  it("should return 400 for incomplete availability data", async () => {
-    const incompleteAvailability = {
-      productId: 1, // Replace with a valid product ID
-      // Missing 'supplierId' and 'price' fields
+  it("should return an error for an invalid unit price", async () => {
+    const product = {
+      prod_id: 1, // Replace with an existing product ID from your database
+      supp_id: 1, // Replace with an existing supplier ID from your database
+      unit_price: -10, // Negative unit price (invalid)
     };
 
     const response = await request(app)
-      .post("/availability")
-      .send(incompleteAvailability);
+      .post("/product-availability")
+      .send(product);
 
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty(
-      "error",
-      "Incomplete availability data"
-    );
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toContain("Invalid unit price");
   });
 
-  it("should return 400 for invalid product or supplier ID", async () => {
-    const invalidAvailability = {
-      productId: 999, // Use an invalid product ID
-      supplierId: 999, // Use an invalid supplier ID
-      price: 19.99,
+  it("should return an error for non-existing product ID", async () => {
+    const product = {
+      prod_id: 999, // Non-existing product ID
+      supp_id: 1, // Replace with an existing supplier ID from your database
+      unit_price: 50,
     };
 
     const response = await request(app)
-      .post("/availability")
-      .send(invalidAvailability);
+      .post("/product-availability")
+      .send(product);
 
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty(
-      "error",
-      "Invalid product or supplier ID"
-    );
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toContain("Product not found");
   });
 
-  it("should return 400 for non-positive price", async () => {
-    const nonPositivePrice = {
-      productId: 1, // Replace with a valid product ID
-      supplierId: 1, // Replace with a valid supplier ID
-      price: -10, // Negative price
+  it("should return an error for non-existing supplier ID", async () => {
+    const product = {
+      prod_id: 1, // Replace with an existing product ID from your database
+      supp_id: 999, // Non-existing supplier ID
+      unit_price: 50,
     };
 
     const response = await request(app)
-      .post("/availability")
-      .send(nonPositivePrice);
+      .post("/product-availability")
+      .send(product);
 
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty(
-      "error",
-      "Price must be a positive number"
-    );
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toContain("Supplier not found");
   });
 });
 
 // As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid
-// As a user, I want to create a new order for a customer.
-describe("POST /customers/:customerId/orders", () => {
-  it("should create a new order for a customer", async () => {
-    const customer = {
-      name: "John Doe",
-      address: "123 Main St",
-      city: "New York",
-      country: "USA",
-    };
-    // Create a new customer to get the customer ID
-    const createCustomerResponse = await request(app)
-      .post("/customers")
-      .send(customer);
-    const customerId = createCustomerResponse.body.id;
-
-    const newOrder = {
-      orderDate: "2023-08-30", // Replace with a valid date
-      referenceNumber: "ORD12345", // Replace with a valid reference number
+describe("POST /orders", () => {
+  it("should create a new order for a valid customer", async () => {
+    // Replace these variables with actual data
+    const validCustomerId = 1; // ID of an existing customer
+    const orderData = {
+      order_date: "2023-09-13", // Replace with a valid date
+      order_reference: "ORD123", // Replace with a unique reference
+      customer_id: validCustomerId,
     };
 
-    const response = await request(app)
-      .post(`/customers/${customerId}/orders`)
-      .send(newOrder);
+    const response = await request(app).post("/orders").send(orderData);
 
-    expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty("id");
-    expect(response.body).toHaveProperty("customerId", customerId);
-    expect(response.body).toHaveProperty("orderDate", newOrder.orderDate);
-    expect(response.body).toHaveProperty(
-      "referenceNumber",
-      newOrder.referenceNumber
-    );
+    expect(response.status).toBe(201); // Assuming you return 201 for successful creation
+    expect(response.body).toHaveProperty("id"); // Assuming the response includes the ID of the created order
   });
 
-  it("should return 400 for an invalid customer ID", async () => {
-    const invalidCustomerId = 999; // Use an invalid customer ID
-    const newOrder = {
-      orderDate: "2023-08-30", // Replace with a valid date
-      referenceNumber: "ORD12345", // Replace with a valid reference number
+  it("should return an error for an invalid customer ID", async () => {
+    // Replace this variable with a non-existent customer ID
+    const invalidCustomerId = 9999;
+
+    const orderData = {
+      order_date: "2023-09-13", // Replace with a valid date
+      order_reference: "ORD123", // Replace with a unique reference
+      customer_id: invalidCustomerId,
     };
 
-    const response = await request(app)
-      .post(`/customers/${invalidCustomerId}/orders`)
-      .send(newOrder);
+    const response = await request(app).post("/orders").send(orderData);
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("error", "Invalid customer ID");
+    expect(response.status).toBe(400); // Assuming you return 400 for validation error
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toBe("Invalid customer ID");
   });
 });
 
 // As a user, I want to update an existing customer's information with their name, address, city, and country.
-const request = require("supertest");
-const app = require("../app");
-
-describe("PUT /customers/:id", () => {
-  it("should update an existing customer's information", async () => {
-    // Create a new customer
-    const newCustomer = {
-      name: "John Doe",
-      address: "123 Main St",
-      city: "New York",
-      country: "USA",
+describe("POST /orders", () => {
+  it("should create a new order for a valid customer", async () => {
+    // Replace these variables with actual data
+    const validCustomerId = 1; // ID of an existing customer
+    const orderData = {
+      order_date: "2023-09-13", // Replace with a valid date
+      order_reference: "ORD123", // Replace with a unique reference
+      customer_id: validCustomerId,
     };
 
-    const createCustomerResponse = await request(app)
-      .post("/customers")
-      .send(newCustomer);
+    const response = await request(app).post("/orders").send(orderData);
 
-    const customerId = createCustomerResponse.body.id;
-
-    // Update the customer's information
-    const updatedCustomerData = {
-      name: "Updated Name",
-      address: "456 Elm St",
-      city: "Los Angeles",
-      country: "USA",
-    };
-
-    const updateCustomerResponse = await request(app)
-      .put(`/customers/${customerId}`)
-      .send(updatedCustomerData);
-
-    expect(updateCustomerResponse.status).toBe(200);
-    expect(updateCustomerResponse.body).toHaveProperty("id", customerId);
-    expect(updateCustomerResponse.body).toHaveProperty(
-      "name",
-      updatedCustomerData.name
-    );
-    expect(updateCustomerResponse.body).toHaveProperty(
-      "address",
-      updatedCustomerData.address
-    );
-    expect(updateCustomerResponse.body).toHaveProperty(
-      "city",
-      updatedCustomerData.city
-    );
-    expect(updateCustomerResponse.body).toHaveProperty(
-      "country",
-      updatedCustomerData.country
-    );
+    expect(response.status).toBe(201); // Assuming you return 201 for successful creation
+    expect(response.body).toHaveProperty("id"); // Assuming the response includes the ID of the created order
   });
 
-  it("should return 404 for updating a non-existent customer", async () => {
-    const nonExistentCustomerId = 999; // Use an ID that does not exist
+  it("should return an error for an invalid customer ID", async () => {
+    // Replace this variable with a non-existent customer ID
+    const invalidCustomerId = 9999;
 
+    const orderData = {
+      order_date: "2023-09-13", // Replace with a valid date
+      order_reference: "ORD123", // Replace with a unique reference
+      customer_id: invalidCustomerId,
+    };
+
+    const response = await request(app).post("/orders").send(orderData);
+
+    expect(response.status).toBe(400); // Assuming you return 400 for validation error
+    expect(response.body).toHaveProperty("error");
+    expect(response.body.error).toBe("Invalid customer ID");
+  });
+});
+
+// As a user, I want to update an existing customer's information with their name, address, city, and country.
+describe("PUT /customers/:id", () => {
+  it("should update an existing customer's information", async () => {
+    const customerIdToUpdate = 1; // Replace with the ID of the customer you want to update
     const updatedCustomerData = {
-      name: "Updated Name",
-      address: "456 Elm St",
-      city: "Los Angeles",
-      country: "USA",
+      name: "New Name",
+      address: "New Address",
+      city: "New City",
+      country: "New Country",
     };
 
     const response = await request(app)
-      .put(`/customers/${nonExistentCustomerId}`)
+      .put(`/customers/${customerIdToUpdate}`)
       .send(updatedCustomerData);
 
-    expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty("error", "Customer not found");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ message: "Customer updated successfully" });
   });
 
-  it("should return 400 for updating with invalid customer ID", async () => {
-    const invalidCustomerId = "invalid"; // Use an invalid ID
-
-    const updatedCustomerData = {
-      name: "Updated Name",
-      address: "456 Elm St",
-      city: "Los Angeles",
-      country: "USA",
-    };
+  it("should return an error if the customer ID is invalid", async () => {
+    const invalidCustomerId = 9999; // Replace with an invalid customer ID
 
     const response = await request(app)
       .put(`/customers/${invalidCustomerId}`)
-      .send(updatedCustomerData);
+      .send({
+        name: "New Name",
+        address: "New Address",
+        city: "New City",
+        country: "New Country",
+      });
 
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("error", "Invalid customer ID");
-  });
-
-  it("should return 400 for incomplete customer data", async () => {
-    const customer = {
-      name: "Jane Smith",
-      address: "123 Oak St",
-      city: "Chicago",
-      country: "USA",
-    };
-
-    // Create a new customer
-    const createCustomerResponse = await request(app)
-      .post("/customers")
-      .send(customer);
-
-    const customerId = createCustomerResponse.body.id;
-
-    // Attempt to update with incomplete customer data
-    const incompleteCustomerData = {
-      // Missing 'name' field
-      address: "Updated Address",
-      city: "Updated City",
-      country: "Updated Country",
-    };
-
-    const response = await request(app)
-      .put(`/customers/${customerId}`)
-      .send(incompleteCustomerData);
-
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("error", "Incomplete customer data");
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: "Customer not found" });
   });
 });
 
 // As a user, I want to delete an existing order and all associated order items.
-describe("DELETE /orders/:orderId", () => {
-  it("should delete an existing order and associated order items", async () => {
-    // Create a new order to be deleted
-    const newOrder = {
-      customerId: 1, // Replace with a valid customer ID
-      orderDate: "2023-09-04",
-      referenceNumber: "ORD123",
-    };
+describe("DELETE /customers/:customerId", () => {
+  it("should delete a customer if the customer doesn't have any orders", async () => {
+    // Create a new customer with no associated orders
+    const createResponse = await request(app).post("/customers").send({
+      name: "Test Customer",
+      address: "123 Test Street",
+      city: "Test City",
+      country: "Test Country",
+    });
 
-    const createOrderResponse = await request(app)
-      .post(`/customers/${newOrder.customerId}/orders`)
-      .send(newOrder);
+    expect(createResponse.status).toBe(201);
 
-    const orderId = createOrderResponse.body.id;
+    const customerId = createResponse.body.id;
 
-    // Create an associated order item (if needed) - Adjust as per your data structure
-
-    // Now, attempt to delete the order and associated items
-    const deleteOrderResponse = await request(app).delete(`/orders/${orderId}`);
-
-    // Check the response
-    expect(deleteOrderResponse.status).toBe(204); // 204 indicates successful deletion
-  });
-
-  it("should return 404 for deleting a non-existent order", async () => {
-    const nonExistentOrderId = 999; // Use an ID that does not exist
-
-    const deleteOrderResponse = await request(app).delete(
-      `/orders/${nonExistentOrderId}`
+    // Delete the customer
+    const deleteResponse = await request(app).delete(
+      `/customers/${customerId}`
     );
 
-    expect(deleteOrderResponse.status).toBe(404);
-    expect(deleteOrderResponse.body).toHaveProperty("error", "Order not found");
+    expect(deleteResponse.status).toBe(204);
+
+    // Verify that the customer was deleted
+    const verifyResponse = await request(app).get(`/customers/${customerId}`);
+
+    expect(verifyResponse.status).toBe(404);
   });
 
-  it("should return 400 for deleting with an invalid order ID", async () => {
-    const invalidOrderId = "invalid"; // Use an invalid ID
+  it("should not delete a customer if the customer has associated orders", async () => {
+    // Create a new customer with associated orders
+    const createResponse = await request(app).post("/customers").send({
+      name: "Customer With Orders",
+      address: "456 Orders Avenue",
+      city: "Ordersville",
+      country: "Orderland",
+    });
 
-    const deleteOrderResponse = await request(app).delete(
-      `/orders/${invalidOrderId}`
+    expect(createResponse.status).toBe(201);
+
+    const customerId = createResponse.body.id;
+
+    // Create an order associated with the customer
+    const createOrderResponse = await request(app).post("/orders").send({
+      order_date: "2023-09-15",
+      order_reference: "ORD123",
+      customer_id: customerId,
+    });
+
+    expect(createOrderResponse.status).toBe(201);
+
+    // Attempt to delete the customer
+    const deleteResponse = await request(app).delete(
+      `/customers/${customerId}`
     );
 
-    expect(deleteOrderResponse.status).toBe(400);
-    expect(deleteOrderResponse.body).toHaveProperty(
-      "error",
-      "Invalid order ID"
+    expect(deleteResponse.status).toBe(400);
+    expect(deleteResponse.body.error).toBe(
+      "Customer has associated orders and cannot be deleted."
     );
   });
 });
 
 // As a user, I want to delete an existing customer only if they do not have any orders.
-// As a user, I want to delete an existing customer only if they do not have any orders.
-describe("DELETE /customers/:id", () => {
-  it("should delete an existing customer without orders", async () => {
-    // Create a new customer
-    const newCustomer = {
-      name: "John Doe",
-      address: "123 Main St",
-      city: "New York",
-      country: "USA",
-    };
+describe("DELETE /customers/:customerId", () => {
+  it("should delete an existing customer only if they have no orders", async () => {
+    // First, create a new customer without any orders
+    const customerResponse = await request(app).post("/customers").send({
+      name: "Test Customer",
+      address: "123 Test St",
+      city: "Testville",
+      country: "Testland",
+    });
 
-    const createCustomerResponse = await request(app)
-      .post("/customers")
-      .send(newCustomer);
+    expect(customerResponse.status).toBe(201);
+    const customer = customerResponse.body;
 
-    const customerId = createCustomerResponse.body.id;
-
-    // Attempt to delete the customer without any orders
-    const deleteCustomerResponse = await request(app).delete(
-      `/customers/${customerId}`
+    // Attempt to delete the customer
+    const deleteResponse = await request(app).delete(
+      `/customers/${customer.id}`
     );
 
-    expect(deleteCustomerResponse.status).toBe(204); // 204 indicates successful deletion
+    // Check if the customer was deleted successfully
+    expect(deleteResponse.status).toBe(204);
   });
 
-  it("should return 400 for deleting a customer with orders", async () => {
-    // Create a new customer with an associated order
-    const newCustomer = {
-      name: "Jane Smith",
-      address: "456 Elm St",
-      city: "Los Angeles",
-      country: "USA",
-    };
+  it("should not delete a customer with associated orders", async () => {
+    // Create a new customer with associated orders
+    const customerResponse = await request(app).post("/customers").send({
+      name: "Customer With Orders",
+      address: "456 Orders Ln",
+      city: "Orderstown",
+      country: "Orderland",
+    });
 
-    const createCustomerResponse = await request(app)
-      .post("/customers")
-      .send(newCustomer);
+    expect(customerResponse.status).toBe(201);
+    const customer = customerResponse.body;
 
-    const customerId = createCustomerResponse.body.id;
+    // Create an order associated with the customer
+    const orderResponse = await request(app).post("/orders").send({
+      order_date: "2023-01-01",
+      order_reference: "ORDER123",
+      customer_id: customer.id,
+    });
 
-    // Create a new order for the customer
-    const newOrder = {
-      orderDate: "2023-08-30",
-      referenceNumber: "ORD12345",
-    };
+    expect(orderResponse.status).toBe(201);
 
-    const createOrderResponse = await request(app)
-      .post(`/customers/${customerId}/orders`)
-      .send(newOrder);
-
-    // Attempt to delete the customer with orders
-    const deleteCustomerResponse = await request(app).delete(
-      `/customers/${customerId}`
+    // Attempt to delete the customer
+    const deleteResponse = await request(app).delete(
+      `/customers/${customer.id}`
     );
 
-    expect(deleteCustomerResponse.status).toBe(400);
-    expect(deleteCustomerResponse.body).toHaveProperty(
-      "error",
-      "Customer has existing orders and cannot be deleted"
-    );
-  });
-
-  it("should return 404 for deleting a non-existent customer", async () => {
-    const nonExistentCustomerId = 999; // Use an ID that does not exist
-
-    const deleteCustomerResponse = await request(app).delete(
-      `/customers/${nonExistentCustomerId}`
-    );
-
-    expect(deleteCustomerResponse.status).toBe(404);
-    expect(deleteCustomerResponse.body).toHaveProperty(
-      "error",
-      "Customer not found"
-    );
-  });
-
-  it("should return 400 for deleting with an invalid customer ID", async () => {
-    const invalidCustomerId = "invalid"; // Use an invalid ID
-
-    const deleteCustomerResponse = await request(app).delete(
-      `/customers/${invalidCustomerId}`
-    );
-
-    expect(deleteCustomerResponse.status).toBe(400);
-    expect(deleteCustomerResponse.body).toHaveProperty(
-      "error",
-      "Invalid customer ID"
+    // Check if the customer was not deleted due to associated orders
+    expect(deleteResponse.status).toBe(400);
+    expect(deleteResponse.body.error).toBe(
+      "Customer has associated orders and cannot be deleted."
     );
   });
 });
@@ -532,89 +509,30 @@ describe("DELETE /customers/:id", () => {
 // As a user, I want to view all orders with their items for a specific customer, including order references, dates, product names, unit prices, suppliers, and quantities.
 describe("GET /customers/:customerId/orders", () => {
   it("should return all orders with items for a specific customer", async () => {
-    // Create a new customer
-    const newCustomer = {
-      name: "John Doe",
-      address: "123 Main St",
-      city: "New York",
-      country: "USA",
-    };
+    const customerId = 1; // Replace with the ID of the specific customer you want to test
 
-    const createCustomerResponse = await request(app)
-      .post("/customers")
-      .send(newCustomer);
-
-    const customerId = createCustomerResponse.body.id;
-
-    // Create a new order for the customer
-    const newOrder = {
-      orderDate: "2023-08-30",
-      referenceNumber: "ORD12345",
-    };
-
-    const createOrderResponse = await request(app)
-      .post(`/customers/${customerId}/orders`)
-      .send(newOrder);
-
-    const orderId = createOrderResponse.body.id;
-
-    // Create a new product
-    const newProduct = {
-      name: "New Product",
-      price: 19.99,
-      supplierName: "Supplier XYZ",
-    };
-
-    const createProductResponse = await request(app)
-      .post("/products")
-      .send(newProduct);
-
-    const productId = createProductResponse.body.id;
-
-    // Add the product to the order with quantity
-    const orderItem = {
-      productId: productId,
-      quantity: 5,
-    };
-
-    const createOrderItemResponse = await request(app)
-      .post(`/orders/${orderId}/items`)
-      .send(orderItem);
-
-    // Get all orders with items for the specific customer
     const response = await request(app).get(`/customers/${customerId}/orders`);
-
     expect(response.status).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
-
-    // Check if each order contains the expected properties
-    for (const order of response.body) {
-      expect(order).toHaveProperty("orderId");
-      expect(order).toHaveProperty("orderDate", newOrder.orderDate);
-      expect(order).toHaveProperty("referenceNumber", newOrder.referenceNumber);
-      expect(Array.isArray(order.items)).toBe(true);
-      expect(order.items.length).toBeGreaterThan(0);
-
-      // Check if each order item contains the expected properties
-      for (const item of order.items) {
-        expect(item).toHaveProperty("productId", productId);
-        expect(item).toHaveProperty("quantity", orderItem.quantity);
-        expect(item).toHaveProperty("productName", newProduct.name);
-        expect(item).toHaveProperty("unitPrice", newProduct.price);
-        expect(item).toHaveProperty("supplierName", newProduct.supplierName);
-      }
-    }
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          order_reference: expect.any(String),
+          order_date: expect.any(String),
+          product_name: expect.any(String),
+          unit_price: expect.any(Number),
+          supplier_name: expect.any(String),
+          quantity: expect.any(Number),
+        }),
+      ])
+    );
   });
 
-  it("should return 400 for an invalid customer ID", async () => {
-    const invalidCustomerId = 999; // Use an invalid customer ID
+  it("should return a 404 status if the customer does not exist", async () => {
+    const nonExistentCustomerId = 999; // Replace with a non-existent customer ID
 
     const response = await request(app).get(
-      `/customers/${invalidCustomerId}/orders`
+      `/customers/${nonExistentCustomerId}/orders`
     );
-
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty("error", "Invalid customer ID");
+    expect(response.status).toBe(404);
   });
 });

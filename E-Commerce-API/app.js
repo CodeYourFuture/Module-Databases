@@ -1,5 +1,6 @@
-const { Pool } = require("pg");
+// I did not write over any query questions and have code here to answer each question. If you run queries you need to remember to mask/hide/unmark those queries you dont use.
 
+const { Pool } = require("pg");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -13,42 +14,141 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-const db = new Pool({
+// Database connection pool setup
+const pool = new Pool({
   user: process.env.DB_USERNAME,
   host: process.env.DB_HOST,
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
 });
-const products = [{}];
 
 // As a user, I want to view a list of all products with their prices and supplier names.
-// In a real application, I fetch products database.
-app.get("/products", (req, res) => {
-  res.status(200).json(products);
-// });
-
-// As a user, I want to search for products by name.
 app.get("/products", async (req, res) => {
   try {
-    // Extract and default the 'name' query parameter
-    const nameFilter = req.query.name || "";
+    const client = await pool.connect();
+    const result = await client.query(`
+      SELECT
+        p.product_name as name,
+        pa.unit_price as price,
+        s.supplier_name as supplierName
+      FROM
+        products p
+      INNER JOIN
+        product_availability pa ON p.id = pa.prod_id
+      INNER JOIN
+        suppliers s ON pa.supp_id = s.id
+    `);
 
-    // Fetch and send the filtered list of products as JSON response
-    res.status(200).json(await fetchProductsByName(nameFilter));
+    // Release the database client connection
+    client.release();
+
+    res.status(200).json(result.rows);
   } catch (error) {
-    console.error(error.stack);
+    console.error("Error querying the database:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
+// In the question it says search but I wonder if they meant find so here is that solution and just below is for search. As a user, I want to view a list of all product names.
+app.get("/product-names", async (req, res) => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query(`
+      SELECT
+        product_name
+      FROM
+        products
+    `);
+
+    // Release the database client connection
+    client.release();
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error querying the database:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// As a user, I want to search for products by name.
+// Add this code to your App.js
+
+// As a user, I want to search for products by name.
+app.get("/products/search", async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    if (!name || name.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Invalid search query, please provide a product name" });
+    }
+
+    const client = await pool.connect();
+    const result = await client.query(
+      `
+      SELECT
+        p.product_name as name,
+        pa.unit_price as price,
+        s.supplier_name as supplierName
+      FROM
+        products p
+      INNER JOIN
+        product_availability pa ON p.id = pa.prod_id
+      INNER JOIN
+        suppliers s ON pa.supp_id = s.id
+      WHERE
+        p.product_name ILIKE $1
+    `,
+      [`%${name}%`]
+    );
+
+    // Release the database client connection
+    client.release();
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error querying the database:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 // As a user, I want to view a single customer by their ID.
+app.get("/customers/:id", async (req, res) => {
+  try {
+    const customerId = req.params.id;
+
+    const client = await pool.connect();
+    const result = await client.query(
+      `
+      SELECT
+        id,
+        name,
+        address,
+        city,
+        country
+      FROM
+        customers
+      WHERE
+        id = $1
+    `,
+      [customerId]
+    );
+
+    // Release the database client connection
+    client.release();
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: "Customer not found" });
+    } else {
+      res.status(200).json(result.rows[0]);
+    }
+  } catch (error) {
+    console.error("Error querying the database:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 app.get("/customers/:id", (req, res) => {
   const customerId = parseInt(req.params.id);
@@ -77,335 +177,294 @@ app.post("/customers", async (req, res) => {
   try {
     const { name, address, city, country } = req.body;
 
-    // Validate input data (ensure all required fields are provided)
     if (!name || !address || !city || !country) {
-      return res.status(400).json({ error: "Incomplete customer data" });
+      return res
+        .status(400)
+        .json({ error: "Please provide name, address, city, and country" });
     }
 
-    // Insert the new customer into the database and return the newly created customer
-    const result = await db.query(
-      "INSERT INTO customers (name, address, city, country) VALUES ($1, $2, $3, $4) RETURNING *",
-      [name, address, city, country]
-    );
+    const query = {
+      text: "INSERT INTO customers (name, address, city, country) VALUES ($1, $2, $3, $4) RETURNING *",
+      values: [name, address, city, country],
+    };
 
-    // Send the newly created customer as a JSON response
+    const client = await db.connect();
+    const result = await client.query(query);
+
+    // Release the database client connection
+    client.release();
+
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    console.error(error.stack);
+    console.error("Error inserting customer into the database:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
 });
 
 // As a user, I want to create a new product.
 // Create a new product
 app.post("/products", async (req, res) => {
   try {
-    const { name, price, supplierName } = req.body;
+    const { product_name } = req.body;
 
-    // Validate input data (ensure all required fields are provided)
-    if (!name || !price || !supplierName) {
-      return res.status(400).json({ error: "Incomplete product data" });
+    if (!product_name || product_name.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Invalid input. Please provide a product_name." });
     }
 
-    // Insert the new product into the database and return the newly created product
-    const result = await db.query(
-      "INSERT INTO products (product_name) VALUES ($1) RETURNING *",
-      [name]
+    const client = await db.connect();
+    const result = await client.query(
+      `
+      INSERT INTO products (product_name)
+      VALUES ($1)
+      RETURNING *
+    `,
+      [product_name]
     );
 
-    const productId = result.rows[0].id;
+    // Release the database client connection
+    client.release();
 
-    // Insert product availability data
-    await db.query(
-      "INSERT INTO product_availability (prod_id, unit_price, supp_id) VALUES ($1, $2, $3)",
-      [productId, price, supplierName]
-    );
-
-    // Send the newly created product as a JSON response
-    res.status(201).json(result.rows[0]);
+    res.status(201).json({
+      message: "Product created successfully",
+      product: result.rows[0],
+    });
   } catch (error) {
-    console.error(error.stack);
+    console.error("Error creating the product:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// ... (error handling middleware and other routes)
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
-});
-
-// Endpoint `/availability` should create a new product availability with a price and supplier ID. An error should be returned if the price is not a positive integer or if either the product or supplier IDs don't exist in the database.
-app.post("/availability", async (req, res) => {
+// As a user, I want to create a new product availability with a price and supplier ID, and get an error if the price is not a positive integer or if either the product or supplier ID does not exist.
+app.post("/product-availability", async (req, res) => {
   try {
-    const { productId, supplierId, price } = req.body;
+    const { prod_id, supp_id, unit_price } = req.body;
 
-    // Validate input data
-    if (!productId || !supplierId || !price) {
-      return res.status(400).json({ error: "Incomplete availability data" });
-    }
-
-    // Ensure product and supplier IDs exist in the database
-    const productExists = await db.query(
-      "SELECT 1 FROM products WHERE id = $1",
-      [productId]
+    // Ensure prod_id and supp_id exist in their respective tables
+    const productExists = await pool.query(
+      "SELECT id FROM products WHERE id = $1",
+      [prod_id]
     );
-    const supplierExists = await db.query(
-      "SELECT 1 FROM suppliers WHERE id = $1",
-      [supplierId]
+    const supplierExists = await pool.query(
+      "SELECT id FROM suppliers WHERE id = $1",
+      [supp_id]
     );
 
-    if (!productExists.rows.length || !supplierExists.rows.length) {
-      return res.status(400).json({ error: "Invalid product or supplier ID" });
+    if (productExists.rows.length === 0) {
+      return res.status(400).json({ error: "Product not found" });
     }
 
-    // Validate price as a positive number
-    if (typeof price !== "number" || price <= 0) {
-      return res.status(400).json({ error: "Price must be a positive number" });
+    if (supplierExists.rows.length === 0) {
+      return res.status(400).json({ error: "Supplier not found" });
     }
 
-    // Insert the new availability into the database and return the newly created availability
-    const result = await db.query(
-      "INSERT INTO product_availability (prod_id, supp_id, unit_price) VALUES ($1, $2, $3) RETURNING *",
-      [productId, supplierId, price]
-    );
+    // Ensure unit_price is a positive integer
+    const parsedUnitPrice = parseInt(unit_price);
 
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error(error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// ... (error handling middleware and other routes
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
-});
-
-// As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
-
-// As a user, I want to create a new order for a customer.
-app.post("/customers/:customerId/orders", async (req, res) => {
-  try {
-    const customerId = parseInt(req.params.customerId);
-
-    // Validate customer ID
-    if (isNaN(customerId) || customerId < 1) {
-      return res.status(400).json({ error: "Invalid customer ID" });
+    if (isNaN(parsedUnitPrice) || parsedUnitPrice <= 0) {
+      return res.status(400).json({ error: "Invalid unit price" });
     }
 
-    // Ensure the customer with the provided ID exists in the database
-    const customerExists = await db.query(
-      "SELECT 1 FROM customers WHERE id = $1",
-      [customerId]
-    );
-
-    if (!customerExists.rows.length) {
-      return res.status(400).json({ error: "Invalid customer ID" });
-    }
-
-    const { orderDate, referenceNumber } = req.body;
-
-    // Validate input data
-    if (!orderDate || !referenceNumber) {
-      return res.status(400).json({ error: "Incomplete order data" });
-    }
-
-    // Insert the new order into the database and return the newly created order
-    const result = await db.query(
-      "INSERT INTO orders (customer_id, order_date, reference_number) VALUES ($1, $2, $3) RETURNING *",
-      [customerId, orderDate, referenceNumber]
-    );
-
-    res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error(error.stack);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// ... (error handling middleware and other routes
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
-});
-
-// As a user, I want to update an existing customer's information with their name, address, city, and country.
-// Update an existing customer's information
-app.put("/customers/:customerId", async (req, res) => {
-  try {
-    const customerId = parseInt(req.params.customerId);
-
-    // Validate customer ID
-    if (isNaN(customerId) || customerId < 1) {
-      return res.status(400).json({ error: "Invalid customer ID" });
-    }
-
-    // Ensure the customer with the provided ID exists in the database
-    const customerExists = await db.query(
-      "SELECT 1 FROM customers WHERE id = $1",
-      [customerId]
-    );
-
-    if (!customerExists.rows.length) {
-      return res.status(404).json({ error: "Customer not found" });
-    }
-
-    const { name, address, city, country } = req.body;
-
-    // Validate input data (ensure all required fields are provided)
-    if (!name || !address || !city || !country) {
-      return res.status(400).json({ error: "Incomplete customer data" });
-    }
-
-    // Update the customer's information in the database
-    const result = await db.query(
-      "UPDATE customers SET name = $1, address = $2, city = $3, country = $4 WHERE id = $5 RETURNING *",
-      [name, address, city, country, customerId]
+    // Insert the new product availability into the database
+    const result = await pool.query(
+      `
+      INSERT INTO product_availability (prod_id, supp_id, unit_price)
+      VALUES ($1, $2, $3)
+      RETURNING *
+    `,
+      [prod_id, supp_id, parsedUnitPrice]
     );
 
     res.status(200).json(result.rows[0]);
   } catch (error) {
-    console.error(error.stack);
+    console.error("Error creating product availability:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
+app.post("/orders", async (req, res) => {
+  try {
+    const { order_date, order_reference, customer_id } = req.body;
+
+    // Check if the customer with the provided ID exists
+    const customerExists = await pool.query(
+      "SELECT 1 FROM customers WHERE id = $1",
+      [customer_id]
+    );
+
+    if (customerExists.rows.length === 0) {
+      return res.status(400).json({ error: "Invalid customer ID" });
+    }
+
+    // Insert the new order if the customer exists
+    const result = await pool.query(
+      "INSERT INTO orders (order_date, order_reference, customer_id) SELECT $1, $2, $3 RETURNING *",
+      [order_date, order_reference, customer_id]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error("Error creating the order:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// As a user, I want to update an existing customer's information with their name, address, city, and country.
+app.put("/customers/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, address, city, country } = req.body;
+
+    const client = await pool.connect();
+    const result = await client.query(
+      `
+      UPDATE customers
+      SET
+          name = $1,
+          address = $2,
+          city = $3,
+          country = $4
+      WHERE
+          id = $5
+      RETURNING *
+      `,
+      [name, address, city, country, id]
+    );
+
+    // Release the database client connection
+    client.release();
+
+    if (result.rowCount === 0) {
+      res.status(404).json({ error: "Customer not found" });
+    } else {
+      res.status(200).json({ message: "Customer updated successfully" });
+    }
+  } catch (error) {
+    console.error("Error updating customer:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 // As a user, I want to delete an existing order and all associated order items.
 app.delete("/orders/:orderId", async (req, res) => {
+  const orderId = req.params.orderId;
+
   try {
-    const orderId = parseInt(req.params.orderId);
+    const client = await pool.connect();
 
-    // Validate order ID
-    if (isNaN(orderId) || orderId < 1) {
-      return res.status(400).json({ error: "Invalid order ID" });
-    }
+    // Check if the order exists
+    const orderExistsQuery = "SELECT id FROM orders WHERE id = $1";
+    const orderExistsResult = await client.query(orderExistsQuery, [orderId]);
 
-    // Check if the order with the provided ID exists in the database
-    const orderExists = await db.query("SELECT 1 FROM orders WHERE id = $1", [orderId]);
-
-    if (!orderExists.rows.length) {
+    if (orderExistsResult.rowCount === 0) {
+      // Order not found
+      client.release();
       return res.status(404).json({ error: "Order not found" });
     }
 
-    // Delete the order and associated order items from the database
-    await db.query("DELETE FROM order_items WHERE order_id = $1", [orderId]);
-    await db.query("DELETE FROM orders WHERE id = $1", [orderId]);
+    // Delete order items associated with the order
+    const deleteOrderItemsQuery = "DELETE FROM order_items WHERE order_id = $1";
+    await client.query(deleteOrderItemsQuery, [orderId]);
 
-    res.status(204).send(); // No content response for successful deletion
+    // Delete the order itself
+    const deleteOrderQuery = "DELETE FROM orders WHERE id = $1";
+    await client.query(deleteOrderQuery, [orderId]);
+
+    client.release();
+
+    // Respond with a success message
+    res.status(204).send();
   } catch (error) {
-    console.error(error.stack);
+    console.error("Error deleting order:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
-
-// ... (error handling middleware and other routes
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
 });
 
 // As a user, I want to delete an existing customer only if they do not have any orders.
+// DELETE an existing customer only if they have no orders
 app.delete("/customers/:customerId", async (req, res) => {
   try {
-    const customerId = parseInt(req.params.customerId);
+    const { customerId } = req.params;
 
-    // Validate customer ID
-    if (isNaN(customerId) || customerId < 1) {
-      return res.status(400).json({ error: "Invalid customer ID" });
+    // Check if the customer has any associated orders
+    const checkOrdersQuery = {
+      text: "SELECT DISTINCT customer_id FROM orders WHERE customer_id = $1",
+      values: [customerId],
+    };
+
+    const ordersResult = await pool.query(checkOrdersQuery);
+
+    if (ordersResult.rows.length > 0) {
+      return res.status(400).json({
+        error: "Customer has associated orders and cannot be deleted.",
+      });
     }
 
-    // Check if the customer with the provided ID exists in the database
-    const customerExists = await db.query("SELECT 1 FROM customers WHERE id = $1", [customerId]);
+    // Delete the customer if no associated orders found
+    const deleteCustomerQuery = {
+      text: "DELETE FROM customers WHERE id = $1",
+      values: [customerId],
+    };
 
-    if (!customerExists.rows.length) {
-      return res.status(404).json({ error: "Customer not found" });
-    }
+    await pool.query(deleteCustomerQuery);
 
-    // Check if the customer has any orders
-    const customerHasOrders = await db.query("SELECT 1 FROM orders WHERE customer_id = $1", [customerId]);
-
-    if (customerHasOrders.rows.length) {
-      return res.status(400).json({ error: "Customer has existing orders and cannot be deleted" });
-    }
-
-    // Delete the customer from the database
-    await db.query("DELETE FROM customers WHERE id = $1", [customerId]);
-
-    res.status(204).send(); // No content response for successful deletion
+    res.status(204).send(); // No content, indicating successful deletion
   } catch (error) {
-    console.error(error.stack);
+    console.error("Error deleting customer:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// ... (error handling middleware and other routes
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);
-//   res.status(500).json({ error: "Internal Server Error" });
-// });
-
 // As a user, I want to view all orders with their items for a specific customer, including order references, dates, product names, unit prices, suppliers, and quantities.
-// ...
 
-// Load all orders with their items for a specific customer
 app.get("/customers/:customerId/orders", async (req, res) => {
   try {
-    const customerId = parseInt(req.params.customerId);
+    const { customerId } = req.params;
 
-    // Validate customer ID
-    if (isNaN(customerId) || customerId < 1) {
+    // Ensure customerId is a valid integer
+    if (!Number.isInteger(Number(customerId))) {
       return res.status(400).json({ error: "Invalid customer ID" });
     }
 
-    // Check if the customer with the provided ID exists in the database
-    const customerExists = await db.query(
-      "SELECT 1 FROM customers WHERE id = $1",
-      [customerId]
-    );
-
-    if (!customerExists.rows.length) {
-      return res.status(404).json({ error: "Customer not found" });
-    }
-
-    // Fetch all orders with their items for the specific customer
-    const ordersWithItems = await db.query(
+    const client = await pool.connect();
+    const result = await client.query(
       `
-      SELECT 
-        o.id AS order_id,
-        o.order_date,
-        o.reference_number,
-        p.product_name,
-        pa.unit_price,
-        s.supplier_name,
-        oi.quantity
-      FROM orders o
-      INNER JOIN order_items oi ON o.id = oi.order_id
-      INNER JOIN products p ON oi.product_id = p.id
-      INNER JOIN product_availability pa ON p.id = pa.prod_id
-      INNER JOIN suppliers s ON pa.supp_id = s.id
-      WHERE o.customer_id = $1
+      SELECT
+          o.order_reference,
+          o.order_date,
+          p.product_name,
+          pa.unit_price,
+          s.supplier_name,
+          oi.quantity
+      FROM
+          orders o
+      INNER JOIN
+          order_items oi ON o.id = oi.order_id
+      INNER JOIN
+          products p ON oi.product_id = p.id
+      INNER JOIN
+          product_availability pa ON p.id = pa.prod_id
+      INNER JOIN
+          suppliers s ON pa.supp_id = s.id
+      WHERE
+          o.customer_id = $1
       `,
       [customerId]
     );
 
-    res.status(200).json(ordersWithItems.rows);
+    // Release the database client connection
+    client.release();
+
+    res.status(200).json(result.rows);
   } catch (error) {
-    console.error(error.stack);
+    console.error("Error querying the database:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-
-
-
+// Export your app
 module.exports = app;
 
 // original;
