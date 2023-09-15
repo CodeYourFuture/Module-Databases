@@ -227,7 +227,6 @@ app.delete("/customers/:customerId", (req, res) => {
         "SELECT customer_id FROM orders WHERE customer_id = $1",
         [customerId]
       );
-      console.log(checkOrderId.rows);
       let orderId =
         checkOrderId.rows.length !== 0 ? res.json("Order exists") : customerId;
       //Delete customer
@@ -241,6 +240,40 @@ app.delete("/customers/:customerId", (req, res) => {
     }
   };
   deleteCustomer();
+});
+//
+app.get("/customers/:customerId/orders", (req, res) => {
+  const newOrder = async () => {
+    try {
+      //Checking if a customer exist
+      const checkCustomerId = await pool.query(
+        "SELECT id FROM customers WHERE id = $1",
+        [req.params.customerId]
+      );
+      let customerId =
+        checkCustomerId.rows.length !== 0
+          ? checkCustomerId.rows[0].id
+          : res.json("Customer ID does not exist");
+      //Checking if a customer placed an order
+      const checkOrderId = await pool.query(
+        "SELECT customer_id FROM orders WHERE customer_id = $1",
+        [customerId]
+      );
+      let orderId =
+        checkOrderId.rows.length !== 0
+          ? customerId
+          : res.json("Order does not exist");
+      // Load all the orders for one customer
+      const result = await pool.query(
+        "SELECT c.name, o.order_reference, o.order_date, o.product_name, o.supplier_name, o.unit_price, o.quantity FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM (SELECT * FROM suppliers as s FULL OUTER JOIN product_availability as pa ON s.id = pa.supp_id) as pa FULL OUTER JOIN products as p ON pa.prod_id = p.id) as p FULL OUTER JOIN order_items as i ON p.prod_id = i.product_id) as i FULL OUTER JOIN orders as o ON i.order_id = o.id) as o FULL OUTER JOIN customers as c ON o.customer_id = c.id WHERE c.id = $1;",
+        [orderId]
+      );
+      res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  newOrder();
 });
 //
 module.exports = app;

@@ -178,3 +178,22 @@ describe("DELETE /customers/:customerId", () => {
     );
   });
 });
+describe("GET /customers/customerId/orders", () => {
+  it("should load orders from one customer", async () => {
+    const response = await request(app).get("/customers/4/orders");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: expect.any(String),
+          order_reference: expect.any(String),
+          order_date: expect.any(String),
+          product_name: expect.any(String),
+          supplier_name: expect.any(String),
+          unit_price: expect.any(Number),
+          quantity: expect.any(Number),
+        }),
+      ])
+    );
+  });
+});
