@@ -88,3 +88,25 @@ describe("POST /products", () => {
     );
   });
 });
+describe("POST /availability", () => {
+  it("should create new product availability", async () => {
+    const productAvailability = {
+      prodId: 12,
+      suppId: 1,
+      unitPrice: 70,
+    };
+    const response = await request(app)
+      .post("/availability")
+      .send(productAvailability);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          prod_id: expect.any(Number),
+          supp_id: expect.any(Number),
+          unit_price: expect.any(Number),
+        }),
+      ])
+    );
+  });
+});

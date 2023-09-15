@@ -102,5 +102,24 @@ app.post("/products", (req, res) => {
   };
   newProduct();
 });
+//
+app.post("/availability", (req, res) => {
+  const productAvailability = async () => {
+    try {
+      await pool.query(
+        "INSERT INTO product_availability (prod_id, supp_id, unit_price) VALUES($1, $2, $3)",
+        [req.body.prodId, req.body.suppId, req.body.unitPrice]
+      );
+      const result = await pool.query(
+        "SELECT * FROM product_availability WHERE prod_id = $1 AND supp_id = $2",
+        [req.body.prodId, req.body.suppId]
+      );
+      res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  productAvailability();
+});
 
 module.exports = app;
