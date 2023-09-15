@@ -141,7 +141,7 @@ app.post("/customers/:customerId/orders", (req, res) => {
           : "Customer ID does not exist";
       await pool.query(
         "INSERT INTO orders (order_date, order_reference, customer_id) VALUES($1, $2, $3)",
-        [req.body.orderDate, req.body.orderReference, req.body.customerId]
+        [req.body.orderDate, req.body.orderReference, customerId]
       );
       const result = await pool.query(
         "SELECT * FROM orders WHERE order_reference = $1",
@@ -154,4 +154,37 @@ app.post("/customers/:customerId/orders", (req, res) => {
   };
   newOrder();
 });
+//
+app.post("/customers/:customerId", (req, res) => {
+  const customerUpdate = async () => {
+    try {
+      const checkCustomerId = await pool.query(
+        "SELECT id FROM customers WHERE id = $1",
+        [req.params.customerId]
+      );
+      let customerId =
+        checkCustomerId.rows[0].id === req.params.customerId
+          ? req.params.customerId
+          : "Customer ID does not exist";
+      await pool.query(
+        "UPDATE customers SET name = $1, address = $2, city = $3, country = $4 WHERE id = $5",
+        [
+          req.body.name,
+          req.body.address,
+          req.body.city,
+          req.body.country,
+          customerId,
+        ]
+      );
+      const result = await pool.query("SELECT * FROM customers WHERE id = $1", [
+        req.params.customerId,
+      ]);
+      res.json(result.rows);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  customerUpdate();
+});
+//
 module.exports = app;
