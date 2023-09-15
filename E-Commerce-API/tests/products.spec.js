@@ -91,8 +91,8 @@ describe("POST /products", () => {
 describe("POST /availability", () => {
   it("should create new product availability", async () => {
     const productAvailability = {
-      prodId: 12,
-      suppId: 1,
+      prodId: 22,
+      suppId: 2,
       unitPrice: 70,
     };
     const response = await request(app)
@@ -156,8 +156,20 @@ describe("POST /customers/:customerId", () => {
   });
 });
 describe("DELETE /orders/:orderId", () => {
-  it("should create new order", async () => {
-    const response = await request(app).delete("/orders/15");
+  it("should delete existing order", async () => {
+    const response = await request(app).delete("/orders/17");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        rowCount: expect.any(Number),
+      })
+    );
+  });
+});
+
+describe("DELETE /customers/:customerId", () => {
+  it("should delete existing customer without order", async () => {
+    const response = await request(app).delete("/customers/28");
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({

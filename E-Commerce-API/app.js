@@ -136,9 +136,9 @@ app.post("/customers/:customerId/orders", (req, res) => {
         [req.params.customerId]
       );
       let customerId =
-        checkCustomerId.rows[0].id === Number(req.body.customerId)
+        checkCustomerId.rows.length !== 0
           ? checkCustomerId.rows[0].id
-          : "Customer ID does not exist";
+          : res.json("Customer ID does not exist");
       await pool.query(
         "INSERT INTO orders (order_date, order_reference, customer_id) VALUES($1, $2, $3)",
         [req.body.orderDate, req.body.orderReference, customerId]
@@ -163,9 +163,9 @@ app.post("/customers/:customerId", (req, res) => {
         [req.params.customerId]
       );
       let customerId =
-        checkCustomerId.rows[0].id === Number(req.params.customerId)
+        checkCustomerId.rows.length !== 0
           ? checkCustomerId.rows[0].id
-          : "Customer ID does not exist";
+          : res.json("Customer ID does not exist");
       await pool.query(
         "UPDATE customers SET name = $1, address = $2, city = $3, country = $4 WHERE id = $5",
         [
@@ -194,12 +194,44 @@ app.delete("/orders/:orderId", (req, res) => {
         "SELECT id FROM orders WHERE id = $1",
         [req.params.orderId]
       );
-      console.log(checkOrderId.rows[0].id);
       let orderId =
-        checkOrderId.rows[0].id === Number(req.params.orderId)
+        checkOrderId.rows.length !== 0
           ? checkOrderId.rows[0].id
-          : "Order ID does not exist";
+          : res.json("Order ID does not exist");
       const result = await pool.query("DELETE FROM orders WHERE id = $1", [
+        orderId,
+      ]);
+
+      res.json(result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  deleteCustomer();
+});
+//
+app.delete("/customers/:customerId", (req, res) => {
+  const deleteCustomer = async () => {
+    try {
+      //Checking if a customer exist
+      const checkCustomerId = await pool.query(
+        "SELECT id FROM customers WHERE id = $1",
+        [req.params.customerId]
+      );
+      let customerId =
+        checkCustomerId.rows.length !== 0
+          ? checkCustomerId.rows[0].id
+          : res.json("Customer ID does not exist");
+      //Checking if a customer placed an order
+      const checkOrderId = await pool.query(
+        "SELECT customer_id FROM orders WHERE customer_id = $1",
+        [customerId]
+      );
+      console.log(checkOrderId.rows);
+      let orderId =
+        checkOrderId.rows.length !== 0 ? res.json("Order exists") : customerId;
+      //Delete customer
+      const result = await pool.query("DELETE FROM customers WHERE id = $1", [
         orderId,
       ]);
 
