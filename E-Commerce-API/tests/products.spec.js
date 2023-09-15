@@ -53,3 +53,22 @@ describe("GET /customers/:customerId", () => {
 });
 
 // 4. As a user, I want to create a new customer with their name, address, city, and country.
+describe.only("POST /customers", () => {
+  const newCustomer = {
+    /////// HELP!!  Is hard coded data ok here? If not what do I use instead? ////////
+    name: "Jane Doe",
+    address: "770-2839 Hawaii St.",
+    city: "Honolulu",
+    country: "United States",
+  };
+
+  it("should create a new customer with their name, address, city, and country", async () => {
+    const response = await request(app).post("/customers").send(newCustomer);
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: expect.any(Number),
+      })
+    );
+  });
+});

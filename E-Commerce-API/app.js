@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 require("dotenv").config();
 
 const port = process.env.PORT || 5000;
@@ -60,6 +62,28 @@ app.get("/customers/:customerId", function (request, response) {
       response.status(400).json(error);
     });
 });
+
+// 4. As a user, I want to create a new customer with their name, address, city, and country.
+app.post("/customers", function (request, response) {
+  const name = request.body.name;
+  const address = request.body.address;
+  const city = request.body.city;
+  const country = request.body.country;
+
+  const addNewCustomerQuery =
+    "INSERT INTO customers (name, address, city, country)" +
+    "VALUES ($1, $2, $3, $4) RETURNING id";
+
+  db.query(addNewCustomerQuery, [name, address, city, country])
+    .then((result) => {
+      response.status(201).json(result.rows[0]);
+    })
+    .catch((error) => {
+      response.status(500).send({ error: error.message });
+    });
+});
+
+///////////////////////////////////////////////////////////////////
 
 app.listen(port, function () {
   console.log(`Server is listening on port ${port}. Ready to accept requests!`);
