@@ -21,13 +21,12 @@ const db = new Pool({
 });
 
 // 1. As a user, I want to view a list of all products with their prices and supplier names.
-app.get("/products", async function (req, res) {
-  await db
-    .query(
-      "SELECT p.id AS product_id, p.product_name, pa.unit_price, pa.supp_id AS supplier_id FROM products p JOIN product_availability pa ON (p.id = pa.prod_id)"
-    )
+app.get("/products", function (request, response) {
+  db.query(
+    "SELECT p.product_name AS name, pa.unit_price AS price, s.supplier_name AS supplierName FROM products p JOIN product_availability pa ON (p.id = pa.prod_id) JOIN suppliers s ON (s.id = pa.supp_id)"
+  )
     .then((result) => {
-      res.status(200).json(result.rows);
+      response.status(200).json(result.rows);
     })
     .catch((err) => {
       console.log(err);
@@ -37,7 +36,10 @@ app.get("/products", async function (req, res) {
 // 2. As a user, I want to search for products by name.
 app.get("/products/:name", function (request, response) {
   const partialName = "%" + request.params.name + "%"; // % to match any part of the name
-  db.query("SELECT * FROM products WHERE product_name ILIKE $1", [partialName])
+  db.query(
+    "SELECT product_name AS name FROM products WHERE product_name ILIKE $1",
+    [partialName]
+  )
     .then((result) => {
       response.status(200).json(result.rows);
     })
