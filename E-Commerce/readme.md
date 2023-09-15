@@ -46,9 +46,24 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+'''
+SELECT * FROM products WHERE product_name LIKE '%socks%';
+'''
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+'''
+SELECT * FROM products p JOIN product_availability pa ON p.id=pa.prod_id WHERE unit_price >100;
+'''
 - [ ] List the 5 most expensive products
+'''
+SELECT product_name, MAX(unit_price) price FROM products p JOIN product_availability pa ON p.id=pa.prod_id GROUP BY product_name ORDER BY price DESC limit 5;
+'''
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+'''
+SELECT product_name, supplier_name FROM products p JOIN product_availability pa ON p.id=pa.prod_id 
+JOIN suppliers s ON pa.supp_id=s.id
+WHERE s.country = 'United Kingdom';
+'''
 - [ ] List all orders, including order items, from customer named Hope Crosby
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity

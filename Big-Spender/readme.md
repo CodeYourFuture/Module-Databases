@@ -49,6 +49,7 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 ```sql
 INSERT YOUR QUERY HERE
+ SELECT * FROM spends WHERE amount between 30000 and 31000
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -69,6 +70,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+SELECT * FROM expense_areas WHERE description ILIKE '%fee%'
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -77,6 +79,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+SELECT * FROM expense_areas WHERE expense_area = 'Better Hospital Food';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -85,6 +88,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+SELECT SUM(amount),date FROM spends GROUP BY date;
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -93,6 +97,7 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+SELECT SUM(amount) FROM spends WHERE date between '2021-03-31' and '2021-05-01
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -101,6 +106,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+SELECT SUM(amount), supplier FROM suppliers JOIN spends ON suppliers.id = spends.supplier_id GROUP BY supplier;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -113,6 +119,7 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+SELECT SUM(amount), date FROM spends GROUP BY date;
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
@@ -125,6 +132,8 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERIES HERE
+INSERT INTO spends (date, transaction_number, supplier_invoice_number, supplier, expense_type, expense_area, description, amount)
+VALUES ('2021-08-19', 38104091, 3780119655, 'Dell', 'Hardware', 'IT', 'Computer Hardware Dell', 32000);
 
 ```
 
