@@ -91,8 +91,8 @@ describe("POST /products", () => {
 describe("POST /availability", () => {
   it("should create new product availability", async () => {
     const productAvailability = {
-      prodId: 22,
-      suppId: 2,
+      prodId: 1,
+      suppId: 3,
       unitPrice: 70,
     };
     const response = await request(app)
@@ -140,7 +140,7 @@ describe("POST /customers/:customerId", () => {
       city: "Glasgow",
       country: "Scotland",
     };
-    const response = await request(app).post("/customers/12").send(customer);
+    const response = await request(app).post("/customers/13").send(customer);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
@@ -157,7 +157,7 @@ describe("POST /customers/:customerId", () => {
 });
 describe("DELETE /orders/:orderId", () => {
   it("should delete existing order", async () => {
-    const response = await request(app).delete("/orders/17");
+    const response = await request(app).delete("/orders/4");
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -169,7 +169,7 @@ describe("DELETE /orders/:orderId", () => {
 
 describe("DELETE /customers/:customerId", () => {
   it("should delete existing customer without order", async () => {
-    const response = await request(app).delete("/customers/28");
+    const response = await request(app).delete("/customers/6");
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
