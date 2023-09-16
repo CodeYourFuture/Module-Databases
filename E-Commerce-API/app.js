@@ -10,10 +10,10 @@ const { Pool } = require("pg");
 const bodyParser = require("body-parser");
 const CORS = require("cors");
 const port = process.env.PORT || 5000;
+app.use(CORS());
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 app.use(express.json());
-app.use(CORS());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const pool = new Pool();
