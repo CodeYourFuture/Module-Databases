@@ -5,6 +5,7 @@ const app = express();
 // Use environment variables instead:
 // https://www.codementor.io/@parthibakumarmurugesan/what-is-env-how-to-set-up-and-run-a-env-file-in-node-1pnyxw9yxj
 
+require("dotenv").config({ path: "./development.env" });
 const { Pool } = require("pg");
 const bodyParser = require("body-parser");
 const CORS = require("cors");
@@ -15,13 +16,7 @@ app.use(express.json());
 app.use(CORS());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const pool = new Pool({
-  user: "coder",
-  password: "glasgow321!",
-  host: "localhost",
-  database: "cyf_ecommerce",
-  port: 5432,
-});
+const pool = new Pool();
 
 app.get("/products", (req, res) => {
   const allProducts = async () => {

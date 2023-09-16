@@ -17,6 +17,7 @@
   "license": "CC-BY-4-0",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "express": "^4.17.1",
     "nodemon": "^3.0.1",
     "pg": "^8.11.3"
