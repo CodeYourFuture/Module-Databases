@@ -8,9 +8,9 @@ const app = express();
 require("dotenv").config({ path: "./development.env" });
 const { Pool } = require("pg");
 const bodyParser = require("body-parser");
-const CORS = require("cors");
+// const CORS = require("cors");
 const port = process.env.PORT || 5000;
-app.use(CORS());
+// app.use(CORS());
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 app.use(express.json());
