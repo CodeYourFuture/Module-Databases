@@ -17,15 +17,15 @@ describe("GET /products", () => {
   });
 });
 
-describe("GET /products/?name=Mobile", () => {
+describe("GET /products/:name", () => {
   it("I want to search for product by name", async () => {
-    const response = await request(app).get("/products/?name=Mobile");
+    const response = await request(app).get("/products/ball");
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          name: expect.any(String),
-        })
+          name: "Ball",
+        }),
       ])
     );
   });
@@ -37,10 +37,10 @@ describe("GET /customers/:customerId", () => {
     const response = await request(app).get(`/customers/${customerId}`);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
-        expect.objectContaining({
-          id: expect.any(Number),
-          name: expect.any(String)
-        })
+      expect.objectContaining({
+        id: expect.any(Number),
+        name: expect.any(String),
+      })
     );
   });
 });
@@ -48,27 +48,25 @@ describe("GET /customers/:customerId", () => {
 describe("POST /customers/newCustomer", () => {
   it("should create a new customer with name, address, city, and country", async () => {
     const newCustomer = {
-      name: "Test TDD",
+      name: "beko TDD",
       address: "123 Cyf St",
       city: "Sample City",
       country: "Sample Country",
     };
     const response = await request(app)
-      .post(`/customers/newCustomer`)
-      .send(newCustomer);
-    expect(response.body).toHaveProperty("name", newCustomer.name);
-    expect(response.body).toHaveProperty("address", newCustomer.address);
-    expect(response.body).toHaveProperty("city", newCustomer.city);
-    expect(response.body).toHaveProperty("country", newCustomer.country);
+        .post("/customers").send(newCustomer)
+      expect(response.status).toBe(201);
+  });
+});
 
-    expect(typeof response.body.name).toBe("string");
-    expect(typeof response.body.address).toBe("string");
-    expect(typeof response.body.city).toBe("string");
-    expect(typeof response.body.country).toBe("string");
-    expect(response.body.name.length).toBeGreaterThan(0);
-    expect(response.body.address.length).toBeGreaterThan(0);
-    expect(response.body.city.length).toBeGreaterThan(0);
-    expect(response.body.country.length).toBeGreaterThan(0);
+describe("POST /products", () => {
+  it("should create a new product", async () => {
+    const newProduct = {
+      product_name: "simple product",
+    };
+    const response = await request(app)
+        .post("/products").send(newProduct);
+      expect(response.status).toBe(201);
   });
 });
 

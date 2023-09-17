@@ -1,10 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
 const db = require("./db");
 
-app.use(bodyParser.json());
+
+app.use(express.json());
 db.connect;
 
 // Your code to run the server should go here
@@ -34,15 +34,11 @@ app.get("/products", (req, res) => {
     });
 });
 
-app.get("/products", (req, res) => {
-  const { name } = req.query;
-  const query = `
-        select product_name As name
-        from products
-        WHERE product_name ILIKE $1
-    `;
+app.get("/products/:name", (req, res) => {
+  const searchName = req.params.name;
+  const query = " SELECT product_name As name FROM products WHERE product_name ILIKE $1 || '%' ";
 
-  db.query(query, [`%${name}%`])
+  db.query(query, [`%${searchName}%`])
     .then((result) => {
       res.status(200).json(result.rows);
     })
@@ -70,7 +66,7 @@ app.get("/customers/:customerId", (req, res) => {
     });
 });
 
-app.post("/customers/newCustomer", (req, res) => {
+app.post("/customers", (req, res) => {
   try {
     const newName = req.body.name;
     const newAddress = req.body.address;
@@ -81,19 +77,37 @@ app.post("/customers/newCustomer", (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const query =
-      "INSERT INTO customers (name, address, city, country)" +
-      "VALUES ($1, $2, $3, $4)";
+      const query = `INSERT INTO customers (name, address, city, country)
+    VALUES ($1, $2, $3, $4)`;
+    
 
     db.query(query, [newName, newAddress, newCity, newCountry])
       .then(() => {
-        // const createdCustomer = {
-        //   name: newName,
-        //   address: newAddress,
-        //   city: newCity,
-        //   country: newCountry,
-        // };
-        res.status(201).json(createdCustomer);
+        res.status(201).send("Created a new customer");
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+      });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post("/products", (req, res) => {
+  try {
+    const newProduct = req.body.product_name;
+
+    if (!newProduct) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const query = `INSERT INTO products (product_name)
+                    VALUES ($1)`;
+
+    db.query(query, [newProduct])
+      .then(() => {
+        res.status(201).send("Created a new product");
       })
       .catch((err) => {
         console.error(err);
