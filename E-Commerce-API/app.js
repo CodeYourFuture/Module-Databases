@@ -5,7 +5,7 @@ const db = require("./db");
 
 
 app.use(express.json());
-db.connect;
+// db.connect;
 
 // Your code to run the server should go here
 // Don't hardcode your DB password in the code or upload it to GitHub! Never ever do this ever.
