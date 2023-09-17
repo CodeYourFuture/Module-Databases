@@ -58,14 +58,13 @@ WHERE product_name LIKE '%socks%'
 SELECT p1.prod_id, p1.supp_id, p1.unit_price, p2.product_name FROM product_availability p1
 JOIN products p2
 ON p1.prod_id = p2.id
-WHERE unit_price >= 100
+WHERE unit_price = 100
 ```
 
 - [x] List the 5 most expensive products
 
 ```psql
 SELECT * FROM product_availability
-WHERE unit_price >= 10
 ORDER BY unit_price DESC
 LIMIT 5
 ```
@@ -73,10 +72,12 @@ LIMIT 5
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 
 ```psql
-SELECT s.supplier_name, p.product_name
-FROM suppliers s
-JOIN  products p
-ON country = 'United Kingdom'
+SELECT s.supplier_name, p.product_name, s.country
+FROM products p	
+JOIN product_availability pa
+ON p.id = pa.prod_id
+JOIN suppliers s ON supp_id = s.id
+WHERE country = 'United Kingdom'
 ```
 
 - [x] List all orders, including order items, from customer named Hope Crosby
@@ -99,10 +100,11 @@ SELECT
     p.product_name,
     pa.unit_price,
     oi.quantity
-FROM products p
-JOIN order_items oi ON p.id = oi.product_id
-JOIN orders o ON oi.order_id = o.id AND o.order_reference = 'ORD006'
-JOIN product_availability pa ON p.id = pa.prod_id;
+FROM orders
+JOIN order_items oi ON orders.id = oi.order_id
+JOIN products p ON oi.product_id = p.id
+JOIN product_availability pa ON oi.product_id = pa.prod_id AND oi.supplier_id = pa.supp_id
+WHERE orders.order_reference = 'ORD006';
 ```
 
 - [x] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
