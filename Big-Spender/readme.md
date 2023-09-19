@@ -48,7 +48,10 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 **You:** Absolutely. Here's the SQL query you need:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT
+SELECT *
+FROM spends
+WHERE Amount >= 30000 AND Amount <= 31000;
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -68,15 +71,24 @@ INSERT YOUR QUERY HERE
 **You:** Then here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT
+SELECT *
+FROM spends
+WHERE LOWER(Description) LIKE '%fee%';
 ```
+
+I tried to use regex but it does not accept regex.
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
 
 **You:** No worries. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT
+SELECT *
+FROM spends
+WHERE expense_area_id IN (SELECT id FROM expense_areas WHERE expense_area = 'Better Hospital Food');
+
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -85,6 +97,12 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+SELECT DATE_PART('month', date) AS month,
+       SUM(amount) AS total_amount
+FROM spends
+GROUP BY DATE_PART('month', date)
+ORDER BY DATE_PART('month', date);
+
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -93,6 +111,24 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+SELECT supplier_id,
+       supplier,
+       SUM(amount) AS total_amount_spent
+FROM spends
+INNER JOIN suppliers ON spends.supplier_id = suppliers.id
+GROUP BY supplier_id, supplier
+ORDER BY total_amount_spent DESC;
+
+-- SELECT supplier_id, supplier, SUM(amount) AS total_amount_spent: The SELECT statement specifies which columns will be included in the result. Here, we're selecting three columns:
+
+-- supplier_id: The ID of the supplier from the spends table.
+-- supplier: The name of the supplier from the suppliers table.
+-- SUM(amount) AS total_amount_spent: The total amount spent on each supplier. The SUM function aggregates the amount column for each supplier, and the AS total_amount_spent assigns an alias to the aggregated value.
+-- FROM spends INNER JOIN suppliers ON spends.supplier_id = suppliers.id: This is the FROM clause where we define the tables we're retrieving data from and how they're related. We use an INNER JOIN to combine data from the spends and suppliers tables based on the condition spends.supplier_id = suppliers.id. This condition links the supplier_id in the spends table with the id in the suppliers table.
+
+-- GROUP BY supplier_id, supplier: The GROUP BY clause groups the results based on the columns specified. Here, we're grouping by both supplier_id and supplier, which ensures that each unique combination of supplier ID and name forms a group.
+
+-- ORDER BY total_amount_spent DESC: The ORDER BY clause sorts the results. In this case, we're sorting the groups by the total_amount_spent in descending order (largest total amount first).
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -101,6 +137,13 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+SELECT suppliers.supplier,
+       SUM(spends.amount) AS total_amount_spent
+FROM spends
+INNER JOIN suppliers ON spends.supplier_id = suppliers.id
+GROUP BY suppliers.supplier
+ORDER BY total_amount_spent DESC;
+
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -113,6 +156,12 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+SELECT date,
+       SUM(amount) AS total_amount_spent
+FROM spends
+WHERE date IN ('2021-03-01', '2021-04-01')
+GROUP BY date;
+
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
@@ -125,6 +174,20 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERIES HERE
+INSERT INTO spends (
+    date,
+    transaction_no,
+    supplier_inv_no,
+    description,
+    amount
+) VALUES (
+    '2021-08-19',
+    38104091,
+    3780119655,
+    'Computer Hardware Dell',
+    32000
+);
+
 
 ```
 
