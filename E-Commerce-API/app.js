@@ -24,6 +24,12 @@ const pool = new Pool({
 });
 
 // As a user, I want to view a list of all products with their prices and supplier names.
+// In a real application, I fetch products database.
+app.get("/products", (req, res) => {
+  res.status(200).json(products);
+});
+
+// As a user, I want to search for products by name.
 app.get("/products", async (req, res) => {
   try {
     const client = await pool.connect();
@@ -358,9 +364,12 @@ app.delete("/orders/:orderId", async (req, res) => {
     const orderExistsQuery = "SELECT id FROM orders WHERE id = $1";
     const orderExistsResult = await client.query(orderExistsQuery, [orderId]);
 
-    if (orderExistsResult.rowCount === 0) {
-      // Order not found
-      client.release();
+    // Check if the order with the provided ID exists in the database
+    const orderExists = await db.query("SELECT 1 FROM orders WHERE id = $1", [
+      orderId,
+    ]);
+
+    if (!orderExists.rows.length) {
       return res.status(404).json({ error: "Order not found" });
     }
 
@@ -394,7 +403,11 @@ app.delete("/customers/:customerId", async (req, res) => {
       values: [customerId],
     };
 
-    const ordersResult = await pool.query(checkOrdersQuery);
+    // Check if the customer with the provided ID exists in the database
+    const customerExists = await db.query(
+      "SELECT 1 FROM customers WHERE id = $1",
+      [customerId]
+    );
 
     if (ordersResult.rows.length > 0) {
       return res.status(400).json({
@@ -402,13 +415,17 @@ app.delete("/customers/:customerId", async (req, res) => {
       });
     }
 
-    // Delete the customer if no associated orders found
-    const deleteCustomerQuery = {
-      text: "DELETE FROM customers WHERE id = $1",
-      values: [customerId],
-    };
+    // Check if the customer has any orders
+    const customerHasOrders = await db.query(
+      "SELECT 1 FROM orders WHERE customer_id = $1",
+      [customerId]
+    );
 
-    await pool.query(deleteCustomerQuery);
+    if (customerHasOrders.rows.length) {
+      return res
+        .status(400)
+        .json({ error: "Customer has existing orders and cannot be deleted" });
+    }
 
     res.status(204).send(); // No content, indicating successful deletion
   } catch (error) {
@@ -464,7 +481,6 @@ app.get("/customers/:customerId/orders", async (req, res) => {
   }
 });
 
-// Export your app
 module.exports = app;
 
 // original;

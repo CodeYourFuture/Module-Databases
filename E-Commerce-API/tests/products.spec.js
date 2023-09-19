@@ -450,15 +450,16 @@ describe("DELETE /customers/:customerId", () => {
 });
 
 // As a user, I want to delete an existing customer only if they do not have any orders.
-describe("DELETE /customers/:customerId", () => {
-  it("should delete an existing customer only if they have no orders", async () => {
-    // First, create a new customer without any orders
-    const customerResponse = await request(app).post("/customers").send({
-      name: "Test Customer",
-      address: "123 Test St",
-      city: "Testville",
-      country: "Testland",
-    });
+// As a user, I want to delete an existing customer only if they do not have any orders.
+describe("DELETE /customers/:id", () => {
+  it("should delete an existing customer without orders", async () => {
+    // Create a new customer
+    const newCustomer = {
+      name: "John Doe",
+      address: "123 Main St",
+      city: "New York",
+      country: "USA",
+    };
 
     expect(customerResponse.status).toBe(201);
     const customer = customerResponse.body;
