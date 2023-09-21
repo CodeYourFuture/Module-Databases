@@ -48,13 +48,16 @@ Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
     ```sql
-    select * from products  WHERE product_name ILIKE '%socks%';
+    SELECT * FROM products  WHERE product_name ILIKE '%socks%';
     ```
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
 ```sql
-    select prod_id, product_name, unit_price, supp_id from product_availability join products on prod_id = id where unit_price > 100;
+    SELECT prod_id, product_name, unit_price, supp_id FROM product_availability JOIN products ON prod_id = id WHERE unit_price > 100;
 ```
 - [ ] List the 5 most expensive products
+    ```sql
+        SELECT GREATEST(unit_price) FROM product_availability LIMIT 5;
+    ```
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 - [ ] List all orders, including order items, from customer named Hope Crosby
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
