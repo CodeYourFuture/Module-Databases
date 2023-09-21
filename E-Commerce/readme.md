@@ -51,6 +51,9 @@ Write SQL queries to complete the following tasks:
     select * from products  WHERE product_name ILIKE '%socks%';
     ```
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+```sql
+    select prod_id, product_name, unit_price, supp_id from product_availability join products on prod_id = id where unit_price > 100;
+```
 - [ ] List the 5 most expensive products
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 - [ ] List all orders, including order items, from customer named Hope Crosby
