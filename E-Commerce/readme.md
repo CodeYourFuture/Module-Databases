@@ -40,6 +40,7 @@ erDiagram
     }
     customers ||--o{ orders : places
 ```
+    ## ERD is in this folder with .png extension
 
 ### Query Practice
 
