@@ -59,6 +59,7 @@ Write SQL queries to complete the following tasks:
         SELECT GREATEST(unit_price) FROM product_availability LIMIT 5;
     ```
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+
     **note for reviewer: this query returns 9 rows so i am not sure whether it is right or not**
     ```sql
         SELECT product_name FROM products JOIN product_availability ON products.id = product_availability.prod_id JOIN suppliers ON product_availability.supp_id = suppliers.id WHERE country ILIKE 'United Kingdom';
@@ -69,6 +70,9 @@ Write SQL queries to complete the following tasks:
     ```
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+    ```sql
+        SELECT c.name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity FROM customers AS c JOIN orders AS o ON c.id = o.customer_id JOIN order_items AS oi ON o.id = oi.order_id JOIN products AS p ON oi.product_id = p.id JOIN suppliers AS s ON oi.supplier_id = s.id;
+    ```
 
 ## Acceptance Criteria
 
