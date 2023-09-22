@@ -51,14 +51,18 @@ Write SQL queries to complete the following tasks:
     SELECT * FROM products  WHERE product_name ILIKE '%socks%';
     ```
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
-```sql
-    SELECT prod_id, product_name, unit_price, supp_id FROM product_availability JOIN products ON prod_id = id WHERE unit_price > 100;
-```
+    ```sql
+        SELECT prod_id, product_name, unit_price, supp_id FROM product_availability JOIN products ON prod_id = id WHERE unit_price > 100;
+    ```
 - [ ] List the 5 most expensive products
     ```sql
         SELECT GREATEST(unit_price) FROM product_availability LIMIT 5;
     ```
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+    ** note for reviewer: this query returns 9 rows so i am not sure whether it is right or not **
+    ```sql
+        SELECT product_name FROM products JOIN product_availability ON products.id = product_availability.prod_id JOIN suppliers ON product_availability.supp_id = suppliers.id WHERE country ILIKE 'United Kingdom';
+    ```
 - [ ] List all orders, including order items, from customer named Hope Crosby
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
