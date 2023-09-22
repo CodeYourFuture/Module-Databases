@@ -59,11 +59,14 @@ Write SQL queries to complete the following tasks:
         SELECT GREATEST(unit_price) FROM product_availability LIMIT 5;
     ```
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
-    ** note for reviewer: this query returns 9 rows so i am not sure whether it is right or not **
+    **note for reviewer: this query returns 9 rows so i am not sure whether it is right or not**
     ```sql
         SELECT product_name FROM products JOIN product_availability ON products.id = product_availability.prod_id JOIN suppliers ON product_availability.supp_id = suppliers.id WHERE country ILIKE 'United Kingdom';
     ```
 - [ ] List all orders, including order items, from customer named Hope Crosby
+    ```sql
+        SELECT o.id AS order_id, o.order_date, o.order_reference, oi.product_id, oi supplier_id, oi.quantity FROM orders o JOIN order_items oi ON o.id = oi.order_id JOIN customers c ON o.customer_id = c.id WHERE c.name = 'Hope Crosby';
+    ```
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
