@@ -114,8 +114,13 @@ select supplier_id , sum(amount) as total from spends group by supplier_id order
 
 **You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
 
+<!-- This query returns supplier names as well by joining supplier table, order then asc based on the supplier name. -->
+
 ```sql
 INSERT YOUR QUERY HERE
+select sd.supplier_id ,spl.supplier ,sum(sd.amount) as total from spends sd join suppliers spl on (spl.id=sd.supplier_id) group by spl.supplier, sd.supplier_id
+order by spl.supplier
+
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
