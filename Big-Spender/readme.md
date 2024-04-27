@@ -91,8 +91,11 @@ select * from spends where lower(description) like '%fee%';
 
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
+<!-- This query add up amounts in the spends table and group them based on months; -->
+
 ```sql
 CREATE YOUR QUERY HERE
+select sum(amount) , to_char(date,'yyyy-mm') as month from spends group by month;
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
