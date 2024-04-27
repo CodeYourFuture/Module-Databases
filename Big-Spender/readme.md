@@ -80,8 +80,11 @@ INSERT YOUR QUERY HERE
 
 **You:** No worries. Here's the query for that:
 
+ <!-- This query returns all the words contain the word 'fee' , like 'fees' , 'FEES' , 'Fees' . -->
+
 ```sql
 INSERT YOUR QUERY HERE
+select * from spends where lower(description) like '%fee%';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
