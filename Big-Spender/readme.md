@@ -47,8 +47,13 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 **You:** Absolutely. Here's the SQL query you need:
 
+<!-- INSERT YOUR QUERY HERE -->
+
+<!-- This query returns all the amounts between 30 to 31 tousands in the spends table. -->
+
 ```sql
-INSERT YOUR QUERY HERE
+
+SELECT * FROM spends WHERE amount BETWEEN 30000 AND 31000;
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
