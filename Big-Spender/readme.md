@@ -102,8 +102,12 @@ select sum(amount) , to_char(date,'yyyy-mm') as month from spends group by month
 
 **You:** Sure thing. Here's the query for that:
 
+<!-- This query returns supplier_id's and the amount been spent on them, and ordered by supplier id's . -->
+
 ```sql
 INSERT YOUR QUERY HERE
+select supplier_id , sum(amount) as total from spends group by supplier_id order by supplier_id ;
+
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
