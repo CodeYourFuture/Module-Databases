@@ -162,7 +162,7 @@ INSERT INTO spends(expense_type_id,expense_area_id , supplier_id , date , transa
 values(42,46,66,'2021-08-19',38104091,3780119655,'Computer Hardware Dell',32000.00)
 ;
 -- After Insert this data and did some query on the table I realised another field with name 'Hardware Purch' is in the expense_types
--- also there wasn't an IT feild for expense areas so i created it, I hope I've understood the questions correctly .
+-- also there wasn't an IT feild for expense areas so i created it, I hope I understood the questions correctly .
 
 ```
 
