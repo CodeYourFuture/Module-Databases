@@ -131,8 +131,12 @@ order by spl.supplier
 
 **You:** Then you need an extra clause. Here's the query:
 
+<!-- It returns total of amount on first of March and first of April . -->
+
 ```sql
 CREATE YOUR QUERY HERE
+select date , sum(amount) from spends where (date='2021-03-01') or (date='2021-04-01') group by date;
+
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
