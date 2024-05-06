@@ -47,7 +47,7 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 **You:** Absolutely. Here's the SQL query you need:
 
-```sql
+```SELECT * FROM spends WHERE amount BETWEEN 30000 AND 31000;
 INSERT YOUR QUERY HERE
 ```
 
@@ -67,7 +67,7 @@ INSERT YOUR QUERY HERE
 
 **You:** Then here's the query for that:
 
-```sql
+```SELECT * FROM spends WHEREQ description LIKE '%fee%';
 INSERT YOUR QUERY HERE
 ```
 
