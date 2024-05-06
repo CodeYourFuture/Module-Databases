@@ -77,7 +77,12 @@ select * from product_availability order by unit_price desc limit 5;
 ```
 
 - [ ] List all orders, including order items, from customer named Hope Crosby
-- [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+- [x] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+```sql
+    select pr.product_name, oi.quantity,sp.supplier_name from orders o join order_items oi on (o.id=oi.order_id) join suppliers sp on (oi.supplier_id=sp.id) join products pr on (pr.id=oi.product_id) where order_reference='ORD006';
+```
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
 ## Acceptance Criteria
