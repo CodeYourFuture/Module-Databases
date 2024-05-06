@@ -61,15 +61,15 @@ Write SQL queries to complete the following tasks:
     -- the query shows the product id , its name , supplier id and supplier name , along side the unit_price .
 ```
 
-- [ ] List the 5 most expensive products
+- [x] List the 5 most expensive products
 
 ```sql
 select * from product_availability order by unit_price desc limit 5;
-the query order unit_pric descending and limit results to first 5 items.
+-- the query order unit_pric descending and limit results to first 5 items.
 
 ```
 
-- [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+- [x] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 
 ```sql
     select p.product_name ,sp.supplier_name  from order_items o join products p on (o.product_id=p.id) join suppliers sp on (o.supplier_id=sp.id) where sp.country='United Kingdom';
