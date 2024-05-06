@@ -38,7 +38,7 @@ erDiagram
         id INT PK
         name VARCHAR(50) NOT NULL
     }
-    customers ||--o{ orders : places
+    customers ||--o{ orders : places}
 ```
 
 ### Query Practice
@@ -46,6 +46,13 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+
+```sql
+    select * from products where product_name like '%sock%';
+
+    -- producing all the names in product table containing 'sock'
+```
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
 - [ ] List the 5 most expensive products
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
