@@ -89,7 +89,11 @@ select * from product_availability order by unit_price desc limit 5;
     select pr.product_name, oi.quantity,sp.supplier_name from orders o join order_items oi on (o.id=oi.order_id) join suppliers sp on (oi.supplier_id=sp.id) join products pr on (pr.id=oi.product_id) where order_reference='ORD006';
 ```
 
-- [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+- [x] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+
+```sql
+    select cu.name , o.order_reference , o.order_date,pr.product_name , sp.supplier_name , oi.quantity from orders o join customers cu on (o.customer_id=cu.id) join order_items oi on(oi.order_id=o.id) join products pr on(oi.product_id=pr.id) join suppliers sp on (oi.supplier_id=sp.id) ;
+```
 
 ## Acceptance Criteria
 
