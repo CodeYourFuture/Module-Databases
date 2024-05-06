@@ -77,6 +77,12 @@ select * from product_availability order by unit_price desc limit 5;
 ```
 
 - [ ] List all orders, including order items, from customer named Hope Crosby
+
+```sql
+    select o.id,o.order_date,o.order_reference ,cu.name,pr.product_name from orders o join order_items oi on (o.id=oi.order_id) join customers cu on (o.customer_id=cu.id) join products pr on (oi.product_id=pr.id)  where name='Hope Crosby';
+    -- This query connects 4 tabels but it returns only order id  order_date , order_reference , customer name and product name.
+```
+
 - [x] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 
 ```sql
