@@ -53,7 +53,7 @@ Write SQL queries to complete the following tasks:
     -- producing all the names in product table containing 'sock'
 ```
 
-- [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+- [x] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
 
 ```sql
     select pv.prod_id , p.product_name ,pv.supp_id,sp.supplier_name , pv.unit_price from product_availability pv join products p on (pv.prod_id=p.id) join suppliers sp on(sp.id=pv.supp_id)  where unit_price>100;
@@ -62,6 +62,13 @@ Write SQL queries to complete the following tasks:
 ```
 
 - [ ] List the 5 most expensive products
+
+```sql
+select * from product_availability order by unit_price desc limit 5;
+the query order unit_pric descending and limit results to first 5 items.
+
+```
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 - [ ] List all orders, including order items, from customer named Hope Crosby
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
