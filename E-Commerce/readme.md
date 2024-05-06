@@ -97,7 +97,7 @@ select * from product_availability order by unit_price desc limit 5;
 
 ## Acceptance Criteria
 
-- [ ] The `cyf_ecommerce` database is imported and set up correctly
-- [ ] The database schema is drawn correctly to visualize relationships between tables
-- [ ] The SQL queries retrieve the correct data according to the tasks listed above
-- [ ] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
+- [x] The `cyf_ecommerce` database is imported and set up correctly
+- [x] The database schema is drawn correctly to visualize relationships between tables
+- [x] The SQL queries retrieve the correct data according to the tasks listed above
+- [x] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
