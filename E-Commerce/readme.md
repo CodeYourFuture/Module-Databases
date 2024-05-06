@@ -70,6 +70,12 @@ the query order unit_pric descending and limit results to first 5 items.
 ```
 
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+
+```sql
+    select p.product_name ,sp.supplier_name  from order_items o join products p on (o.product_id=p.id) join suppliers sp on (o.supplier_id=sp.id) where sp.country='United Kingdom';
+    -- Query retrieves rpoduct name and supp name from other tables using join
+```
+
 - [ ] List all orders, including order items, from customer named Hope Crosby
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
