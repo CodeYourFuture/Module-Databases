@@ -45,7 +45,7 @@ erDiagram
 
 Write SQL queries to complete the following tasks:
 
-- [ ] List all the products whose name contains the word "socks"
+- [x] List all the products whose name contains the word "socks"
 
 ```sql
     select * from products where product_name like '%sock%';
@@ -54,6 +54,13 @@ Write SQL queries to complete the following tasks:
 ```
 
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+```sql
+    select pv.prod_id , p.product_name ,pv.supp_id,sp.supplier_name , pv.unit_price from product_availability pv join products p on (pv.prod_id=p.id) join suppliers sp on(sp.id=pv.supp_id)  where unit_price>100;
+
+    -- the query shows the product id , its name , supplier id and supplier name , along side the unit_price .
+```
+
 - [ ] List the 5 most expensive products
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
 - [ ] List all orders, including order items, from customer named Hope Crosby
