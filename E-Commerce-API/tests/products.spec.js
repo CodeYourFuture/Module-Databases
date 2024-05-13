@@ -16,3 +16,18 @@ describe("GET /products", () => {
     );
   });
 });
+
+describe("GET search/:search", () => {
+  it("Should return a the item is searched by user", async () => {
+    const response = await request(app).get(`search/:${Ball}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          product_name: expect.any(String),
+        }),
+      ])
+    );
+  });
+});

@@ -32,9 +32,29 @@ const db = new Pool({
   port: 5432,
 });
 
-app.get("/customers", async (req, res) => {
-  const customers = await db.query("SELECT * FROM orders");
+app.get("/products", async (req, res) => {
+  const customers = await db.query("SELECT * FROM products");
   res.status(200).send(customers.rows);
+});
+
+app.get("/search/:search", async (req, res) => {
+  const searchItem = req.params.search;
+  try {
+    const resultInDB = await db.query(
+      "SELECT * FROM products WHERE product_name=$1",
+      [searchItem]
+    );
+    if (resultInDB.rows.length !== 0) {
+      res.status(200).json(resultInDB.rows);
+    } else {
+      res
+        .status(404)
+        .json({ message: "No products found for the search term." });
+    }
+  } catch (error) {
+    res.status(404).json({ success: flase });
+    console.error(error);
+  }
 });
 
 module.exports = app;
