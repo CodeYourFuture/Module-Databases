@@ -33,8 +33,10 @@ const db = new Pool({
 });
 
 app.get("/products", async (req, res) => {
-  const customers = await db.query("SELECT * FROM products");
-  res.status(200).send(customers.rows);
+  const products = await db.query(
+    "SELECT pr.product_name AS NAME , pa.unit_price AS price, sp.supplier_name AS supplierName FROM product_availability pa JOIN suppliers sp ON(pa.supp_id=sp.id) JOIN products pr ON (pa.prod_id=pr.id);"
+  );
+  res.status(200).send(products.rows);
 });
 
 app.get("/search/:search", async (req, res) => {
