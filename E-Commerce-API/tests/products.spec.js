@@ -108,3 +108,31 @@ describe("POST /customers", () => {
     );
   });
 });
+
+describe("POST /products", () => {
+  it("Should create a new product and return a successful message if insertion was seccessful", async () => {
+    const newProduct = {
+      productName: "Laptop HP",
+    };
+    const response = await request(app).post("/products").send(newProduct);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: "New product created successfully",
+      })
+    );
+  });
+
+  it("Should return a message shows insertion failed with incoorected values for the product or empty values", async () => {
+    const badProduct = {
+      productName: "",
+    };
+    const response = await request(app).post("/products").send(badProduct);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! This product can not be created!",
+      })
+    );
+  });
+});

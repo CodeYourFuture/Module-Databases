@@ -109,4 +109,29 @@ app.post("/customers", (req, res) => {
   }
 });
 
+app.post("/products", async (req, res) => {
+  const bodyData = {
+    productName: req.body.productName,
+  };
+  try {
+    if (
+      bodyData.productName !== undefined &&
+      bodyData.productName !== "" &&
+      bodyData.productName !== null
+    ) {
+      const productInsertion = db.query(
+        "INSERT INTO products(product_name) VALUES ($1)",
+        [bodyData.productName]
+      );
+      res.status(200).json({ message: "New product created successfully" });
+    } else {
+      res
+        .status(400)
+        .json({ error: "Bad request! This product can not be created!" });
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+    res.status(500).json({ error: "Internal server error. inseryion failed!" });
+  }
+});
 module.exports = app;
