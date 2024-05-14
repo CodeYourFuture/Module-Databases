@@ -85,6 +85,28 @@ app.get("/customers/:customerId", async (req, res) => {
   }
 });
 
-app.post("/customers", (req, res) => {});
+app.post("/customers", (req, res) => {
+  const bodyData = {
+    name: req.body.name,
+    address: req.body.address,
+    city: req.body.city,
+    country: req.body.country,
+  };
+
+  try {
+    if (bodyData.name !== "" && bodyData.name !== undefined) {
+      const insertCustomer = db.query(
+        "INSERT INTO customers(name, address, city, country) VALUES ($1, $2, $3, $4)",
+        [bodyData.name, bodyData.address, bodyData.city, bodyData.country]
+      );
+      res.status(200).json({ message: "Customer created successfully" });
+    } else {
+      res.status(400).json({ error: "Bad Request! Name cannot be empty" });
+    }
+  } catch (error) {
+    console.error("Error inserting customer:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 module.exports = app;
