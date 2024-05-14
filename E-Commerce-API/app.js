@@ -33,29 +33,30 @@ const db = new Pool({
 });
 
 app.get("/products", async (req, res) => {
-  const products = await db.query(
-    "SELECT pr.product_name AS NAME , pa.unit_price AS price, sp.supplier_name AS supplierName FROM product_availability pa JOIN suppliers sp ON(pa.supp_id=sp.id) JOIN products pr ON (pa.prod_id=pr.id);"
-  );
-  res.status(200).send(products.rows);
-});
-
-app.get("/search/:search", async (req, res) => {
-  const searchItem = req.params.search;
+  const queryParam = req.query.search;
+  // console.log(queryParam, queryParam.length, "<-------queryparam");
   try {
-    const resultInDB = await db.query(
-      "SELECT * FROM products WHERE product_name=$1",
-      [searchItem]
-    );
-    if (resultInDB.rows.length !== 0) {
-      res.status(200).json(resultInDB.rows);
+    if (queryParam === undefined) {
+      const products = await db.query(
+        "SELECT pr.product_name AS NAME , pa.unit_price AS price, sp.supplier_name AS supplierName FROM product_availability pa JOIN suppliers sp ON(pa.supp_id=sp.id) JOIN products pr ON (pa.prod_id=pr.id);"
+      );
+      res.status(200).send(products.rows);
     } else {
-      res
-        .status(404)
-        .json({ message: "No products found for the search term." });
+      const queriedSearch = await db.query(
+        "SELECT pr.product_name AS NAME , pa.unit_price AS price, sp.supplier_name AS supplierName FROM product_availability pa JOIN suppliers sp ON(pa.supp_id=sp.id) JOIN products pr ON (pa.prod_id=pr.id) WHERE pr.product_name=$1;",
+        [queryParam]
+      );
+      if (queriedSearch.rows.length !== 0) {
+        res.status(200).json(queriedSearch.rows);
+      } else {
+        res
+          .status(404)
+          .json({ message: "No products found for the searched term." });
+      }
     }
-  } catch (error) {
-    res.status(404).json({ success: flase });
-    console.error(error);
+  } catch (err) {
+    console.error(err, "<----Error happened");
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
