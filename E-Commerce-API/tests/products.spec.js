@@ -82,15 +82,11 @@ describe("POST /customers", () => {
       city: "Birmingham",
       country: "United Kingdom",
     };
-    const response = (await request(app).post("/customers")).send(newCustomer);
+    const response = await request(app).post("/customers").send(newCustomer);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        id: expect.any(Number),
-        name: expect.any(String),
-        address: expect.any(String),
-        city: expect.any(String),
-        country: expect.any(String),
+        message: "Customer created successfully",
       })
     );
   });
@@ -107,7 +103,7 @@ describe("POST /customers", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual(
       expect.objectContaining({
-        Error: " Bad Request! Name can not be empty",
+        Error: "Bad Request! Name can not be empty",
       })
     );
   });

@@ -101,7 +101,7 @@ app.post("/customers", (req, res) => {
       );
       res.status(200).json({ message: "Customer created successfully" });
     } else {
-      res.status(400).json({ error: "Bad Request! Name cannot be empty" });
+      res.status(400).json({ Error: "Bad Request! Name can not be empty" });
     }
   } catch (error) {
     console.error("Error inserting customer:", error);
