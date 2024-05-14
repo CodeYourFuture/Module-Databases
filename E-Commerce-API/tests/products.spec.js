@@ -72,3 +72,43 @@ describe("GET /customers/:customerId , should load a single customer by their ID
     );
   });
 });
+
+//test to add a new customer to the db
+describe("POST /customers", () => {
+  it("Should add a new customer with name address city and ciuntry", async () => {
+    const newCustomer = {
+      name: "test Customer",
+      address: "B00 0XX",
+      city: "Birmingham",
+      country: "United Kingdom",
+    };
+    const response = (await request(app).post("/customers")).send(newCustomer);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: expect.any(Number),
+        name: expect.any(String),
+        address: expect.any(String),
+        city: expect.any(String),
+        country: expect.any(String),
+      })
+    );
+  });
+
+  it("Should return an object with a message if body is not set correctly like empty string", async () => {
+    //bad request with empty name
+    const newCustomer = {
+      name: "",
+      address: "B00 0XX",
+      city: "Birmingham",
+      country: "United Kingdom",
+    };
+    const response = await request(app).post("/customers").send(newCustomer);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        Error: " Bad Request! Name can not be empty",
+      })
+    );
+  });
+});

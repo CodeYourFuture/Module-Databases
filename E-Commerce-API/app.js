@@ -9,6 +9,7 @@ const express = require("express");
 
 const { Pool } = require("pg");
 const app = express();
+app.use(express.json());
 const port = 3000;
 // const db = new Pool({
 //   user: process.env.DB_USERNAME,
@@ -83,5 +84,7 @@ app.get("/customers/:customerId", async (req, res) => {
     res.status(500).json({ error: "Internal server error!" });
   }
 });
+
+app.post("/customers", (req, res) => {});
 
 module.exports = app;
