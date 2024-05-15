@@ -136,3 +136,118 @@ describe("POST /products", () => {
     );
   });
 });
+
+//test collection for availability endpoint....
+describe("POST availabilty", () => {
+  it("Should return a successful messgae if a new product availabilty is done ", async () => {
+    //This values are duplicate now so check for new one other wise test will fail
+    const newProductAvalability = {
+      prod_id: 3,
+      suppId: 4,
+      unitPrice: 111,
+    };
+
+    const response = await request(app)
+      .post("/availability")
+      .send(newProductAvalability);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: "New product availability created successfully.",
+      })
+    );
+  });
+
+  it("Should return an error message if product id or supp id or price does not match requierments", async () => {
+    // /product id is negative and doesnt exist in the DB
+    const badProductAvailability = {
+      prodId: -1,
+      suppId: 2,
+      unitPrice: 100,
+    };
+
+    const response = await request(app)
+      .post("/availability")
+      .send(badProductAvailability);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! Product id does not exist in the DB",
+      })
+    );
+  });
+
+  it("Should return an error message if product id or supp id or price does not match requierments", async () => {
+    //supplier id is negative
+    const badProductAvailability = {
+      prodId: 2,
+      suppId: -2,
+      unitPrice: 100,
+    };
+
+    const response = await request(app)
+      .post("/availability")
+      .send(badProductAvailability);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! supplier id does not exist in the DB",
+      })
+    );
+  });
+
+  it("Should return an error message if product id or supp id or price does not match requierments", async () => {
+    const badProductAvailability = {
+      prodId: 2,
+      suppId: 2,
+      unitPrice: -100,
+    };
+
+    const response = await request(app)
+      .post("/availability")
+      .send(badProductAvailability);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! Price should be a pasitive integer value",
+      })
+    );
+  });
+  it("Should return an error message if product id or supp id or price does not match requierments", async () => {
+    const badProductAvailability = {
+      prodId: 2,
+      suppId: 2,
+      unitPrice: "string",
+    };
+
+    const response = await request(app)
+      .post("/availability")
+      .send(badProductAvailability);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! Price should be a pasitive integer value",
+      })
+    );
+  });
+
+  it("Should return an error message if product id or supp id or price does not match requierments", async () => {
+    // check for duplicate values
+    const badProductAvailability = {
+      prodId: 3,
+      suppId: 3,
+      unitPrice: 100,
+    };
+
+    const response = await request(app)
+      .post("/availability")
+      .send(badProductAvailability);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! Duplicate values can not be inserted",
+      })
+    );
+  });
+});

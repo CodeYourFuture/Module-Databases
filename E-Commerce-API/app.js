@@ -134,4 +134,72 @@ app.post("/products", async (req, res) => {
     res.status(500).json({ error: "Internal server error. inseryion failed!" });
   }
 });
+
+//Availibality endpoint to add new available product
+app.post("/availability", async (req, res) => {
+  const bodyData = {
+    prodId: req.body.prodId,
+    suppId: req.body.suppId,
+    unitPrice: parseInt(req.body.unitPrice),
+  };
+  console.log(bodyData);
+  try {
+    //this is an exist clause going to be used to check if prod_id and supp_id exist in the table
+    const queryCheckAvailibility =
+      "SELECT EXISTS(SELECT 1 FROM products WHERE id=$1) AS product_id_exists,EXISTS(SELECT 1 FROM suppliers WHERE id=$2) AS supplier_id_exists;";
+
+    const prodIdExist = await db.query(
+      "SELECT EXISTS(SELECT 1 FROM products WHERE id=$1)AS prod_id",
+      [bodyData.prodId]
+    );
+
+    const suppIdExist = await db.query(
+      "SELECT EXISTS(SELECT 1 FROM suppliers WHERE id=$1) AS supp_id",
+      [bodyData.suppId]
+    );
+    //check for duplicate values in the db
+    const duplicateKeyValue = await db.query(
+      "SELECT * FROM product_availability WHERE prod_id=$1 AND supp_id=$2",
+      [bodyData.prodId, bodyData.suppId]
+    );
+
+    console.log(duplicateKeyValue.rows, "ducplicate values");
+
+    const areAvailable = await db.query(queryCheckAvailibility, [
+      bodyData.prodId,
+      bodyData.suppId,
+    ]);
+    console.log(prodIdExist.rows, suppIdExist.rows, "check existence query");
+    if (bodyData.unitPrice >= 0 && Number.isInteger(bodyData.unitPrice)) {
+      if (!prodIdExist.rows[0].prod_id) {
+        res
+          .status(400)
+          .json({ error: "Bad request! Product id does not exist in the DB" });
+      } else if (!suppIdExist.rows[0].supp_id) {
+        res
+          .status(400)
+          .json({ error: "Bad request! supplier id does not exist in the DB" });
+      } else if (duplicateKeyValue.rows.length !== 0) {
+        res
+          .status(400)
+          .json({ error: "Bad request! Duplicate values can not be inserted" });
+      } else {
+        const insertProductAvailability = await db.query(
+          "INSERT INTO product_availability(prod_id , supp_id , unit_price) VALUES($1 , $2 , $3)",
+          [bodyData.prodId, bodyData.suppId, bodyData.unitPrice]
+        );
+        res
+          .status(200)
+          .json({ message: "New product available created successfully" });
+      }
+    } else {
+      res.status(400).json({
+        error: "Bad request! Price should be a pasitive integer value",
+      });
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+    res.status(500).json({ error: "Internal server error!" });
+  }
+});
 module.exports = app;
