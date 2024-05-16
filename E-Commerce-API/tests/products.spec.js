@@ -518,3 +518,52 @@ describe("DELETE customers/:customerId", () => {
     );
   });
 });
+
+describe.only("GET /customers/:customerId/orders", () => {
+  it("Should return a successful response for the query", async () => {
+    const response = await request(app).get("/customers/:customerId/orders");
+    expect(response.status(200));
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          order_reference: expect.any(String),
+          order_date: expect.any(Date),
+          product_name: expect.any(String),
+          unit_price: expect.any(Number),
+          supplier_name: expect.any(String),
+          quantity: expect.any(Number),
+        }),
+      ])
+    );
+  });
+  //return an object with an error message that customer does not exist in the DB
+  it("Should return an error id customer id does not exist", async () => {
+    const response = await request(app).get("/customers/-1/orders");
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "customer not found",
+      })
+    );
+  });
+
+  it("Should return an error if customer id is not valid", async () => {
+    const response = await request(app).get("/customers/str/orders");
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "customer id is not valid",
+      })
+    );
+  });
+
+  it("Should return an error if customer id is not available", async () => {
+    const response = await request(app).get("/customers/orders");
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "customer id not provided",
+      })
+    );
+  });
+});
