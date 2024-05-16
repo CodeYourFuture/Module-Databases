@@ -83,9 +83,9 @@ or
 
 ```sql
 select s.*
-from spends s.*
+from spends s
 join expense_areas ea on s.expense_area_id = ea.id
-where ea.expense_area = 'Better Hospital Food';
+where ea.expense_area ilike 'Better Hospital Food';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
