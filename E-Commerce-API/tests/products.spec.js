@@ -444,7 +444,7 @@ describe("POST update /Customers/:customerId", () => {
 //test collection to delete an order
 describe("DELETE /orders/:orderId", () => {
   it("Should return a success message of deletion for the associated order", async () => {
-    const response = awaitrequest(app).delete("/orders/15");
+    const response = await request(app).delete("/orders/15");
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
