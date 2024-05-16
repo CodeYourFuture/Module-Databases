@@ -251,3 +251,111 @@ describe("POST availabilty", () => {
     );
   });
 });
+
+//Test collections to add a new order for a specific customer
+describe("POST /customers/:customerId/orders", () => {
+  it("should return a success message if new order for existence customer completed", async () => {
+    const newOrder = {
+      orderDate: "2024-5-07",
+      orderReference: "ORD011",
+      customer_id: 1,
+    };
+    const response = await request(app)
+      .post("/customers/1/orders")
+      .send(newOrder);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: "New order created successfully for customer",
+      })
+    );
+  });
+  it("should return an error maeesage if order date is null or empty or not in a valid format", async () => {
+    const newOrder = {
+      //order date is null
+      orderDate: null,
+      orderReference: "ORD011",
+      customer_id: 1,
+    };
+    const response = await request(app)
+      .post("/customers/1/orders")
+      .send(newOrder);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error:
+          "Bad request! Order date is not valid. check nullity or date format",
+      })
+    );
+  });
+
+  it("should return an error maeesage if order date is null or empty or not in a valid format", async () => {
+    const newOrder = {
+      //order date is empty
+      orderDate: "",
+      orderReference: "ORD011",
+      customer_id: 1,
+    };
+    const response = await request(app)
+      .post("/customers/1/orders")
+      .send(newOrder);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error:
+          "Bad request! Order date is not valid. check nullity or date format",
+      })
+    );
+  });
+
+  it("should return an error maeesage if order reference is null or empty or not in a valid format", async () => {
+    const newOrder = {
+      orderDate: "2024-05-22",
+      //order reference is empty
+      orderReference: "",
+      customer_id: 1,
+    };
+    const response = await request(app)
+      .post("/customers/1/orders")
+      .send(newOrder);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! Order reference can not be null or empty",
+      })
+    );
+  });
+
+  it("should return an error maeesage if order reference is null or empty or not in a valid format", async () => {
+    const newOrder = {
+      orderDate: "2024-05-22",
+      orderReference: null,
+      customer_id: 1,
+    };
+    const response = await request(app)
+      .post("/customers/1/orders")
+      .send(newOrder);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! Order reference can not be null or empty",
+      })
+    );
+  });
+  it("should return an error maeesage if customer id does not exist in the DB ", async () => {
+    const newOrder = {
+      orderDate: "2024-05-22",
+      orderReference: "ORD013",
+      customer_id: -1,
+    };
+    const response = await request(app)
+      .post("/customers/-1/orders")
+      .send(newOrder);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! The customer does not exist",
+      })
+    );
+  });
+});
