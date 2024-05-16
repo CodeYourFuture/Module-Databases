@@ -163,13 +163,11 @@ app.post("/availability", async (req, res) => {
       [bodyData.prodId, bodyData.suppId]
     );
 
-    console.log(duplicateKeyValue.rows, "ducplicate values");
-
     const areAvailable = await db.query(queryCheckAvailibility, [
       bodyData.prodId,
       bodyData.suppId,
     ]);
-    console.log(prodIdExist.rows, suppIdExist.rows, "check existence query");
+
     if (bodyData.unitPrice >= 0 && Number.isInteger(bodyData.unitPrice)) {
       if (!prodIdExist.rows[0].prod_id) {
         res
@@ -200,6 +198,52 @@ app.post("/availability", async (req, res) => {
   } catch (error) {
     console.error("Error: ", error);
     res.status(500).json({ error: "Internal server error!" });
+  }
+});
+
+app.post("/customers/:customerId/orders", async (req, res) => {
+  const customerID = req.params.customerId;
+  console.log(customerID, "this is customer id");
+  const bodyData = {
+    customerId: customerID,
+    orderDate: req.body.orderDate,
+    orderReference: req.body.orderReference,
+  };
+  // check for existence of customer
+  const customerExist = await db.query(
+    " SELECT EXISTS(SELECT 1 FROM customers WHERE id=$1) AS customer_id",
+    [customerID]
+  );
+  console.log(customerExist, "existence of customer");
+  try {
+    //if customer does not exist return an error message
+    if (!customerExist.rows[0].customer_id) {
+      res
+        .status(400)
+        .json({ error: "Bad request! The customer does not exist" });
+    } else if (!bodyData.orderDate || bodyData === "") {
+      res.status(400).json({
+        error:
+          "Bad request! Order date is not valid. check nullity or date format",
+      });
+    }
+    //check nullity or emptiness of order reference
+    else if (!bodyData.orderReference || bodyData.orderReference === "") {
+      res.status(400).json({
+        error: "Bad request! Order reference can not be null or empty",
+      });
+    } else {
+      const insertOrder = await db.query(
+        "INSERT INTO orders(order_date , order_reference , customer_id) VALUES($1 , $2 , $3)",
+        [bodyData.orderDate, bodyData.orderReference, bodyData.customerId]
+      );
+      res
+        .status(200)
+        .json({ message: "New order created successfully for customer" });
+    }
+  } catch (error) {
+    console.error("Error: ", error),
+      res.status(500).json({ Error: "Internal server error" });
   }
 });
 module.exports = app;
