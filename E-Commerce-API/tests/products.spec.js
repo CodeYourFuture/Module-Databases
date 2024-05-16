@@ -480,7 +480,7 @@ describe("DELETE /orders/:orderId", () => {
 describe("DELETE customers/:customerId", () => {
   //delete a customer successfully
   it("should delete a customer successfully with a message ", async () => {
-    const response = await request(app).delete("/customers/7");
+    const response = await request(app).delete("/customers/10");
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -490,7 +490,7 @@ describe("DELETE customers/:customerId", () => {
   });
   //Should return an object with a warning and a message
   it("should return an error with a message that customer already has some orders", async () => {
-    const response = await request(app).delete("customers/1");
+    const response = await request(app).delete("/customers/1");
     expect(response.status).toBe(400);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -500,7 +500,7 @@ describe("DELETE customers/:customerId", () => {
   });
   // check if a customer does not exist in the db by returning an error and a message
   it("Should return an error if customer does not exist in the DB", async () => {
-    const response = await request(app).delete("customers/-1");
+    const response = await request(app).delete("/customers/-1");
     expect(response.status).toBe(404);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -509,7 +509,7 @@ describe("DELETE customers/:customerId", () => {
     );
   });
   it("Should return an error if customer id is not an integer", async () => {
-    const response = await request(app).delete("customers/str");
+    const response = await request(app).delete("/customers/str");
     expect(response.status).toBe(400);
     expect(response.body).toEqual(
       expect.objectContaining({
