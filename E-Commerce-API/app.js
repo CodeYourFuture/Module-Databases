@@ -390,10 +390,16 @@ app.get("/customers/:customerId/orders", async (req, res) => {
       return res.status(404).json({ error: "customer not found" });
     } else {
       const customerDetails = await db.query(
-        "select o.order_reference , o.order_date , pr.product_name , s.supplier_name , oi.quantity, pa.unit_price  from orders o join order_items oi on (o.id=oi.order_id) join suppliers s on(oi.supplier_id=s.id) join products pr on (oi.product_id=pr.id) join product_availability pa on(oi.product_id=pa.prod_id) where o.customer_id=$1",
+        "select o.order_date , o.order_reference ,  pr.product_name ,oi.quantity, s.supplier_name ,  pa.unit_price  from orders o join order_items oi on (o.id=oi.order_id) join suppliers s on(oi.supplier_id=s.id) join products pr on (oi.product_id=pr.id) join product_availability pa on(oi.product_id=pa.prod_id) where o.customer_id=$1",
         [customerId]
       );
-      return res.status(200).json(customerDetails.rows);
+      if (customerDetails.rows.length !== 0) {
+        return res.status(200).json(customerDetails.rows);
+      } else {
+        return res
+          .status(200)
+          .json({ message: "customer has no order to display" });
+      }
     }
   } catch (error) {
     console.error("Error: ", error);

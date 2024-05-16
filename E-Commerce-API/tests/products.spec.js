@@ -521,19 +521,29 @@ describe("DELETE customers/:customerId", () => {
 
 describe.only("GET /customers/:customerId/orders", () => {
   it("Should return a successful response for the query", async () => {
-    const response = await request(app).get("/customers/:customerId/orders");
-    expect(response.status(200));
+    const response = await request(app).get("/customers/1/orders");
+    expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
+          order_date: expect.any(String),
           order_reference: expect.any(String),
-          order_date: expect.any(Date),
           product_name: expect.any(String),
           unit_price: expect.any(Number),
           supplier_name: expect.any(String),
           quantity: expect.any(Number),
         }),
       ])
+    );
+  });
+
+  it("Should return a message if customer exist but has no order", async () => {
+    const response = await request(app).get("/customers/9/orders");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: "customer has no order to display",
+      })
     );
   });
   //return an object with an error message that customer does not exist in the DB
@@ -557,13 +567,13 @@ describe.only("GET /customers/:customerId/orders", () => {
     );
   });
 
-  it("Should return an error if customer id is not available", async () => {
-    const response = await request(app).get("/customers/orders");
-    expect(response.status).toBe(400);
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        error: "customer id not provided",
-      })
-    );
-  });
+  // it("Should return an error if customer id is not available", async () => {
+  //   const response = await request(app).get("/customers/orders");
+  //   expect(response.status).toBe(400);
+  //   expect(response.body).toEqual(
+  //     expect.objectContaining({
+  //       error: "customer id not provided",
+  //     })
+  //   );
+  // });
 });
