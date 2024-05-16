@@ -440,3 +440,27 @@ describe("POST update /Customers/:customerId", () => {
     );
   });
 });
+
+//test collection to delete an order
+describe("DELETE /orders/:orderId", () => {
+  it("Should return a success message of deletion for the associated order", async () => {
+    const response = awaitrequest(app).delete("/orders/15");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: "The order with all its items deleted successfully",
+      })
+    );
+  });
+
+  //return an error with a message if order could'not found
+  it("Should return a success message of deletion for the associated order", async () => {
+    const response = await request(app).delete("/orders/-1");
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Order did not find to be deleted",
+      })
+    );
+  });
+});
