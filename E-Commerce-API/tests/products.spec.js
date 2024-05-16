@@ -288,6 +288,25 @@ describe("POST /customers/:customerId/orders", () => {
       })
     );
   });
+  //check if date format is incorrect
+  it("should return an error maeesage if order date is null or empty or not in a valid format", async () => {
+    const newOrder = {
+      //order date is null
+      orderDate: "2024-13-20",
+      orderReference: "ORD011",
+      customer_id: 1,
+    };
+    const response = await request(app)
+      .post("/customers/1/orders")
+      .send(newOrder);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error:
+          "Bad request! Order date is not valid. check nullity or date format",
+      })
+    );
+  });
 
   it("should return an error maeesage if order date is null or empty or not in a valid format", async () => {
     const newOrder = {
