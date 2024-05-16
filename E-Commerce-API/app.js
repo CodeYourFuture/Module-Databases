@@ -333,4 +333,46 @@ app.delete("/orders/:orderId", async (req, res) => {
     return res.status(500).json({ error: "internal server error" });
   }
 });
+
+// endpoint to delete a customer without any order
+app.delete("/customers/:customerId", async (req, res) => {
+  const customerId = req.params.customerId;
+  //if id does not have a correct format not a number or not an integer
+  const isIdValId = isNaN(customerId) || !Number.isInteger(Number(customerId));
+  if (isIdValId) {
+    return res.status(400).json({
+      error: "Customer id format is not correct.should be an integer",
+    });
+  }
+  try {
+    const customerExist = await db.query(
+      "SELECT EXISTS (SELECT 1 FROM customers WHERE id=$1) AS customer_exist",
+      [customerId]
+    );
+    if (!customerExist.rows[0].customer_exist) {
+      return res.status(404).json({ error: "Customer does not exist" });
+    } else {
+      const customerHasOrder = await db.query(
+        "SELECT 1 FROM orders WHERE customer_id=$1",
+        [customerId]
+      );
+      if ((await customerHasOrder).rows.length !== 0) {
+        return res.status(400).json({
+          warning: "Customer has made some orders, you can not delete them!",
+        });
+      } else {
+        const deleteCustomer = await db.query(
+          "DELETE FROM customers WHERE id=$1",
+          [customerId]
+        );
+        return res
+          .status(200)
+          .json({ message: "Customer deleted successfully" });
+      }
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 module.exports = app;

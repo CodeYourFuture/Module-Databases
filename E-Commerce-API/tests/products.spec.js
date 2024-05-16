@@ -513,7 +513,7 @@ describe("DELETE customers/:customerId", () => {
     expect(response.status).toBe(400);
     expect(response.body).toEqual(
       expect.objectContaining({
-        error: "Customer id fromat is not correct.should be an integer",
+        error: "Customer id format is not correct.should be an integer",
       })
     );
   });
