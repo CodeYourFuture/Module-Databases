@@ -474,3 +474,47 @@ describe("DELETE /orders/:orderId", () => {
     );
   });
 });
+
+//Test colllection to delete a customer if they do not have an order
+
+describe("DELETE customers/:customerId", () => {
+  //delete a customer successfully
+  it("should delete a customer successfully with a message ", async () => {
+    const response = await request(app).delete("/customers/7");
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: "Customer deleted successfully",
+      })
+    );
+  });
+  //Should return an object with a warning and a message
+  it("should return an error with a message that customer already has some orders", async () => {
+    const response = await request(app).delete("customers/1");
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        warning: "Customer has made some orders, you can not delete them!",
+      })
+    );
+  });
+  // check if a customer does not exist in the db by returning an error and a message
+  it("Should return an error if customer does not exist in the DB", async () => {
+    const response = await request(app).delete("customers/-1");
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Customer does not exist",
+      })
+    );
+  });
+  it("Should return an error if customer id is not an integer", async () => {
+    const response = await request(app).delete("customers/str");
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Customer id fromat is not correct.should be an integer",
+      })
+    );
+  });
+});
