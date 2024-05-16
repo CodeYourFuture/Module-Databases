@@ -326,6 +326,7 @@ describe("POST /customers/:customerId/orders", () => {
     );
   });
 
+  //test if orderReference is not valid
   it("should return an error maeesage if order reference is null or empty or not in a valid format", async () => {
     const newOrder = {
       orderDate: "2024-05-22",
@@ -342,6 +343,7 @@ describe("POST /customers/:customerId/orders", () => {
       })
     );
   });
+  //Test if customer doesn not exist
   it("should return an error maeesage if customer id does not exist in the DB ", async () => {
     const newOrder = {
       orderDate: "2024-05-22",
