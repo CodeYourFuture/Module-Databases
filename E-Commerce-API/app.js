@@ -214,14 +214,25 @@ app.post("/customers/:customerId/orders", async (req, res) => {
     " SELECT EXISTS(SELECT 1 FROM customers WHERE id=$1) AS customer_id",
     [customerID]
   );
-  console.log(customerExist, "existence of customer");
+
+  //check if date format is invalid
+  function isValidDate(stringDate) {
+    return !isNaN(Date.parse(stringDate));
+  }
+
+  console.log(isValidDate(bodyData.orderDate), "check for date");
+
   try {
     //if customer does not exist return an error message
     if (!customerExist.rows[0].customer_id) {
       res
         .status(400)
         .json({ error: "Bad request! The customer does not exist" });
-    } else if (!bodyData.orderDate || bodyData === "") {
+    } else if (
+      !bodyData.orderDate ||
+      bodyData === "" ||
+      !isValidDate(bodyData.orderDate)
+    ) {
       res.status(400).json({
         error:
           "Bad request! Order date is not valid. check nullity or date format",
