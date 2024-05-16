@@ -220,8 +220,6 @@ app.post("/customers/:customerId/orders", async (req, res) => {
     return !isNaN(Date.parse(stringDate));
   }
 
-  console.log(isValidDate(bodyData.orderDate), "check for date");
-
   try {
     //if customer does not exist return an error message
     if (!customerExist.rows[0].customer_id) {
@@ -255,6 +253,45 @@ app.post("/customers/:customerId/orders", async (req, res) => {
   } catch (error) {
     console.error("Error: ", error),
       res.status(500).json({ Error: "Internal server error" });
+  }
+});
+
+app.post("/customers/:customerId", async (req, res) => {
+  const customerId = req.params.customerId;
+  const bodyData = {
+    id: customerId,
+    name: req.body.name,
+    address: req.body.address,
+    city: req.body.city,
+    country: req.body.country,
+  };
+  const customerExist = await db.query(
+    "SELECT EXISTS (SELECT 1 FROM customers WHERE id=$1) AS customer_exist",
+    [bodyData.id]
+  );
+  try {
+    if (!customerExist.rows[0].customer_exist) {
+      res.status(400).json({ error: "Customer does not exist in the DB" });
+    } else if (!bodyData.name || bodyData.name === "") {
+      res.status(400).json({
+        error: "Bad request! customer name can not be empty or null!",
+      });
+    } else {
+      const updatedCustomer = await db.query(
+        "UPDATE customers SET name=$1 , address=$2 , city=$3 , country = $4 WHERE id=$5",
+        [
+          bodyData.name,
+          bodyData.address,
+          bodyData.city,
+          bodyData.country,
+          bodyData.id,
+        ]
+      );
+      res.status(200).json({ message: "Customer updated successfully" });
+    }
+  } catch (error) {
+    console.error("Error: ", error);
+    res.status(500).json({ error: "Internal server error!" });
   }
 });
 module.exports = app;

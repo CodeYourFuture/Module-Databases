@@ -380,3 +380,63 @@ describe("POST /customers/:customerId/orders", () => {
     );
   });
 });
+
+//Test collection to update an existence customer
+describe("POST update /Customers/:customerId", () => {
+  it("Should return a success message if customer details updated correctly", async () => {
+    const updatedCustomer = {
+      name: "Behrouz",
+      address: "",
+      city: "Birmingham",
+      country: "United Kingdom",
+    };
+
+    const response = await request(app)
+      .post("/customers/1")
+      .send(updatedCustomer);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: "Customer updated successfully",
+      })
+    );
+  });
+
+  it("Should return an error message if customer does not exist in the DB", async () => {
+    const updatedCustomer = {
+      name: "Behrouz",
+      address: "B00 0XY",
+      city: "Birmingham",
+      country: "United Kingdom",
+    };
+
+    const response = await request(app)
+      .post("/customers/-1")
+      .send(updatedCustomer);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Customer does not exist in the DB",
+      })
+    );
+  });
+
+  it("Should return an error meesage for empty or null names", async () => {
+    const updatedCustomer = {
+      name: "",
+      address: "",
+      city: "Birmingham",
+      country: "United Kingdom",
+    };
+
+    const response = await request(app)
+      .post("/customers/1")
+      .send(updatedCustomer);
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! customer name can not be empty or null!",
+      })
+    );
+  });
+});
