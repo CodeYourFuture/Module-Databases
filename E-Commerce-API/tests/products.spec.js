@@ -463,4 +463,14 @@ describe("DELETE /orders/:orderId", () => {
       })
     );
   });
+
+  it("Should return a success message of deletion for the associated order", async () => {
+    const response = await request(app).delete("/orders/badFormat");
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Bad request! Order id format is not correct",
+      })
+    );
+  });
 });

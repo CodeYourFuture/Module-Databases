@@ -298,6 +298,11 @@ app.post("/customers/:customerId", async (req, res) => {
 //Delete an order with all its items
 app.delete("/orders/:orderId", async (req, res) => {
   const orderId = req.params.orderId;
+  if (isNaN(orderId)) {
+    return res
+      .status(400)
+      .json({ error: "Bad request! Order id format is not correct" });
+  }
   try {
     const orderExist = await db.query(
       "SELECT EXISTS (SELECT 1 FROM orders WHERE id=$1) AS order_exist",
