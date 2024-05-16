@@ -294,4 +294,38 @@ app.post("/customers/:customerId", async (req, res) => {
     res.status(500).json({ error: "Internal server error!" });
   }
 });
+
+//Delete an order with all its items
+app.delete("/orders/:orderId", async (req, res) => {
+  const orderId = req.params.orderId;
+  try {
+    const orderExist = await db.query(
+      "SELECT EXISTS (SELECT 1 FROM orders WHERE id=$1) AS order_exist",
+      [orderId]
+    );
+    if (!orderExist.rows[0].order_exist) {
+      return res
+        .status(404)
+        .json({ error: "Order did not find to be deleted" });
+    }
+    //starting the deleetion transaction
+    await db.query("BEGIN");
+    //delete from order items fisrt from order_items
+    const deleteOrderItems = await db.query(
+      "DELETE FROM order_items WHERE order_id=$1",
+      [orderId]
+    );
+    //delete the order
+    const deleteOrder = await db.query("DELETE FROM orders WHERE ID=$1", [
+      orderId,
+    ]);
+    await db.query("COMMIT");
+    return res
+      .status(200)
+      .json({ message: "The order with all its items deleted successfully" });
+  } catch (error) {
+    console.error("Error: ", error);
+    return res.status(500).json({ error: "internal server error" });
+  }
+});
 module.exports = app;
