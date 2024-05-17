@@ -3,6 +3,7 @@ import 'dotenv/config';
 import pg from "pg"
 const { Pool } = pg;
 const app = express();
+app.use(express.json());
 
 const db = new Pool({
     host: process.env.DB_HOST,
@@ -22,6 +23,7 @@ app.get('/products', async (req, res) => {
 })
 
 app.get('/products/:name', async (req, res) => {
+    console.log(req.params.name);
     try {
         const name = req.params.name;
         const result = await db.query(`SELECT product_name FROM products WHERE product_name ILIKE '%${name}%';`);
@@ -34,9 +36,19 @@ app.get('/products/:name', async (req, res) => {
 app.get('/customers/:id', async (req, res) => {
     try {
         const result = await db.query('select * from customers where id= $1;', [req.params.id])
-        res.status(200).send(result.rows)
+        res.status(200).send(result.rows);
     } catch (error) {
         res.status(400).send('Customer not found!')
+    }
+})
+
+app.post('/customers', async (req, res) => {
+    try {
+        await db.query(`INSERT INTO customers (name, address, city, country)
+        VALUES($1,$2, $3, $4)`, [req.body.name, req.body.address, req.body.city, req.body.country]);
+        res.status(201).send('Added the customer successfully');
+    } catch (error) {
+        res.status(500).send(`failed to add new customer! ${error}`)
     }
 })
 
