@@ -11,7 +11,7 @@ const db = new Pool({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
 });
-  
+
 app.get('/products', async (req, res) => {
     try {
         const result = await db.query('select p.product_name, pa.unit_price ,s.supplier_name from products p inner join product_availability pa on (p.id = pa.prod_id) inner join suppliers s on (s.id =pa.supp_id);');
@@ -31,6 +31,14 @@ app.get('/products/:name', async (req, res) => {
     }
 });
 
+app.get('/customers/:id', async (req, res) => {
+    try {
+        const result = await db.query('select * from customers where id= $1;', [req.params.id])
+        res.status(200).send(result.rows)
+    } catch (error) {
+        res.status(400).send('Customer not found!')
+    }
+})
 
 const port = process.env.PORT;
 

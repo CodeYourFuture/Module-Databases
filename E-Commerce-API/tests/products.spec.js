@@ -28,7 +28,24 @@ describe("GET /products", () => {
       ])
     );
   });
-  
-  
+  describe('Get customers', () => {
+    it('get customer by id', async () => {
+      const res = await request(app).get('/customers/1');
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: expect.any(String),
+            address: expect.any(String),
+            city: expect.any(String),
+            country: expect.any(String),
+
+          }),
+        ])
+      )
+
+    })
+  })
+
 });
 
