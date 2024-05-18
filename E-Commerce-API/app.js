@@ -6,31 +6,24 @@
 // Use environment variables instead:
 // https://www.codementor.io/@parthibakumarmurugesan/what-is-env-how-to-set-up-and-run-a-env-file-in-node-1pnyxw9yxj
 const express = require("express");
+require("dotenv").config();
 
 const { Pool } = require("pg");
 const app = express();
 app.use(express.json());
 const port = 3000;
-// const db = new Pool({
-//   user: process.env.DB_USERNAME,
-//   host: process.env.DB_HOST,
-//   port: process.env.DB_PORT,
-//   database: process.env.DB_DATABASE,
-//   username: process.env.DB_USERNAME,
-//   //   password: process.env.DB_PASSWORD,
-//   password: process.env.DB_PASSWORD,
-// });
+const db = new Pool({
+  user: process.env.DB_USERNAME,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_DATABASE,
+  username: process.env.DB_USERNAME,
+  //   password: process.env.DB_PASSWORD,
+  password: process.env.DB_PASSWORD,
+});
 
 app.listen(port, () => {
   console.log("Listening on port:", port);
-});
-
-const db = new Pool({
-  user: "behrouzkarimi",
-  host: "localhost",
-  password: "behrouz",
-  database: "e_commerce",
-  port: 5432,
 });
 
 //This endpoint returns all the products with name price and suppliername
@@ -68,7 +61,7 @@ app.get("/products", async (req, res) => {
 
 app.get("/customers/:customerId", async (req, res) => {
   const idOfCustomer = req.params.customerId;
-  console.log(idOfCustomer, "id of customer");
+
   try {
     const foundCustomer = await db.query(
       "SELECT * FROM customers WHERE id=$1",
@@ -142,7 +135,6 @@ app.post("/availability", async (req, res) => {
     suppId: req.body.suppId,
     unitPrice: parseInt(req.body.unitPrice),
   };
-  console.log(bodyData);
   try {
     //this is an exist clause going to be used to check if prod_id and supp_id exist in the table
     const queryCheckAvailibility =
@@ -203,7 +195,6 @@ app.post("/availability", async (req, res) => {
 
 app.post("/customers/:customerId/orders", async (req, res) => {
   const customerID = req.params.customerId;
-  console.log(customerID, "this is customer id");
   const bodyData = {
     customerId: customerID,
     orderDate: req.body.orderDate,
