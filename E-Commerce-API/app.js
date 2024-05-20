@@ -26,7 +26,7 @@ app.get('/products/:name', async (req, res) => {
     console.log(req.params.name);
     try {
         const name = req.params.name;
-        const result = await db.query(`SELECT product_name FROM products WHERE product_name ILIKE '%${name}%';`);
+        const result = await db.query(`SELECT product_name FROM products WHERE product_name ILIKE '%$1%';`, [name]);
         res.status(200).send(result.rows);
     } catch (error) {
         res.status(400).send(`failed to get searched name`);
