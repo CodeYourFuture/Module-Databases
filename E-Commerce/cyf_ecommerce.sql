@@ -15,7 +15,6 @@ DROP TABLE IF EXISTS products cascade;
 
 DROP TABLE IF EXISTS suppliers cascade;
 
-
 CREATE TABLE customers (id SERIAL PRIMARY KEY,
                                           name VARCHAR(50) NOT NULL,
                                                            address VARCHAR(120),
@@ -48,7 +47,7 @@ CREATE TABLE order_items (id SERIAL PRIMARY KEY,
                                                                                                             quantity INT NOT NULL,
                           FOREIGN KEY (product_id,
                                        supplier_id) REFERENCES product_availability (prod_id, supp_id));
-
+ 
 
 INSERT INTO customers (name, address, city, country)
 VALUES ('Guy Crawford',
