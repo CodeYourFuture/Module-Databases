@@ -92,7 +92,7 @@ describe('when passed supplier ID and price', () => {
     const response = await request(app).post('/product_availability').send({
       prod_id: 7,
       supp_id: 2,
-      unit_price: 0,
+      unit_price:-2,
     })
     expect(response.statusCode).toBe(404);
   })
@@ -130,8 +130,10 @@ describe('when passed order date and order reference and customer ID', () => {
     const response = await request(app).post('/customers/5/orders').send({
       order_date: '2019-05-24',
       order_reference: 'ORD011',
-      customer_id:-1,
+      customer_id:-1,//invalid customers ID
     })
     expect(response.statusCode).toBe(400);
   })
 })
+
+describe('Given ')
