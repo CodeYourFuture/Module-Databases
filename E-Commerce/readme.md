@@ -138,6 +138,7 @@ where lower(c.name) like lower('Hope Crosby');
 ```
 
 - [x] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
 ```sql
 select p.product_name, pa.unit_price, oi.quantity
 from orders o
@@ -147,16 +148,18 @@ join product_availability pa on oi.product_id = pa.prod_id and oi.supplier_id = 
 where lower(o.order_reference) like lower('ORD006');
 
 ```
+
 - [x] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
 
 ```sql
 select c.name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity
 from orders o
+join customers c on o.customer_id = c.id
 join order_items oi on o.id = oi.order_id
 join products p on oi.product_id = p.id
 join product_availability pa on oi.product_id = pa.prod_id and oi.supplier_id = pa.supp_id
-join suppliers s on pa.supp_id = s.id
-join customers c on o.customer_id = c.id;
+join suppliers s on oi.supplier_id = s.id
+order by c.name, o.order_reference, p.product_name;
 ```
 
 ## Acceptance Criteria
