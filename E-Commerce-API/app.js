@@ -1,8 +1,17 @@
 const express = require("express");
+const { db } = require("./db");
+
 const app = express();
-// Your code to run the server should go here
-// Don't hardcode your DB password in the code or upload it to GitHub! Never ever do this ever.
-// Use environment variables instead:
-// https://www.codementor.io/@parthibakumarmurugesan/what-is-env-how-to-set-up-and-run-a-env-file-in-node-1pnyxw9yxj
+
+app.use(express.json())
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
+
 
 module.exports = app;
