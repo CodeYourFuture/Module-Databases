@@ -62,4 +62,24 @@ app.get("/products/:name", async (req, res) => {
   }
 })
 
+// get customer by id
+app.get("/customers/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await db.query(
+      `
+      SELECT *
+      from customers
+      where id = $1
+      `, [id]
+    );
+
+    const customer = result.rows[0];
+    res.status(200).json(customer);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+})
+
 module.exports = server;

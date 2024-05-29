@@ -22,7 +22,7 @@ As a developer, I want to add new API endpoints to the NodeJS application for th
 As a developer, I want to build up my API using TDD - writing the test first and then iterating : adding one feature to pass one unit test.
 
 1. [x] As a user, I want to view a list of all products with their prices and supplier names.
-1. As a user, I want to search for products by name.
+1. [x] As a user, I want to search for products by name.
 1. As a user, I want to view a single customer by their ID.
 1. As a user, I want to create a new customer with their name, address, city, and country.
 1. As a user, I want to create a new product.
