@@ -6,6 +6,10 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json())
 
+const server = app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+
 // get all products
 app.get("/products", async (req, res) => {
   try {
@@ -31,9 +35,7 @@ app.get("/products", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
 
 
-module.exports = app;
+
+module.exports = server;
