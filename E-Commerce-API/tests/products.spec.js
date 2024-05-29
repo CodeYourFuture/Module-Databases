@@ -1,4 +1,6 @@
 const request = require("supertest");
+process.env.NODE_ENV = "test";
+process.env.PORT = 3001;
 const app = require("../app");
 
 describe("GET /products", () => {
