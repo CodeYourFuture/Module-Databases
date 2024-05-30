@@ -27,6 +27,8 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:name", async (req, res) => {
+  const name = req.params.name;
+
   try {
     const result = await db.query(
       `
