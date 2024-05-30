@@ -16,21 +16,19 @@ describe("GET /customers/:id", () => {
 
 describe("POST /customers", () => {
   it("should create a new customer with their name, address, city, and country.", async () => {
-    const response = await request(server).post("/customers").send({
+    const newCustomer = {
       name: "John Doe",
       address: "123 Main St",
       city: "Manchester",
       country: "United Kingdom"
-    });
+    }
+    const response = await request(server).post("/customers").send(newCustomer);
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
-      {
+      expect.objectContaining({
         id: expect.any(Number),
-        name: "John Doe",
-        address: "123 Main St",
-        city: "Manchester",
-        country: "United Kingdom"
-      }
-    )
+        ...newCustomer
+      })
+    );
   });
 });

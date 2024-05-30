@@ -29,3 +29,19 @@ describe("GET /products/:name", () => {
     );
   });
 });
+
+describe("POST /products", () => {
+  it("should add a new product to the list", async () => {
+    const newProduct = {
+      name: "New Product",
+    };
+    const response = await request(server).post("/products").send(newProduct);
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: expect.any(Number),
+        ...newProduct,
+      })
+    );
+  });
+});
