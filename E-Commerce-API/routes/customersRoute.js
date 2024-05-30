@@ -2,7 +2,7 @@ const express = require("express");
 const db = require("../db");
 const router = express.Router();
 
-// get customer by id
+// GET customer by id
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// create a new customer with their name, address, city, and country
+// POST a new customer with their name, address, city, and country
 router.post("/", async (req, res) => {
   const { name, address, city, country } = req.body;
 

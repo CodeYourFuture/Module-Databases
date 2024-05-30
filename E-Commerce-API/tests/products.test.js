@@ -31,6 +31,10 @@ describe("GET /products/:name", () => {
 });
 
 describe("POST /products", () => {
+  afterEach(async () => {
+    await global.dbClient.query("DELETE FROM products WHERE id > 7");
+  });
+
   it("should add a new product to the list", async () => {
     const newProduct = {
       product_name: "New Product",

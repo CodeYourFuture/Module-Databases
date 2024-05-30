@@ -15,6 +15,10 @@ describe("GET /customers/:id", () => {
 });
 
 describe("POST /customers", () => {
+  afterEach(async () => {
+    await global.dbClient.query("DELETE FROM customers WHERE id > 6;");
+  });
+
   it("should create a new customer with their name, address, city, and country.", async () => {
     const newCustomer = {
       name: "John Doe",

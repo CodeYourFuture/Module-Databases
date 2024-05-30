@@ -2,7 +2,7 @@ const express = require("express");
 const db = require("../db");
 const router = express.Router();
 
-// get all products
+// GET all products
 router.get("/", async (req, res) => {
   try {
     const result = await db.query(
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// get product by name
+// GET product by name
 router.get("/:name", async (req, res) => {
   const name = req.params.name;
 
@@ -55,7 +55,7 @@ router.get("/:name", async (req, res) => {
   }
 });
 
-// add product
+// POST a new product with its name
 router.post("/", async (req, res) => {
   const { product_name } = req.body;
 
