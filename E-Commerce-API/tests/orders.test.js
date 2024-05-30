@@ -17,7 +17,6 @@ describe("POST /product-availability", () => {
         id: expect.any(Number),
         ...newOrder,
       })
-    )
-  })
-
+    );
+  });
 });

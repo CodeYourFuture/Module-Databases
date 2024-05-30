@@ -71,7 +71,7 @@ router.post("/", async (req, res) => {
 
       res.status(201).json(result.rows[0]);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.detail });
     }
   } else {
     res.status(400).json({ error: "name is required" });
