@@ -62,7 +62,13 @@ describe("POST /customers", () => {
     });
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
-    
+      {
+        id: expect.any(Number),
+        name: "John Doe",
+        address: "123 Main St",
+        city: "Manchester",
+        country: "UK"
+      }
     )
   });
 });
