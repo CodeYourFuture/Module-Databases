@@ -1,9 +1,3 @@
-// const request = require("supertest");
-// const { end } = require("../db");
-// process.env.NODE_ENV = "test";
-// process.env.PORT = 3001;
-// const server = require("../app");
-
 describe("GET /customers/:id", () => {
   it("should return a customer with the id 2", async () => {
     const response = await request(server).get("/customers/2");
@@ -40,8 +34,3 @@ describe("POST /customers", () => {
     )
   });
 });
-
-// afterAll(async () => {
-//   await end(); // Disconnect from the database
-//   server.close(); // Close the server
-// });
