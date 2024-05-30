@@ -84,7 +84,10 @@ INSERT YOUR QUERY HERE
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+SELECT DATE_TRUNC('month', date) AS month, SUM(amount) AS total_spent
+FROM spends
+GROUP BY DATE_TRUNC('month', date)
+ORDER BY month;
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -92,7 +95,10 @@ CREATE YOUR QUERY HERE
 **You:** Sure thing. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+SELECT supplier_id, SUM(amount) AS total_spent
+FROM spends
+GROUP BY supplier_id
+ORDER BY total_spent DESC;
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -112,7 +118,11 @@ INSERT YOUR QUERY HERE
 **You:** Then you need an extra clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+SELECT date, SUM(amount) AS total_spent
+FROM spends
+WHERE date IN ('2021-03-01', '2021-04-01')
+GROUP BY date
+ORDER BY date;
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
