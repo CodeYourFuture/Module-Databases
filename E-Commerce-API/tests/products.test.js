@@ -1,8 +1,8 @@
-const request = require("supertest");
-const { end } = require("../db");
-process.env.NODE_ENV = "test";
-process.env.PORT = 3001;
-const server = require("../app");
+// const request = require("supertest");
+// const { end } = require("../db");
+// process.env.NODE_ENV = "test";
+// process.env.PORT = 3001;
+// const server = require("../app");
 
 describe("GET /products", () => {
   it("should return a list of all product names with their prices and supplier names", async () => {
@@ -36,7 +36,7 @@ describe("GET /products/:name", () => {
   });
 });
 
-afterAll(async () => {
-  await end(); // Disconnect from the database
-  server.close(); // Close the server
-});
+// afterAll(async () => {
+//   await end(); // Disconnect from the database
+//   server.close(); // Close the server
+// });
