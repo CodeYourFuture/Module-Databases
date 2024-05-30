@@ -75,5 +75,5 @@ describe("POST /customers", () => {
 
 afterAll(async () => {
   await end(); // Disconnect from the database
-  server.close(); // Close the server if using a separate server instance
+  server.close(); // Close the server
 });
