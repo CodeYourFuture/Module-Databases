@@ -36,3 +36,38 @@ describe("POST /customers", () => {
     );
   });
 });
+
+describe('PUT /customers', () => {
+  afterEach(async () => {
+    await global.dbClient.query("DELETE FROM customers WHERE id > 6;");
+  });
+
+  it('should update a customer with their name, address, city, and country.', async () => {
+    const newCustomer = {
+      name: "John Doe",
+      address: "123 Main St",
+      city: "Manchester",
+      country: "United Kingdom"
+    }
+
+    await request(server).post("/customers").send(newCustomer);
+    const lastId = await global.dbClient.query("SELECT MAX(id) FROM customers");
+
+    const updatedCustomer = {
+      id: lastId.rows[0].max,
+      name: "John Doe Junior",
+      address: "321 Main St",
+      city: "Salford",
+      country: "United Kingdom"
+    };
+    
+    const response = await request(server).put(`/customers/`).send(updatedCustomer);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        ...updatedCustomer
+      })
+    );
+  });
+});

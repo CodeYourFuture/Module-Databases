@@ -56,4 +56,30 @@ router.post("/", async (req, res) => {
   }
 })
 
+router.put("/", async (req, res) => {
+  const { id, name, address, city, country } = req.body;
+  if (id) {
+
+    try {
+      const result = await db.query(
+        `
+        UPDATE customers
+        SET name = $1, address = $2, city = $3, country = $4
+        WHERE id = $5
+        RETURNING *
+        `, [name, address, city, country, id]
+      );
+
+      const updatedCustomer = result.rows[0];
+
+      res.status(200).json(updatedCustomer);
+
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  } else {
+    res.status(400).json({ error: "ID is required." });
+  }
+})
+
 module.exports = router;
