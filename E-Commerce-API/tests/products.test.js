@@ -40,6 +40,7 @@ describe("POST /products", () => {
       product_name: "New Product",
     };
     const response = await request(server).post("/products").send(newProduct);
+    
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
       expect.objectContaining({
