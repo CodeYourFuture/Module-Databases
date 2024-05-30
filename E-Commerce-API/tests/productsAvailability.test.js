@@ -14,8 +14,8 @@ describe("POST /product-availability", () => {
       expect(response.status).toBe(201);
       expect(response.body).toEqual(
         expect.objectContaining(newProductAvailability)
-      )
-    })
+      );
+    });
   it(`should return an error if any parameter is not a number or not a positive integer`, async () => {
     const newProductAvailability = {
       prod_id: -1,
@@ -59,7 +59,50 @@ describe("POST /product-availability", () => {
       })
     );
   });
-  // it(`should return an error if the product availability already exists`)
-  // it(`should return an error if the price is not a positive integer`)
-  // it(`should return an error if either the product or supplier ID does not exist`)
-})
+
+  it(`should return an error if the product availability already exists`, async () => {
+    const newProductAvailability = {
+      prod_id: 1,
+      supp_id: 1,
+      unit_price: 10
+    };
+    const response = await request(server).post("/product-availability").send(newProductAvailability);
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: `Key (prod_id, supp_id)=(1, 1) already exists.`
+      })
+    );
+  });
+
+  it(`should return an error if either the product or supplier ID does not exist`, async () => {
+    const newProductAvailability = {
+      prod_id: 100,
+      supp_id: 1,
+      unit_price: 10
+    };
+    const response = await request(server).post("/product-availability").send(newProductAvailability);
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: `Key (prod_id)=(100) is not present in table "products".`
+      })
+    );
+
+    const newProductAvailability2 = {
+      prod_id: 1,
+      supp_id: 100,
+      unit_price: 10
+    };
+    const response2 = await request(server).post("/product-availability").send(newProductAvailability2);
+
+    expect(response2.status).toBe(500);
+    expect(response2.body).toEqual(
+      expect.objectContaining({
+        error: `Key (supp_id)=(100) is not present in table "suppliers".`
+      })
+    );
+  });
+});

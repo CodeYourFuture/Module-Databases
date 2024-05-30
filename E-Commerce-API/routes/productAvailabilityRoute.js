@@ -30,7 +30,7 @@ router.post("/", async (req, res) => {
       res.status(201).json(newProductAvailability);
 
     } catch (error) {
-      res.status(500).json({ error: error.message })
+      res.status(500).json({ error: error.detail })
     }
   } else {
     res.status(400).json({ error: "Missing required fields" });
