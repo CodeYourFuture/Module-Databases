@@ -20,7 +20,7 @@ describe("POST /customers", () => {
       name: "John Doe",
       address: "123 Main St",
       city: "Manchester",
-      country: "UK"
+      country: "United Kingdom"
     });
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
@@ -29,7 +29,7 @@ describe("POST /customers", () => {
         name: "John Doe",
         address: "123 Main St",
         city: "Manchester",
-        country: "UK"
+        country: "United Kingdom"
       }
     )
   });
