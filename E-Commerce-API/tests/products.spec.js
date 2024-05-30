@@ -52,6 +52,21 @@ describe("GET /customers/:id", () => {
   });
 });
 
+describe("POST /customers", () => {
+  it("should create a new customer with their name, address, city, and country.", async () => {
+    const response = await request(server).post("/customers").send({
+      name: "John Doe",
+      address: "123 Main St",
+      city: "Manchester",
+      country: "UK"
+    });
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual(
+    
+    )
+  });
+});
+
 afterAll(async () => {
   await end(); // Disconnect from the database
   server.close(); // Close the server if using a separate server instance
