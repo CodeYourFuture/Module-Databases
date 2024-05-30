@@ -35,8 +35,8 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   const { name, address, city, country } = req.body;
 
-  try {
-    if (name) {
+  if (name) {
+    try {
       const result = await db.query(
         `
         INSERT INTO customers (name, address, city, country)
@@ -47,10 +47,12 @@ router.post("/", async (req, res) => {
       const addedCustomer = result.rows[0];
 
       res.status(201).json(addedCustomer);
-    }
 
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  } else {
+    res.status(400).json({ error: "Name is required." });
   }
 })
 

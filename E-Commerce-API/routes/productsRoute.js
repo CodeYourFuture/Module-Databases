@@ -2,6 +2,7 @@ const express = require("express");
 const db = require("../db");
 const router = express.Router();
 
+// get all products
 router.get("/", async (req, res) => {
   try {
     const result = await db.query(
@@ -26,6 +27,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// get product by name
 router.get("/:name", async (req, res) => {
   const name = req.params.name;
 
@@ -52,5 +54,28 @@ router.get("/:name", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+// add product
+router.post("/", async (req, res) => {
+  const { product_name } = req.body;
+
+  if (product_name) {
+    try {
+      const result = await db.query(
+        `
+        INSERT INTO products (product_name)
+        VALUES ($1)
+        RETURNING *;
+        `, [product_name]
+      )
+
+      res.status(201).json(result.rows[0]);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  } else {
+    res.status(400).json({ error: "name is required" });
+  }
+})
 
 module.exports = router;
