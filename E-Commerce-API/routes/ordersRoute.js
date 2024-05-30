@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
         `, [order_date, order_reference, customer_id]
       )
       const order = result.rows[0];
-      order.order_date = order.order_date.toLocaleDateString('en-GB', { dateStyle: 'short' });
+      order.order_date = new Date(order.order_date.getTime() + 3600000).toISOString().split('T')[0];
 
       res.status(201).json(order)
     } catch (error) {

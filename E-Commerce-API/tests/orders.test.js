@@ -19,4 +19,20 @@ describe("POST /product-availability", () => {
       })
     );
   });
+
+  it("should return an error if the order date or order reference are not provided", async () => {
+    const newOrder = {
+      order_date: "",
+      order_reference: "",
+      customer_id: 5
+    }
+    const response = await request(server).post("/orders").send(newOrder);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "order_date and order_reference are required"
+      })
+    )
+  });
 });
