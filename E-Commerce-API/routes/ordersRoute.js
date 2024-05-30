@@ -27,4 +27,27 @@ router.post("/", async (req, res) => {
   }
 })
 
+router.delete("/", async (req, res) => {
+  const { order_id } = req.body;
+
+  if (order_id) {
+    try {
+      const orderItemsDeleted = (await db.query("DELETE FROM order_items WHERE order_id = $1 RETURNING *;", [order_id])).rows;
+      const orderDeleted = (await db.query("DELETE FROM orders WHERE id = $1 RETURNING *;", [order_id])).rows[0];
+
+      if (orderItemsDeleted.length === 0) {
+        res.status(404).json({ error: `Order not found` })
+      } else {
+        res.status(200).json({ ...orderItemsDeleted, ...orderDeleted, message: `Order deleted successfully` })
+      }
+    }
+    catch (error) {
+      res.status(500).json({ error: error.detail })
+    }
+  } else {
+    res.status(400).json({ error: `order_id is required` })
+  }
+  
+})
+
 module.exports = router;

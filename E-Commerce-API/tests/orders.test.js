@@ -36,3 +36,74 @@ describe("POST /product-availability", () => {
     )
   });
 });
+
+describe("DELETE /orders", () => {
+  it("should delete an order and all order items", async () => {
+    await global.dbClient.query(`
+      INSERT INTO orders (order_date, order_reference, customer_id)
+        VALUES ('2024-05-31', 'ORD012', 4)
+        RETURNING *;
+    `);
+    const lastOrderId = (await global.dbClient.query("SELECT MAX(id) FROM orders;")).rows[0].max;
+
+    await global.dbClient.query(`
+      INSERT INTO order_items (order_id, product_id, supplier_id, quantity)
+        VALUES
+          (${lastOrderId}, 1, 1, 2),
+          (${lastOrderId}, 2, 1, 3),
+          (${lastOrderId}, 3, 1, 1)
+          RETURNING *;
+    `);
+
+    const orderToBeDeleted = {
+      order_id: lastOrderId
+    };
+
+    const response = await request(server).delete("/orders").send(orderToBeDeleted);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: "Order deleted successfully"
+      })
+    );
+  });
+
+  it("should return an error if the order does not exist", async () => {
+    await global.dbClient.query(`
+      INSERT INTO orders (order_date, order_reference, customer_id)
+        VALUES ('2024-05-31', 'ORD012', 4)
+        RETURNING *;
+    `);
+    const lastOrderId = (await global.dbClient.query("SELECT MAX(id) FROM orders;")).rows[0].max;
+
+    await global.dbClient.query(`
+      INSERT INTO order_items (order_id, product_id, supplier_id, quantity)
+        VALUES
+          (${lastOrderId}, 1, 1, 2),
+          (${lastOrderId}, 2, 1, 3),
+          (${lastOrderId}, 3, 1, 1)
+          RETURNING *;
+    `);
+
+    const orderToBeDeleted = {
+      order_id: lastOrderId + 10
+    };
+
+    const response = await request(server).delete("/orders").send(orderToBeDeleted);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: `Order not found`
+      })
+    );
+
+    await global.dbClient.query(`
+    DELETE FROM order_items
+        WHERE order_id = ${lastOrderId};
+        DELETE FROM orders
+        WHERE id = ${lastOrderId};
+    `);
+  });
+});
