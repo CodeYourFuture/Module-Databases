@@ -31,14 +31,14 @@ As a developer, I want to build up my API using TDD - writing the test first and
 1. [x] As a user, I want to update an existing customer's information with their name, address, city, and country.
 1. [x] As a user, I want to delete an existing order and all associated order items.
 1. [x] As a user, I want to delete an existing customer only if they do not have any orders.
-1. As a user, I want to view all orders with their items for a specific customer, including order references, dates, product names, unit prices, suppliers, and quantities.
+1. [x] As a user, I want to view all orders with their items for a specific customer, including order references, dates, product names, unit prices, suppliers, and quantities.
 
 **These user stories describe the API. Do not build a front end or database.**
 
 ## Acceptance Criteria
 
-- [ ] Each user story has an accompanying unit test
-- [ ] Secrets are not stored in the codebase
+- [x] Each user story has an accompanying unit test
+- [x] Secrets are not stored in the codebase
 
 <details>
 <summary>Try writing out your own acceptance criteria from the user stories before looking here</summary>
