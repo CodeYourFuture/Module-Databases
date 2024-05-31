@@ -30,7 +30,7 @@ As a developer, I want to build up my API using TDD - writing the test first and
 1. [x] As a user, I want to create a new order for a customer with an order date and reference number, and get an error if the customer ID is invalid.
 1. [x] As a user, I want to update an existing customer's information with their name, address, city, and country.
 1. [x] As a user, I want to delete an existing order and all associated order items.
-1. As a user, I want to delete an existing customer only if they do not have any orders.
+1. [x] As a user, I want to delete an existing customer only if they do not have any orders.
 1. As a user, I want to view all orders with their items for a specific customer, including order references, dates, product names, unit prices, suppliers, and quantities.
 
 **These user stories describe the API. Do not build a front end or database.**

@@ -56,6 +56,7 @@ router.post("/", async (req, res) => {
   }
 })
 
+// PUT an existing customer by id with their name, address, city, and country
 router.put("/", async (req, res) => {
   const { id, name, address, city, country } = req.body;
   if (id) {
@@ -79,6 +80,37 @@ router.put("/", async (req, res) => {
     }
   } else {
     res.status(400).json({ error: "ID is required." });
+  }
+})
+
+//DELETE an existing customer by id only if they have no orders
+router.delete("/", async (req, res) => {
+  const { id } = req.body;
+
+  if (id) {
+    try {
+      const result = await db.query(
+        `
+        DELETE FROM customers
+          WHERE id = $1
+        RETURNING *;
+        `, [id]
+      );
+
+      const deletedCustomer = result.rows[0];
+
+      if (deletedCustomer) {
+        res.status(200).json({ ...deletedCustomer, message: 'customer deleted' })
+
+      } else {
+        res.status(404).json({ error: "Customer not found." });
+      }
+
+
+    } catch (error) {
+      if (error.message.includes(`update or delete on table "customers" violates foreign key constraint "orders_customer_id_fkey" on table "orders"`))
+      res.status(500).json({ error: "Cannot delete customer with existing orders." });
+    }
   }
 })
 

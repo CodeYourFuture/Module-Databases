@@ -60,7 +60,7 @@ describe('PUT /customers', () => {
       city: "Salford",
       country: "United Kingdom"
     };
-    
+
     const response = await request(server).put(`/customers/`).send(updatedCustomer);
 
     expect(response.status).toBe(200);
@@ -70,4 +70,61 @@ describe('PUT /customers', () => {
       })
     );
   });
+});
+
+describe('DELETE /customers', () => {
+  it('should delete a customer given their id and if they do not have any orders.', async () => {
+    const newCustomer = {
+      name: "John Doe",
+      address: "123 Main St",
+      city: "Manchester",
+      country: "United Kingdom"
+    }
+    await request(server).post("/customers").send(newCustomer);
+
+    const lastId = (await global.dbClient.query("SELECT MAX(id) FROM customers")).rows[0].max;
+
+    const customerToBeDeleted = {
+      id: lastId
+    }
+
+    const response = await request(server).delete(`/customers`).send(customerToBeDeleted);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: 'customer deleted'
+      })
+    );
+  });
+
+  it('should return an error if the customer was not found.', async () => {
+    const customerToBeDeleted = {
+      id: 50
+    }
+
+    const response = await request(server).delete(`/customers`).send(customerToBeDeleted);
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Customer not found."
+      })
+    );
+  });
+
+  it('should return an error if the customer has orders.', async () => {
+    const customerToBeDeleted = {
+      id: 1
+    }
+
+    const response = await request(server).delete(`/customers`).send(customerToBeDeleted);
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: "Cannot delete customer with existing orders."
+      })
+    );
+  })
 });
