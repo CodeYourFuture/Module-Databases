@@ -107,3 +107,39 @@ describe("DELETE /orders", () => {
     `);
   });
 });
+
+describe('GET /orders', () => {
+  it(`should return all orders with their items for a specific customer given the id 1,
+  including order references, dates, product names, unit prices, suppliers, and quantities.`, async () => {
+    const customerId = 1;
+
+    const response = await request(server).get('/orders').send({ customer_id: customerId });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          order_reference: expect.any(String),
+          order_date: expect.any(String),
+          product_name: expect.any(String),
+          unit_price: expect.any(Number),
+          supplier_name: expect.any(String),
+          quantity: expect.any(Number)
+        })
+      ])
+    )
+  })
+
+  it('should return an error if the customer does not exist', async () => {
+    const customerId = 50;
+
+    const response = await request(server).get('/orders').send({ customer_id: customerId });
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        error: `Customer not found`
+      })
+    )
+  })
+})
