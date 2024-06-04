@@ -45,17 +45,59 @@ erDiagram
 
 Write SQL queries to complete the following tasks:
 
-- [ ] List all the products whose name contains the word "socks"
-- [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
-- [ ] List the 5 most expensive products
-- [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
-- [ ] List all orders, including order items, from customer named Hope Crosby
-- [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
-- [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+- [x] List all the products whose name contains the word "socks"
+    SELECT * FROM products WHERE product_name ILIKE '%socks%';
+
+- [x] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+    SELECT p.id, p.product_name, pa.unit_price, pa.supp_id 
+    FROM products AS p 
+    JOIN product_availability AS pa 
+    ON p.id = pa.prod_id 
+    WHERE pa.unit_price > 100;
+
+- [x] List the 5 most expensive products
+   SELECT p.product_name, pa.unit_price 
+   FROM products AS p 
+   JOIN product_availability AS pa 
+   ON p.id = pa.prod_id 
+   GROUP BY p.product_name, pa.unit_price 
+   ORDER BY pa.unit_price DESC LIMIT 5;
+
+- [x] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+    SELECT p.product_name, s.supplier_name
+    FROM products AS p 
+    JOIN product_availability AS pa ON p.id = pa.prod_id
+    JOIN suppliers AS s ON s.id = pa.supp_id
+    WHERE s.country = 'United Kingdom';
+
+- [x] List all orders, including order items, from customer named Hope Crosby
+        SELECT c.name, o.id, o.order_date, o.order_reference, p.product_name, oi.quantity
+        FROM orders AS o
+        JOIN order_items AS oi ON o.id = oi.order_id
+        JOIN products AS p ON oi.product_id = p.id
+        JOIN customers AS c ON o.customer_id = c.id
+        WHERE c.name = 'Hope Crosby';
+
+- [x] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+   SELECT p.product_name, pa.unit_price, oi.quantity
+   FROM orders AS o
+   JOIN order_items AS oi ON o.id = oi.order_id
+   JOIN products AS p ON p.id = oi.product_id
+   JOIN product_availability AS pa ON pa.prod_id = oi.product_id
+   WHERE o.order_reference = 'ORD006';
+
+- [x] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+   SELECT c.name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity
+   FROM orders AS o
+   JOIN customers AS c ON o.customer_id = c.id
+   JOIN order_items AS oi ON o.id = oi.order_id
+   JOIN products AS p ON oi.product_id = p.id
+   JOIN suppliers AS s ON oi.supplier_id = s.id
+   ORDER BY c.name, o.order_reference, p.product_name;
 
 ## Acceptance Criteria
 
-- [ ] The `cyf_ecommerce` database is imported and set up correctly
-- [ ] The database schema is drawn correctly to visualize relationships between tables
-- [ ] The SQL queries retrieve the correct data according to the tasks listed above
-- [ ] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
+- [x] The `cyf_ecommerce` database is imported and set up correctly
+- [x] The database schema is drawn correctly to visualize relationships between tables
+- [x] The SQL queries retrieve the correct data according to the tasks listed above
+- [x] The pull request with the answers to the tasks is opened on the `main` branch of the `E-Commerce` repository
