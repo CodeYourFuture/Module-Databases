@@ -100,7 +100,7 @@ SELECT supplier_id, SUM(amount) AS cost_per_supplier FROM spends GROUP BY suppli
 **You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
 
 ```sql
-SELECT sp.supplier_id, su.supplier, SUM(sp.amount) AS cost_per_supplier FROM spends AS sp JOIN suppliers AS su ON sp.supplier_id = su.id GROUP BY sp.supplier_id, su.supplier;
+SELECT sp.supplier_id, sup.supplier, SUM(sp.amount) AS cost_per_supplier FROM spends AS sp JOIN suppliers AS sup ON sp.supplier_id = sup.id GROUP BY sp.supplier_id, sup.supplier;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
