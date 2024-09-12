@@ -48,7 +48,8 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 **You:** Absolutely. Here's the SQL query you need:
 
 ```sql
-INSERT YOUR QUERY HERE
+select * from spends
+where amount > 30000 and amount < 31000;
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -68,7 +69,8 @@ INSERT YOUR QUERY HERE
 **You:** Then here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+select * from spends
+where description ilike '%fee%';
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -76,7 +78,9 @@ INSERT YOUR QUERY HERE
 **You:** No worries. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+select * from spends
+right join expense_areas on spends.expense_area_id  = expense_areas.id
+where expense_areas.expense_area like '%Better Hospital Food%';
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -84,7 +88,16 @@ INSERT YOUR QUERY HERE
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+select
+  to_char(date, 'YYYY-MM') AS month,
+  sum(amount) as total_amount
+from
+  spends
+group by
+  month
+order by
+  month;
+
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -92,7 +105,15 @@ CREATE YOUR QUERY HERE
 **You:** Sure thing. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+select
+  suppliers.id,
+  sum(spends.amount) as total_amount
+from
+  spends
+join
+  suppliers on spends.supplier_id = suppliers.id
+group by
+  suppliers.id;
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -100,7 +121,15 @@ INSERT YOUR QUERY HERE
 **You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
 
 ```sql
-INSERT YOUR QUERY HERE
+select
+  suppliers.supplier,
+  sum(spends.amount) as total_amount
+from
+  spends
+join
+  suppliers on spends.supplier_id = suppliers.id
+group by
+  suppliers.supplier;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -112,7 +141,16 @@ INSERT YOUR QUERY HERE
 **You:** Then you need an extra clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+select
+  date,
+  sum(amount) as total_amount
+from
+  spends
+where date = '2021-03-01' or date = '2021-04-01'
+group by
+  date
+order by
+  date;
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
@@ -124,8 +162,17 @@ CREATE YOUR QUERY HERE
 **You:** Sure thing. To confirm, the date is August 19, 2021, the transaction number is 38104091, the supplier invoice number is 3780119655, the supplier is 'Dell', the expense type is 'Hardware' and the expense area is 'IT'. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERIES HERE
+insert into suppliers (supplier)
+values ('Dell');
 
+insert into expense_types (expense_type)
+values('Hardware');
+
+insert into expense_areas (expense_area)
+values('IT');
+
+insert into spends
+values(343, 42, 46, 66, '2021-08-19', 38104091, 3780119655, 'Computer Hardware Dell', 32000);
 ```
 
 **Claire:** Great, that's everything we need. Thanks for your help.
