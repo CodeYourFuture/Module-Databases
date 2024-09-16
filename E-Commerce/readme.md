@@ -40,18 +40,42 @@ erDiagram
     }
     customers ||--o{ orders : places
 ```
+    ## ERD is in this folder with .png extension
 
 ### Query Practice
 
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+    ```sql
+    SELECT * FROM products  WHERE product_name ILIKE '%socks%';
+    ```
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+    ```sql
+        SELECT prod_id, product_name, unit_price, supp_id FROM product_availability JOIN products ON prod_id = id WHERE unit_price > 100;
+    ```
 - [ ] List the 5 most expensive products
+    ```sql
+        SELECT GREATEST(unit_price) FROM product_availability LIMIT 5;
+    ```
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+
+    **note for reviewer: this query returns 9 rows so i am not sure whether it is right or not**
+    ```sql
+        SELECT product_name FROM products JOIN product_availability ON products.id = product_availability.prod_id JOIN suppliers ON product_availability.supp_id = suppliers.id WHERE country ILIKE 'United Kingdom';
+    ```
 - [ ] List all orders, including order items, from customer named Hope Crosby
+    ```sql
+        SELECT o.id AS order_id, o.order_date, o.order_reference, oi.product_id, oi supplier_id, oi.quantity FROM orders o JOIN order_items oi ON o.id = oi.order_id JOIN customers c ON o.customer_id = c.id WHERE c.name = 'Hope Crosby';
+    ```
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+    ```sql
+        SELECT p.product_name, pa.unit_price, oi.quantity FROM products AS p JOIN product_availability AS pa ON p.id = pa.prod_id JOIN order_items AS oi ON pa.prod_id = oi.product_id JOIN orders AS o ON oi.order_id = o.id WHERE o.order_reference = 'ORD006';
+    ```
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+    ```sql
+        SELECT c.name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity FROM customers AS c JOIN orders AS o ON c.id = o.customer_id JOIN order_items AS oi ON o.id = oi.order_id JOIN products AS p ON oi.product_id = p.id JOIN suppliers AS s ON oi.supplier_id = s.id;
+    ```
 
 ## Acceptance Criteria
 
