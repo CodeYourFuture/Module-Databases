@@ -45,13 +45,23 @@ erDiagram
 
 Write SQL queries to complete the following tasks:
 
-- [ ] List all the products whose name contains the word "socks"
-- [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
-- [ ] List the 5 most expensive products
-- [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
-- [ ] List all orders, including order items, from customer named Hope Crosby
-- [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
-- [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+- [+] List all the products whose name contains the word "socks"
+<!-- select * from products where product_name like '%socks%'; -->
+- [+] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+<!-- select a.prod_id, p.product_name, a.unit_price, a.supp_id from product_availability a join products p on (a.prod
+_id = p.id) where unit_price > 100; -->
+- [+] List the 5 most expensive products
+<!-- select prod_id, product_name from product_availability join products on (product_availability.prod_id = products
+.id) order by unit_price desc limit 5; -->
+- [+] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+<!-- select product_name, supplier_name from orders join order_items on (orders.id = order_items.order_id) join products on (order_items.product_id = products.id) join suppliers on (order_items.supplier_id = suppliers.id) where country = 'United Kingdom'; -->
+- [+] List all orders, including order items, from customer named Hope Crosby
+<!-- select orders.id, order_date from orders join order_items on (orders.id = order_items.order_id) join customers o
+n (orders.customer_id = customers.id) where name = 'Hope Crosby'; -->
+- [+] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+<!-- select product_name, unit_price, quantity from orders join order_items on (orders.id = order_items.order_id) join product_availability on (product_availability.prod_id = order_items.product_id)join products on (product_availability.prod_id = products.id) where orders.order_reference = 'ORD006'; -->
+- [+] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+<!-- select name, order_reference, order_date, product_name, supplier_name, quantity from orders join customers on (orders.customer_id = customers.id) join order_items on (orders.id = order_items.order_id) join products on (order_items.product_id = products.id) join suppliers on (order_items.supplier_id = suppliers.id); -->
 
 ## Acceptance Criteria
 
