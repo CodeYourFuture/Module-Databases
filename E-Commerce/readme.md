@@ -46,12 +46,25 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+      SELECT \* FROM products WHERE product_name LIKE '%socks%;
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+      SELECT product_id, product_name, unit_price, supplier_id FROM products WHERE unit_price > 100;
+
 - [ ] List the 5 most expensive products
+      SELECT \* FROM products ORDER BY unit_price DESC LIMIT 5;
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+      SELECT p.product_name, s.supplier_name FROM products p JOIN suppliers s ON p.supplier_id = s.supplier_id WHERE s.country = 'United Kingdom';
+
 - [ ] List all orders, including order items, from customer named Hope Crosby
+      SELECT \* FROM orders o JOIN customers c ON o.customer_id = c.customer_id WHERE c.customer_name = 'Hope Crosby';
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+      SELECT p.product_name, oi.unit_price, oi.quantity FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = 'ORD006';
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+      SELECT c.customer_name AS name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity FROM customers c JOIN orders o ON c.customer_id = o.customer_id JOIN order_items oi ON o.order_id = oi.order_id JOIN products p ON oi.product_id = p.product_id JOIN suppliers s ON p.supplier_id = s.supplier_id;
 
 ## Acceptance Criteria
 
