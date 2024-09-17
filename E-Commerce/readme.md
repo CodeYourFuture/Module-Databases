@@ -46,12 +46,32 @@ erDiagram
 Write SQL queries to complete the following tasks:
 
 - [ ] List all the products whose name contains the word "socks"
+
+SELECT * FROM products WHERE product_name LIKE '%socks%';
+
 - [ ] List all the products which cost more than 100 showing product id, name, unit price, and supplier id
+
+SELECT * FROM product_availability JOIN products ON product_availability.prod_id = products.id WHERE unit_price > 100;
+
 - [ ] List the 5 most expensive products
+
+SELECT prod_id, product_name, unit_price FROM product_availability JOIN products ON product_availability.prod_id = products.id ORDER BY product_availability.unit_price DESC LIMIT 5;
+
 - [ ] List all the products sold by suppliers based in the United Kingdom. The result should only contain the columns product_name and supplier_name
+
+SELECT product_name, supplier_name FROM suppliers JOIN product_availability ON suppliers.id = product_availability.supp_id JOIN products ON product_availability.prod_id = products.id WHERE suppliers.country = 'United Kingdom';
+
 - [ ] List all orders, including order items, from customer named Hope Crosby
+
+SELECT * FROM customers JOIN orders ON (customers.id = orders.customer_id) JOIN order_items ON (order_items.order_id = orders.id) WHERE customers.name = 'Hope Crosby'; 
+
 - [ ] List all the products in the order ORD006. The result should only contain the columns product_name, unit_price, and quantity
+
+SELECT products.product_name, product_availability.unit_price, order_items.quantity FROM orders JOIN order_items ON (orders.id = order_items.order_id) JOIN products ON (products.id = order_items.product_id) JOIN product_availability ON (products.id = product_availability.prod_id) WHERE orders.order_reference = 'ORD006'; 
+
 - [ ] List all the products with their supplier for all orders of all customers. The result should only contain the columns name (from customer), order_reference, order_date, product_name, supplier_name, and quantity
+
+SELECT customers.name, orders.order_reference, suppliers.supplier_name, order_items.quantity, products.product_name FROM order_items JOIN orders ON(orders.id = order_items.order_id) JOIN suppliers ON (suppliers.id = order_items.supplier_id) JOIN customers ON (customers.id = orders.customer_id) JOIN products ON(products.id = order_items.product_id);
 
 ## Acceptance Criteria
 
