@@ -11,6 +11,7 @@
 Run the following commands:
 
 ```
+//SELECT * from expense_areas where  expense_area = 'COVID-19';
 createdb big-spender
 psql -d big-spender -f big-spender.sql
 ```
@@ -48,7 +49,7 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 **You:** Absolutely. Here's the SQL query you need:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT: big-spender=# select transaction_no  from spends where amount between ' 30000' and '31000';
 ```
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
@@ -68,7 +69,7 @@ INSERT YOUR QUERY HERE
 **You:** Then here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT : select transaction_no, description from spends where lower(description) like '%fee%';
 ```
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
@@ -76,7 +77,9 @@ INSERT YOUR QUERY HERE
 **You:** No worries. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT: SELECT * from spends join expense_areas on (expense_areas.id= spends.expense_area_id) where expense_area='Better Hospital Food'; ;
+ For transcation nr only  : SELECT transaction_no from spends join expense_areas on (expense_areas.id= spends.expense_area_id) where expense_area='Better Hospital Food'; ;
+
 ```
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
@@ -84,7 +87,9 @@ INSERT YOUR QUERY HERE
 **You:** You can get that by using the GROUP BY clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+CREATE : SELECT EXTRACT(MONTH FROM date) AS month, SUM(amount) AS total_amount
+FROM spends
+GROUP BY EXTRACT(MONTH FROM date);
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -92,7 +97,9 @@ CREATE YOUR QUERY HERE
 **You:** Sure thing. Here's the query for that:
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT: SELECT supplier_id, SUM(amount) AS total_amount
+FROM spends
+GROUP BY supplier_id;
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -100,7 +107,10 @@ INSERT YOUR QUERY HERE
 **You:** Whoops! I gave you ids to key the totals, but let me give you names instead.
 
 ```sql
-INSERT YOUR QUERY HERE
+INSERT :SELECT sup.supplier, SUM(sp.amount) AS total_amount
+FROM spends AS sp
+JOIN suppliers AS sup ON sp.supplier_id = sup.id
+GROUP BY sup.supplier;
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -112,7 +122,9 @@ INSERT YOUR QUERY HERE
 **You:** Then you need an extra clause. Here's the query:
 
 ```sql
-CREATE YOUR QUERY HERE
+CREATE: SELECT SUM(amount) AS total_amount
+FROM spends
+WHERE date = '2021-03-01' OR date = '2021-04-01'
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
