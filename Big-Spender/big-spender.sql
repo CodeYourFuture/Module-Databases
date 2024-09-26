@@ -1,5 +1,5 @@
-CREATE TABLE expense_types (id SERIAL PRIMARY KEY,
-                                              expense_type VARCHAR(30) NOT NULL);
+\q
+
 
 
 CREATE TABLE expense_areas (id SERIAL PRIMARY KEY,
