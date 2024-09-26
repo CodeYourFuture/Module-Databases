@@ -1,0 +1,12 @@
+                List of relations
+ Schema |         Name         |   Type   | Owner 
+--------+----------------------+----------+-------
+ public | expense_areas        | table    | anna
+ public | expense_areas_id_seq | sequence | anna
+ public | expense_types        | table    | anna
+ public | expense_types_id_seq | sequence | anna
+ public | spends               | table    | anna
+ public | spends_id_seq        | sequence | anna
+ public | suppliers            | table    | anna
+ public | suppliers_id_seq     | sequence | anna
+(8 rows)
