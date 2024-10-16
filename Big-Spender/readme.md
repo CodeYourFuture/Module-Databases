@@ -138,3 +138,49 @@ INSERT YOUR QUERIES HERE
 - [ ] All queries are written in SQL
 - [ ] All queries are correct and I have tested them in the database
 - [ ] I have opened a pull request with my answers written directly into this README.md file
+
+Answers
+
+SELECT \* FROM spends WHERE amount BETWEEN 30000 AND 31000;
+
+SELECT \* FROM spends WHERE LOWER(description) LIKE '%fee%';
+
+SELECT \_ FROM spends WHERE expense_area_id IN (SELECT id FROM expense_areas WHERE expense_area ILIKE 'Better Hospital Food');
+
+SELECT DATE_TRUNC('month', date)::DATE AS month, SUM(amount) AS total_amount FROM spends GROUP BY month ORDER BY month;
+
+SELECT
+supplier.id AS supplier_id,
+supplier.name AS supplier_name,
+SUM(spends.amount) AS total_amount
+FROM
+suppliers AS supplier
+JOIN
+spends ON supplier.id = spends.supplier_id
+GROUP BY
+supplier.id, supplier.name
+ORDER BY
+total_amount DESC;
+
+SELECT date, SUM(amount) FROM spends WHERE date='2021-03-01' OR date='2021-04-01' GROUP BY date;
+
+INSERT INTO spends (
+date,
+transaction_no,
+supplier_inv_no,
+supplier_id,
+expense_type_id,
+expense_area_id,
+description,
+amount
+)
+VALUES (
+'2021-08-19',
+'38104091',
+'3780119655',
+(SELECT id FROM suppliers WHERE name = 'Dell'),
+(SELECT id FROM expense_types WHERE name = 'Hardware'),
+(SELECT id FROM expense_areas WHERE name = 'IT'),
+'Computer Hardware Dell',
+32000
+);
