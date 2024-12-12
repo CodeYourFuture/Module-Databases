@@ -4,8 +4,13 @@
   "description": "API for the CYF ecommerce application",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "jest"
+    "start": "nodemon app.js",
+    "test": "jest --detectOpenHandles"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
   },
   "keywords": [
     "node",
@@ -16,10 +21,16 @@
   "author": "CYF",
   "license": "CC-BY-4-0",
   "dependencies": {
-    "express": "^4.17.1"
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.24.5",
+    "babel-jest": "^29.7.0",
     "jest": "^27.2.5",
     "supertest": "^6.1.6"
-  }
+  },
+  "type": "module"
 }
