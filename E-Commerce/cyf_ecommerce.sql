@@ -477,3 +477,16 @@ VALUES (19,
         1,
         5);
 
+select * from products where product_name like '%socks%';
+
+SELECT a.id, a.product_name, b.supp_id, b.unit_price FROM products a INNER JOIN product_availability b ON a.id = b.prod_id WHERE b.unit_price > 100;
+
+SELECT a.id, a.product_name, b.supp_id, b.unit_price FROM products a INNER JOIN product_availability b ON a.id = b.prod_id ORDER BY b.unit_price DESC  LIMIT 5;
+
+SELECT a.product_name, b.supplier_name FROM products a INNER JOIN product_availability c ON a.id = c.prod_id INNER JOIN suppliers b ON c.supp_id = b.id WHERE b.country = 'United Kingdom';
+
+select a.*, b.* from orders a INNER JOIN order_items b ON a.id = b.order_id INNER JOIN customers c ON a.customer_id = c.id WHERE c.name = 'Hope Crosby';
+
+select distinct p.product_name, pa.unit_price, oi.quantity from products p INNER JOIN product_availability pa ON p.id = pa.prod_id INNER JOIN order_items oi ON            p.id = oi.product_id INNER JOIN orders o ON oi.order_id = o.id WHERE o.order_reference = 'ORD006';
+
+select c.name AS customer_name, o.order_reference, o.order_date, p.product_name, s.supplier_name, oi.quantity from customers c INNER JOIN orders o ON c.id = o.customer_id INNER JOIN order_items oi ON o.id = oi.order_id INNER JOIN products p ON oi.product_id = p.id INNER JOIN product_availability pa ON p.id = pa.prod_id INNER JOIN suppliers s ON pa.supp_id = s.id;
