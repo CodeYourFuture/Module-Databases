@@ -49,7 +49,12 @@ You are working with Claire and Farnoosh, who are trying to complete a missing r
 
 ```sql
 INSERT YOUR QUERY HERE
+
+                select * from spends where amount between 30000 and 31000 and DATE_PART('year',date)= 2021;
+
 ```
+
+big-spender=# select \* from spends where amount between 30000 and 31000 and DATE_PART('year',date)= 2021;
 
 **Claire:** That's great, thanks. Hey, what about transactions that include the word 'fee' in their description?
 
@@ -67,9 +72,12 @@ INSERT YOUR QUERY HERE
 
 **You:** Then here's the query for that:
 
-```sql
+<!-- ```select * from spends where description ilike '%FeE%' -->
+
 INSERT YOUR QUERY HERE
-```
+
+````
+                select * from spends where description ilike '%FeE%'
 
 **Farnoosh:** Hi, it's me again. It turns out we also need the transactions that have the expense area of 'Better Hospital Food'. Can you help us with that one?
 
@@ -77,7 +85,12 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
-```
+
+                SELECT spends.*, expense_areas.expense_area
+                FROM spends
+                INNER JOIN expense_areas ON expense_areas.id = spends.expense_area_id
+                WHERE expense_areas.expense_area = 'Better Hospital Food';
+````
 
 **Claire:** Great, that's very helpful. How about the total amount spent for each month?
 
@@ -85,6 +98,12 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+
+            SELECT DATE_TRUNC('month', date)::date AS month, SUM(amount) AS total
+            FROM spends
+            GROUP BY month
+            ORDER BY month;
+
 ```
 
 **Farnoosh:** Thanks, that's really useful. We also need to know the total amount spent on each supplier. Can you help us with that?
@@ -93,6 +112,14 @@ CREATE YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+
+
+                SELECT SUM(spends.amount) AS total_amount
+                FROM spends
+                INNER JOIN suppliers ON suppliers.id = spends.supplier_id
+                GROUP BY suppliers.id
+                ORDER BY total_amount DESC;
+
 ```
 
 **Farnoosh:** Oh, how do I know who these suppliers are? There's only numbers here.
@@ -101,6 +128,12 @@ INSERT YOUR QUERY HERE
 
 ```sql
 INSERT YOUR QUERY HERE
+                SELECT suppliers.*, SUM(spends.amount) AS total_amount
+                FROM spends
+                INNER JOIN suppliers ON suppliers.id = spends.supplier_id
+                GROUP BY suppliers.id
+                ORDER BY total_amount DESC;
+
 ```
 
 **Claire:** Thanks, that's really helpful. I can't quite figure out...what is the total amount spent on each of these two dates (1st March 2021 and 1st April 2021)?
@@ -113,6 +146,12 @@ INSERT YOUR QUERY HERE
 
 ```sql
 CREATE YOUR QUERY HERE
+
+                    SELECT date, SUM(amount) AS total_amount
+                    FROM spends
+                    WHERE date BETWEEN '2021-03-01' AND '2021-04-01'
+                    GROUP BY date;
+
 ```
 
 **Farnoosh:** Fantastic. One last thing, looks like we missed something. Can we add a new transaction to the spends table with a description of 'Computer Hardware Dell' and an amount of £32,000?
@@ -131,6 +170,16 @@ INSERT YOUR QUERIES HERE
 **Claire:** Great, that's everything we need. Thanks for your help.
 
 **You:** No problem, glad I could help you out.
+
+select id from suppliers where supplier = 'Dell';
+insert into suppliers(supplier) values ('Dell');
+select id from expense_types where expense_type = 'Hardware';
+insert into expense_types (expense_type) values ('Hardware');
+select id from expense_areas where expense_area = 'IT';
+insert into expense_areas (expense_area) values ('IT');
+
+INSERT INTO spends (expense_type_id,expense_area_id,supplier_id, date,transaction_no,supplier_inv_no, description, amount)
+VALUES (42, 46,66,'2021-08-19',38104091,3780119655, 'Computer Hardware Dell', 32000);
 
 ## Acceptance Criteria
 
